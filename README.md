@@ -55,7 +55,7 @@ List of extra features not included in the MVP:
 
 ## Wireframes
 
-- [excalidraw](#)
+- [Excalidraw](https://excalidraw.com/#json=5202385194450944,ItMtODZ9uvL91BZOFA31vg)
 
 ## Links
 - [Backend Repo](https://github.com/juliramon/getaways-backend)
