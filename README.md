@@ -53,6 +53,10 @@ List of extra features not included in the MVP:
 |Search       |/search   |
 |Getaways list|/getaways |
 
+##Wireframes
+
+- [excalidraw](#)
+
 ## Links
 - [Frontend Repo](#)
 - [Heroku](#)
