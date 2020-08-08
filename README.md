@@ -40,6 +40,7 @@ List of extra features not included in the MVP:
 - **Advanced search**: As a user I want to be able to apply additional filters to my search to improve my queries
 - **Save content**: As a user I want to be able to save content to my "Saved content" list
 - **Geo location**: As a user I want to be able to search and get custom recommendations base on my location
+- **Book getaways**: As a user I want to be able to book available getaways
 
 ## Routing
 
