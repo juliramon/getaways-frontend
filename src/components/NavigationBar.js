@@ -3,7 +3,6 @@ import {Navbar, Nav, Container, Form} from "react-bootstrap";
 import ContentBar from "./homepage/ContentBar";
 
 const NavigationBar = (props) => {
-	console.log(props);
 	const {logo_url, user} = props;
 	const initialState = {
 		loggedUser: user,
@@ -11,7 +10,6 @@ const NavigationBar = (props) => {
 	const [state] = useState(initialState);
 	let navRight = undefined;
 	if (state.loggedUser) {
-		console.log("user is logged");
 		navRight = (
 			<Nav className="logged-user">
 				<Nav.Link href="/profile">
@@ -26,7 +24,6 @@ const NavigationBar = (props) => {
 			</Nav>
 		);
 	} else {
-		console.log("user is not logged");
 		navRight = (
 			<Nav>
 				<Nav.Link href="/login">Log in</Nav.Link>

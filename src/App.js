@@ -7,6 +7,7 @@ import {Route, Switch} from "react-router-dom";
 import Signup from "./components/auth/Signup";
 import Login from "./components/auth/Login";
 import Feed from "./components/feed/Feed";
+import ProtectedRoute from "./services/protectedRoute";
 
 function App() {
 	const initialState = {
@@ -35,10 +36,11 @@ function App() {
 						<Login {...props} getUserDetails={getLoggedUser} />
 					)}
 				/>
-				<Route
+				<ProtectedRoute
 					exact
 					path="/feed"
-					render={(props) => <Feed {...props} user={state.loggedUser} />}
+					user={state.loggedUser}
+					component={Feed}
 				/>
 			</Switch>
 		</div>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useHistory, Link} from "react-router-dom";
 import {Form, Button} from "react-bootstrap";
-import AuthService from "../../services/auth-service";
+import AuthService from "../../services/authService";
 
 const Login = (props) => {
 	const initialState = {
