@@ -13,6 +13,11 @@ class AuthService {
 			.post("/auth/signup", {fullName, email, password})
 			.then((res) => res.data);
 	};
+	login = (email, password) => {
+		return this.service
+			.post("/auth/login", {email, password})
+			.then((response) => response.data);
+	};
 }
 
 export default AuthService;
