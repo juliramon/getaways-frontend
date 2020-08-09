@@ -3,7 +3,7 @@ import {useHistory, Link} from "react-router-dom";
 import {Form, Button} from "react-bootstrap";
 import AuthService from "../../services/auth-service";
 
-const Login = () => {
+const Login = (props) => {
 	const initialState = {
 		formData: {
 			email: "",
@@ -26,6 +26,7 @@ const Login = () => {
 			.login(email, password)
 			.then((res) => {
 				setState(initialState);
+				props.getUserDetails(res);
 				history.push("/feed");
 			})
 			.catch((err) => console.log(err));
