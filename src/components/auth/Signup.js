@@ -1,16 +1,19 @@
 import React, {useState} from "react";
 import {Form, Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import AuthService from "../../services/auth-service";
 
 const Signup = () => {
 	const initialState = {
 		formData: {
-			name: "",
+			fullName: "",
 			email: "",
 			password: "",
 		},
 	};
 	const [state, setState] = useState(initialState);
+	const service = new AuthService();
+	const history = useHistory();
 
 	const handleChange = (e) => {
 		setState({
@@ -21,6 +24,14 @@ const Signup = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		const {fullName, email, password} = state.formData;
+		service
+			.signup(fullName, email, password)
+			.then((res) => {
+				setState(initialState);
+				history.push("/feed");
+			})
+			.catch((err) => console.log(err));
 	};
 
 	return (
@@ -95,18 +106,9 @@ const Signup = () => {
 									<Form.Label>Name</Form.Label>
 									<Form.Control
 										type="text"
-										name="name"
+										name="fullName"
 										onChange={handleChange}
 										placeholder="Enter your full name"
-									/>
-								</Form.Group>
-								<Form.Group>
-									<Form.Label>Username</Form.Label>
-									<Form.Control
-										type="text"
-										name="username"
-										onChange={handleChange}
-										placeholder="Set a username"
 									/>
 								</Form.Group>
 							</div>
