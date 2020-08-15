@@ -60,8 +60,8 @@ List of extra features not included in the MVP:
 ## Links
 - [Backend Repo](https://github.com/juliramon/getaways-backend)
 - [Heroku](#)
-- [Trello](#)
-- [Slides](#)
+- [Trello](https://trello.com/b/OECrYZ5V/getawaysguru)
+- [Slides](https://docs.google.com/presentation/d/1DxM7t3Y3Fx6j6xptG64EGT6lLAJPyH9k0sMkdEzwV4w/edit?usp=sharing)
 
 
 ## Available Scripts
