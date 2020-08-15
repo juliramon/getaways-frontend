@@ -25,7 +25,7 @@ function App() {
 		<div className="app">
 			<GlobalStyle />
 			<Switch>
-				<Route exact path="/" render={(props) => <Homepage />} />
+				<Route exact path="/" render={() => <Homepage />} />
 				<Route
 					exact
 					path="/signup"
