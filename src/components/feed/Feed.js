@@ -161,6 +161,28 @@ const Feed = ({user}) => {
 											<Link to="/">
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
+													className="icon icon-tabler icon-tabler-route"
+													width="28"
+													height="28"
+													viewBox="0 0 24 24"
+													strokeWidth="1.5"
+													stroke="#2c3e50"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" />
+													<circle cx="6" cy="19" r="2" />
+													<circle cx="18" cy="5" r="2" />
+													<path d="M12 19h4.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h3.5" />
+												</svg>
+												Getaways
+											</Link>
+										</li>
+										<li>
+											<Link to="/">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
 													className="icon icon-tabler icon-tabler-bed"
 													width="28"
 													height="28"
@@ -176,27 +198,6 @@ const Feed = ({user}) => {
 													<circle cx="7" cy="10" r="1" />
 												</svg>
 												Places
-											</Link>
-										</li>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-compass"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#2c3e50"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<polyline points="8 16 10 10 16 8 14 14 8 16" />
-													<circle cx="12" cy="12" r="9" />
-												</svg>
-												Experiences
 											</Link>
 										</li>
 										<li>
