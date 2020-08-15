@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Form, Button} from "react-bootstrap";
 import {Link, useHistory} from "react-router-dom";
-import AuthService from "../../services/auth-service";
+import AuthService from "../../services/authService";
 
-const Signup = () => {
+const Signup = (props) => {
 	const initialState = {
 		formData: {
 			fullName: "",
@@ -29,6 +29,7 @@ const Signup = () => {
 			.signup(fullName, email, password)
 			.then((res) => {
 				setState(initialState);
+				props.getUserDetails(res);
 				history.push("/feed");
 			})
 			.catch((err) => console.log(err));
