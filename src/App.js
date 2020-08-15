@@ -8,14 +8,18 @@ import Signup from "./components/auth/Signup";
 import Login from "./components/auth/Login";
 import Feed from "./components/feed/Feed";
 import ProtectedRoute from "./services/protectedRoute";
+import Cookies from "js-cookie";
+import Logout from "./components/auth/Logout";
 
 function App() {
+	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
 	const initialState = {
-		loggedUser: null,
+		loggedUser: loggedData,
 	};
 	const [state, setState] = useState(initialState);
 	const getLoggedUser = (user) => {
 		setState({loggedUser: user});
+		Cookies.set("user", user, {expires: 7});
 	};
 	return (
 		<div className="app">
@@ -34,6 +38,13 @@ function App() {
 					path="/login"
 					render={(props) => (
 						<Login {...props} getUserDetails={getLoggedUser} />
+					)}
+				/>
+				<Route
+					exact
+					path="/logout"
+					render={(props) => (
+						<Logout {...props} getUserDetails={getLoggedUser} />
 					)}
 				/>
 				<ProtectedRoute

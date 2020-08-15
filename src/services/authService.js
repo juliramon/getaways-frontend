@@ -15,9 +15,10 @@ class AuthService {
 	};
 	login = (username, password) => {
 		return this.service
-			.post("/login", {username, password})
+			.post("/auth/login", {username, password})
 			.then((response) => response.data);
 	};
+	logout = () => this.service.post("/auth/logout", {}).then((res) => res.data);
 }
 
 export default AuthService;
