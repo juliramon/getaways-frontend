@@ -22,7 +22,7 @@ const NavigationBar = (props) => {
 							/>
 						</div>
 						<div className="user-meta">
-							{state.loggedUser.fullName}{" "}
+							{state.loggedUser.fullName}
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="icon icon-tabler icon-tabler-chevron-down"
@@ -130,7 +130,7 @@ const NavigationBar = (props) => {
 			<Navbar>
 				<Container fluid className="align-items-center">
 					<div className="nav-col left d-flex">
-						<Navbar.Brand href="#home">
+						<Navbar.Brand href="/feed">
 							<img src={logo_url} alt="Logo Getaways.guru" />
 						</Navbar.Brand>
 						<Nav>
@@ -160,7 +160,7 @@ const NavigationBar = (props) => {
 					</div>
 					<div className="nav-col right d-flex">
 						<Nav>
-							<Nav.Link href="/getaways">
+							<Nav.Link href="/activities">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="icon icon-tabler icon-tabler-route"
@@ -178,7 +178,7 @@ const NavigationBar = (props) => {
 									<circle cx="18" cy="5" r="2" />
 									<path d="M12 19h4.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h3.5" />
 								</svg>
-								Getaways
+								Activities
 							</Nav.Link>
 							<Nav.Link href="/places">
 								<svg
@@ -198,25 +198,6 @@ const NavigationBar = (props) => {
 									<circle cx="7" cy="10" r="1" />
 								</svg>
 								Places
-							</Nav.Link>
-							<Nav.Link href="/experiences">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="icon icon-tabler icon-tabler-brand-safari"
-									width="44"
-									height="44"
-									viewBox="0 0 24 24"
-									strokeWidth="1.5"
-									stroke="#2c3e50"
-									fill="none"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<path stroke="none" d="M0 0h24v24H0z" />
-									<polyline points="8 16 10 10 16 8 14 14 8 16" />
-									<circle cx="12" cy="12" r="9" />
-								</svg>
-								Experiences
 							</Nav.Link>
 							<Nav.Link href="/stories">
 								<svg

@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from "react";
 import NavigationBar from "../NavigationBar";
-import {Container, Row, Col} from "react-bootstrap";
+import {Container, Row, Col, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import PublicationModal from "../PublicationModal";
 
 const Feed = ({user}) => {
 	const initialState = {
@@ -9,11 +10,14 @@ const Feed = ({user}) => {
 	};
 	const [state] = useState(initialState);
 	const [dropCap, setDropCap] = useState("");
+	const [modalVisibility, setModalVisibility] = useState(false);
 	useEffect(() => {
 		const userName = state.loggedUser.fullName;
 		const dropCap = userName.charAt(0);
 		setDropCap(dropCap);
 	}, [state.loggedUser]);
+	const handleModalVisibility = () => setModalVisibility(true);
+	const hideModalVisibility = () => setModalVisibility(false);
 	return (
 		<div id="feed">
 			<NavigationBar
@@ -109,8 +113,79 @@ const Feed = ({user}) => {
 										</li>
 									</ul>
 								</div>
-								<div className="links">
+								<div className="content">
+									<p>Top picks for you</p>
 									<ul>
+										<li>
+											<Link to="/">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													className="icon icon-tabler icon-tabler-compass"
+													width="28"
+													height="28"
+													viewBox="0 0 24 24"
+													strokeWidth="1.5"
+													stroke="#2c3e50"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" />
+													<polyline points="8 16 10 10 16 8 14 14 8 16" />
+													<circle cx="12" cy="12" r="9" />
+												</svg>
+												Discover
+											</Link>
+										</li>
+										<li>
+											<Link to="/">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													className="icon icon-tabler icon-tabler-users"
+													width="28"
+													height="28"
+													viewBox="0 0 24 24"
+													strokeWidth="1.5"
+													stroke="#2c3e50"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" />
+													<circle cx="9" cy="7" r="4" />
+													<path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+													<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+													<path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+												</svg>
+												Community
+											</Link>
+										</li>
+									</ul>
+								</div>
+								<div className="links">
+									<p>Manage your account</p>
+									<ul>
+										<li>
+											<Link to="/dashboard">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													className="icon icon-tabler icon-tabler-layout-list"
+													width="28"
+													height="28"
+													viewBox="0 0 24 24"
+													strokeWidth="1.5"
+													stroke="#2c3e50"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" />
+													<rect x="4" y="4" width="16" height="6" rx="2" />
+													<rect x="4" y="14" width="16" height="6" rx="2" />
+												</svg>
+												Dashboard
+											</Link>
+										</li>
 										<li>
 											<Link to="/">
 												<svg
@@ -154,81 +229,15 @@ const Feed = ({user}) => {
 										</li>
 									</ul>
 								</div>
-								<div className="content">
-									<p>Your getaways</p>
-									<ul>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-bed"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#2c3e50"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<path d="M3 7v11m0 -4h18m0 4v-8a2 2 0 0 0 -2 -2h-8v6" />
-													<circle cx="7" cy="10" r="1" />
-												</svg>
-												Places
-											</Link>
-										</li>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-compass"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#2c3e50"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<polyline points="8 16 10 10 16 8 14 14 8 16" />
-													<circle cx="12" cy="12" r="9" />
-												</svg>
-												Experiences
-											</Link>
-										</li>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-notebook"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#2c3e50"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" />
-													<line x1="13" y1="8" x2="15" y2="8" />
-													<line x1="13" y1="12" x2="15" y2="12" />
-												</svg>
-												Stories
-											</Link>
-										</li>
-									</ul>
-								</div>
 								<div className="new">
 									<ul>
 										<li>
-											<Link to="/" className="btn btn-primary text-center">
+											<Button
+												className="btn btn-primary text-center"
+												onClick={handleModalVisibility}
+											>
 												Add getaway
-											</Link>
+											</Button>
 										</li>
 									</ul>
 								</div>
@@ -237,6 +246,10 @@ const Feed = ({user}) => {
 					</Col>
 				</Row>
 			</Container>
+			<PublicationModal
+				visibility={modalVisibility}
+				hideModal={hideModalVisibility}
+			/>
 		</div>
 	);
 };

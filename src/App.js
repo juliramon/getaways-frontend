@@ -10,6 +10,9 @@ import Feed from "./components/feed/Feed";
 import ProtectedRoute from "./services/protectedRoute";
 import Cookies from "js-cookie";
 import Logout from "./components/auth/Logout";
+import ActivityForm from "./components/composer/ActivityForm";
+import Dashboard from "./components/dashboard/Dashboard";
+import ActivityList from "./components/listings/ActivityList";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -21,6 +24,7 @@ function App() {
 		setState({loggedUser: user});
 		Cookies.set("user", user, {expires: 7});
 	};
+
 	return (
 		<div className="app">
 			<GlobalStyle />
@@ -52,6 +56,24 @@ function App() {
 					path="/feed"
 					user={state.loggedUser}
 					component={Feed}
+				/>
+				<ProtectedRoute
+					exact
+					path="/activity-composer"
+					user={state.loggedUser}
+					component={ActivityForm}
+				/>
+				<ProtectedRoute
+					exact
+					path="/dashboard"
+					user={state.loggedUser}
+					component={Dashboard}
+				/>
+				<ProtectedRoute
+					exact
+					path="/activities"
+					user={state.loggedUser}
+					component={ActivityList}
 				/>
 			</Switch>
 		</div>
