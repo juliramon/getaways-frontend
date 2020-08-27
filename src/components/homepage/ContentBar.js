@@ -2,7 +2,6 @@ import React from "react";
 import {Container} from "react-bootstrap";
 
 const ContentBar = (props) => {
-	console.log("content bar =>", props);
 	let contentBar = undefined;
 	if (props.user === undefined) {
 		contentBar = (
