@@ -24,6 +24,9 @@ class ContentService {
 
 	userActivities = () =>
 		this.service.get("/userActivities").then((res) => res.data);
+
+	activityDetails = (id) =>
+		this.service.get(`/activities/${id}`).then((res) => res.data);
 }
 
 export default ContentService;

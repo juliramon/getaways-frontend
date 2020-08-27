@@ -13,6 +13,7 @@ import Logout from "./components/auth/Logout";
 import ActivityForm from "./components/composer/ActivityForm";
 import Dashboard from "./components/dashboard/Dashboard";
 import ActivityList from "./components/listings/ActivityList";
+import Listing from "./components/listingPage/Listing";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -74,6 +75,11 @@ function App() {
 					path="/activities"
 					user={state.loggedUser}
 					component={ActivityList}
+				/>
+				<Route
+					exact
+					path="/activities/:id"
+					render={(props) => <Listing {...props} user={state.loggedUser} />}
 				/>
 			</Switch>
 		</div>

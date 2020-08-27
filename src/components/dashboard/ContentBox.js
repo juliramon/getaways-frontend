@@ -2,15 +2,17 @@ import React from "react";
 import {Dropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
-const ContentBox = ({title, subtitle, publicationDate}) => {
+const ContentBox = ({id, title, subtitle, publicationDate}) => {
 	return (
 		<div className="content box d-flex align-items-center">
-			<div className="image">
-				<img src="" alt="" />
-			</div>
-			<h1 className="title">{title}</h1>
-			<p className="subtitle">{subtitle}</p>
-			<p className="date">{publicationDate}</p>
+			<Link to={`/activities/${id}`} className="d-flex align-items-center">
+				<div className="image">
+					<img src="" alt={title} />
+				</div>
+				<h1 className="title">{title}</h1>
+				<p className="subtitle">{subtitle}</p>
+				<p className="date">{publicationDate}</p>
+			</Link>
 			<div className="crud-buttons">
 				<Dropdown>
 					<Dropdown.Toggle variant="none">
@@ -35,7 +37,7 @@ const ContentBox = ({title, subtitle, publicationDate}) => {
 					<Dropdown.Menu>
 						<ul>
 							<li>
-								<Link to="/">
+								<Link to={`/activities/${id}`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-eye"

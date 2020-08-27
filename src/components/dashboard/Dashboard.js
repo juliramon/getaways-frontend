@@ -33,6 +33,7 @@ const Dashboard = ({user}) => {
 		activities = state.activities.map((el) => (
 			<ContentBox
 				key={el._id}
+				id={el._id}
 				title={el.title}
 				subtitle={el.subtitle}
 				publicationDate={el.createdAt}

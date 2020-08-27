@@ -689,6 +689,9 @@ nav {
 	background-color: #fff;
 	background-color: #f1f1f1;
 	border-bottom: 1px solid #cfcfcf;
+	a {
+		color: #000000;
+	}
 	.image,
 	.title,
 	.subtitle,
@@ -859,3 +862,34 @@ nav {
 	}
 }
 /*---LISTINGS BOX STYLES---*/
+/*---LISTING PAGE DETAILS---*/
+
+#listingPage {
+	.listing-wrapper {
+		margin: 0 auto;
+		padding: 50px 0;
+	}
+	.listing-title {
+		font-family: "INTER";
+		font-weight: bold;
+		font-size: 2.2em;
+	}
+	.listing-subtitle {
+		font-size: 1.25em;
+		max-width: 600px;
+		opacity: 0.8;
+	}
+	.col.left {
+		padding-left: 0;
+		width: 50%;
+		.listing-description {
+			font-size: 1em;
+			line-height: 1.7em;
+		}
+	}
+	.col.right {
+		padding-right: 0;
+	}
+}
+
+/*---LISTING PAGE DETAILS---*/
