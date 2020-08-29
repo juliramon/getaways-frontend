@@ -41,6 +41,7 @@ class AuthService {
 				}
 			});
 	};
+
 	login = (username, password) => {
 		return this.service.post("/auth/login", {username, password}).then(() => {
 			if (this.error === undefined) {
@@ -52,7 +53,20 @@ class AuthService {
 			}
 		});
 	};
+
 	logout = () => this.service.post("/auth/logout", {}).then((res) => res.data);
+
+	googleAuth = (fullName, email, imageUrl) => {
+		return this.service
+			.post("/auth/googlesignup", {fullName, email, imageUrl})
+			.then(() => {
+				if (this.error === undefined) {
+					return this.response;
+				} else {
+					return this.error;
+				}
+			});
+	};
 }
 
 export default AuthService;
