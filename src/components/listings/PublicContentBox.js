@@ -1,14 +1,14 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-const PublicContentBox = ({title, subtitle, location}) => {
+const PublicContentBox = ({id, title, subtitle, location}) => {
 	return (
 		<div
 			id="listing"
 			className="d-flex align-items-center justify-content-between"
 		>
-			<a
-				href="/"
+			<Link
+				to={`/activities/${id}`}
 				title={title}
 				className="listing-wrapper d-flex align-items-center"
 			>
@@ -20,7 +20,7 @@ const PublicContentBox = ({title, subtitle, location}) => {
 					<p className="listing-subtitle">{subtitle}</p>
 					<p className="listing-location">{location}</p>
 				</div>
-			</a>
+			</Link>
 			<div className="listing-action">
 				<Link to="/" title="Book" className="btn btn-primary">
 					Book

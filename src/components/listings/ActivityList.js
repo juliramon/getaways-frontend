@@ -26,6 +26,7 @@ const ActivityList = ({user}) => {
 	const activitiesList = state.activities.map((el) => (
 		<PublicContentBox
 			key={el._id}
+			id={el._id}
 			title={el.title}
 			subtitle={el.subtitle}
 			location={el.location}
@@ -34,7 +35,9 @@ const ActivityList = ({user}) => {
 	return (
 		<div id="contentList" className="activity">
 			<NavigationBar
-				logo_url={"../logo-getaways-guru.svg"}
+				logo_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+				}
 				user={user}
 				dropCap={dropCap}
 			/>
@@ -68,6 +71,23 @@ const ActivityList = ({user}) => {
 									<Form.Check label="€" />
 									<Form.Check label="€€" />
 									<Form.Check label="€€€" />
+								</div>
+								<div className="filter-block">
+									<span className="block-title">Location</span>
+									<Form.Check label="> 100 km" />
+									<Form.Check label="50 - 100 km" />
+									<Form.Check label="20 - 50 km" />
+									<Form.Check label="< 20 km" />
+								</div>
+								<div className="filter-block">
+									<span className="block-title">Category</span>
+									<Form.Check label="Romantic" />
+									<Form.Check label="Adventure" />
+									<Form.Check label="Gastronomic" />
+									<Form.Check label="Cultural" />
+									<Form.Check label="Winter" />
+									<Form.Check label="Summer" />
+									<Form.Check label="Health & Wellness" />
 								</div>
 							</div>
 						</div>

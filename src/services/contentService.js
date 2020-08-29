@@ -24,6 +24,23 @@ class ContentService {
 
 	userActivities = () =>
 		this.service.get("/userActivities").then((res) => res.data);
+
+	activityDetails = (id) =>
+		this.service.get(`/activities/${id}`).then((res) => res.data);
+
+	removeActivity = (id) =>
+		this.service.delete(`/activities/${id}`).then((res) => res.data);
+
+	editActivity = (_id, title, subtitle, description, location, status) =>
+		this.service
+			.put(`/activities/${_id}`, {
+				title,
+				subtitle,
+				description,
+				location,
+				status,
+			})
+			.then((res) => res.data);
 }
 
 export default ContentService;

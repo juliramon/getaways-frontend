@@ -91,6 +91,15 @@ form button {
 	border-radius: 8px !important;
 }
 
+.btn.sidebar {
+	justify-content: center;
+	color: #ffffff;
+	padding: 12px 15px;
+	font-weight: bold;
+	width: 100%;
+	margin-top: 20px;
+}
+
 /*---GLOBAL STYLES---*/
 /*---HEADER STYLES---*/
 
@@ -384,6 +393,24 @@ nav {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		.alert {
+			padding: 8px 12px;
+			border-radius: 8px;
+			font-size: 1rem;
+			display: flex;
+			align-items: center;
+			svg {
+				margin-right: 6px;
+				min-width: 18px;
+				min-height: 18px;
+			}
+		}
+		.alert-danger {
+			color: #fff;
+			background-color: #e46c62;
+			font-weight: bold;
+			border: none;
+		}
 	}
 	.signup-col-wrapper.right {
 		max-width: 450px;
@@ -449,14 +476,18 @@ nav {
 /*---SIGNUP STYLES---*/
 /*---FEED STYLES---*/
 
-#feed .box {
-	padding: 50px 0;
-	.user-meta {
-		margin-bottom: 15px;
+#feed {
+	.box {
+		width: 100%;
+		padding: 50px 0;
+	}
+	.box .col.left {
+		max-width: 20% !important;
 	}
 	.user-meta-wrapper {
 		display: flex;
 		align-items: center;
+		margin-bottom: 15px;
 		p {
 			margin-bottom: 0;
 		}
@@ -485,9 +516,10 @@ nav {
 			padding: 0;
 		}
 		li {
+			padding: 10px 15px;
+			margin: 6px 0;
 			font-size: 1.2em;
 			font-weight: bold;
-			padding: 7px 0;
 		}
 		a {
 			display: flex;
@@ -497,12 +529,10 @@ nav {
 		svg {
 			margin-right: 6px;
 		}
-		.btn {
-			justify-content: center;
-			color: #ffffff;
-			padding: 12px 15px;
-			font-weight: bold;
-			width: 100%;
+		li:hover {
+			background-color: lightblue;
+			border-radius: 8px;
+			cursor: pointer;
 		}
 	}
 }
@@ -616,6 +646,11 @@ nav {
 	.col.left .list-item {
 		padding: 10px 15px;
 		margin: 6px 0;
+		font-size: 1.2em;
+		font-weight: bold;
+	}
+	.col.left .list-item svg {
+		margin-right: 6px;
 	}
 	.col.left .list-item.active {
 		background-color: lightblue;
@@ -689,6 +724,9 @@ nav {
 	background-color: #fff;
 	background-color: #f1f1f1;
 	border-bottom: 1px solid #cfcfcf;
+	a {
+		color: #000000;
+	}
 	.image,
 	.title,
 	.subtitle,
@@ -697,7 +735,7 @@ nav {
 		padding: 8px 12px;
 	}
 	.image {
-		width: 10%;
+		width: 11%;
 		display: flex;
 		justify-content: center;
 	}
@@ -713,14 +751,14 @@ nav {
 		margin: 0;
 		font-family: "INTER";
 		font-weight: bold;
-		width: 35%;
+		width: 38%;
 		overflow: hidden;
 	}
 	.subtitle {
-		width: 30%;
+		width: 33%;
 	}
 	.date {
-		width: 15%;
+		width: 16%;
 	}
 	.crud-buttons {
 		width: 10%;
@@ -756,18 +794,23 @@ nav {
 	.dropdown-menu ul li {
 		margin: 6px 10px !important;
 	}
-	.dropdown-menu ul li a {
+	.dropdown-menu ul li a,
+	.dropdown-menu ul li button {
 		padding: 10px 15px !important;
 		display: block !important;
 		align-items: center;
 		color: #000000;
 		font-size: 0.95em;
+		text-align: left;
+		width: 100%;
 	}
-	.dropdown-menu ul li a:hover {
+	.dropdown-menu ul li a:hover,
+	.dropdown-menu ul li button:hover {
 		background-color: lightblue;
 		border-radius: 8px;
 	}
-	.dropdown-menu ul li a svg {
+	.dropdown-menu ul li a svg,
+	.dropdown-menu ul li button svg {
 		margin-right: 10px;
 	}
 }
@@ -859,3 +902,34 @@ nav {
 	}
 }
 /*---LISTINGS BOX STYLES---*/
+/*---LISTING PAGE DETAILS---*/
+
+#listingPage {
+	.listing-wrapper {
+		margin: 0 auto;
+		padding: 50px 0;
+	}
+	.listing-title {
+		font-family: "INTER";
+		font-weight: bold;
+		font-size: 2.2em;
+	}
+	.listing-subtitle {
+		font-size: 1.25em;
+		max-width: 600px;
+		opacity: 0.8;
+	}
+	.col.left {
+		padding-left: 0;
+		width: 50%;
+		.listing-description {
+			font-size: 1em;
+			line-height: 1.7em;
+		}
+	}
+	.col.right {
+		padding-right: 0;
+	}
+}
+
+/*---LISTING PAGE DETAILS---*/

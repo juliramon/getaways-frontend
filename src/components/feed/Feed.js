@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import NavigationBar from "../NavigationBar";
-import {Container, Row, Col, Button} from "react-bootstrap";
+import {Container, Row, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import PublicationModal from "../PublicationModal";
 
@@ -21,14 +21,16 @@ const Feed = ({user}) => {
 	return (
 		<div id="feed">
 			<NavigationBar
-				logo_url={"../logo-getaways-guru.svg"}
+				logo_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+				}
 				user={user}
 				dropCap={dropCap}
 			/>
 			<Container fluid className="mw-1600">
 				<Row>
-					<Col lg={2} sm={3}>
-						<div className="box">
+					<div className="box d-flex">
+						<div className="col left">
 							<div className="user-meta">
 								<div className="user-meta-wrapper">
 									<div className="avatar avatar-s">
@@ -114,7 +116,7 @@ const Feed = ({user}) => {
 									</ul>
 								</div>
 								<div className="content">
-									<p>Top picks for you</p>
+									<p>Explore and engage</p>
 									<ul>
 										<li>
 											<Link to="/">
@@ -230,20 +232,18 @@ const Feed = ({user}) => {
 									</ul>
 								</div>
 								<div className="new">
-									<ul>
-										<li>
-											<Button
-												className="btn btn-primary text-center"
-												onClick={handleModalVisibility}
-											>
-												Add getaway
-											</Button>
-										</li>
-									</ul>
+									<Button
+										className="btn btn-primary text-center sidebar"
+										onClick={handleModalVisibility}
+									>
+										Add getaway
+									</Button>
 								</div>
 							</div>
 						</div>
-					</Col>
+						<div className="col center"></div>
+						<div className="col right"></div>
+					</div>
 				</Row>
 			</Container>
 			<PublicationModal

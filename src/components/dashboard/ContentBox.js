@@ -1,16 +1,25 @@
 import React from "react";
-import {Dropdown} from "react-bootstrap";
+import {Dropdown, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import ContentService from "../../services/contentService";
 
-const ContentBox = ({title, subtitle, publicationDate}) => {
+const ContentBox = ({id, title, subtitle, publicationDate, getActivities}) => {
+	const service = new ContentService();
+	const removeActivity = () => {
+		service.removeActivity(id).then(() => {
+			getActivities();
+		});
+	};
 	return (
 		<div className="content box d-flex align-items-center">
-			<div className="image">
-				<img src="" alt="" />
-			</div>
-			<h1 className="title">{title}</h1>
-			<p className="subtitle">{subtitle}</p>
-			<p className="date">{publicationDate}</p>
+			<Link to={`/activities/${id}`} className="d-flex align-items-center">
+				<div className="image">
+					<img src="" alt={title} />
+				</div>
+				<h1 className="title">{title}</h1>
+				<p className="subtitle">{subtitle}</p>
+				<p className="date">{publicationDate}</p>
+			</Link>
 			<div className="crud-buttons">
 				<Dropdown>
 					<Dropdown.Toggle variant="none">
@@ -35,7 +44,7 @@ const ContentBox = ({title, subtitle, publicationDate}) => {
 					<Dropdown.Menu>
 						<ul>
 							<li>
-								<Link to="/">
+								<Link to={`/activities/${id}`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-eye"
@@ -57,7 +66,7 @@ const ContentBox = ({title, subtitle, publicationDate}) => {
 								</Link>
 							</li>
 							<li>
-								<Link to="/">
+								<Link to={`/activities/${id}/edit`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-pencil"
@@ -105,7 +114,7 @@ const ContentBox = ({title, subtitle, publicationDate}) => {
 								<Link to="/">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-power"
+										className="icon icon-tabler icon-tabler-archive"
 										width="20"
 										height="20"
 										viewBox="0 0 24 24"
@@ -116,14 +125,15 @@ const ContentBox = ({title, subtitle, publicationDate}) => {
 										strokeLinejoin="round"
 									>
 										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M7 6a7.75 7.75 0 1 0 10 0" />
-										<line x1="12" y1="4" x2="12" y2="12" />
+										<rect x="3" y="4" width="18" height="4" rx="2" />
+										<path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+										<line x1="10" y1="12" x2="14" y2="12" />
 									</svg>
 									Archive
 								</Link>
 							</li>
 							<li>
-								<Link to="/">
+								<Button variant="none" onClick={removeActivity}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-trash"
@@ -144,7 +154,7 @@ const ContentBox = ({title, subtitle, publicationDate}) => {
 										<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
 									</svg>
 									Remove
-								</Link>
+								</Button>
 							</li>
 						</ul>
 					</Dropdown.Menu>
