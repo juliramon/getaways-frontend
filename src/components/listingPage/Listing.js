@@ -30,7 +30,9 @@ const Listing = (props) => {
 	return (
 		<div id="listingPage">
 			<NavigationBar
-				logo_url={"../logo-getaways-guru.svg"}
+				logo_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+				}
 				user={props.user}
 				dropCap={dropCap}
 			/>

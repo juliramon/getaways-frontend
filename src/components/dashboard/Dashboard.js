@@ -3,7 +3,7 @@ import {Container, Row, Button} from "react-bootstrap";
 import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
 import ContentBox from "./ContentBox";
-import {Link} from "react-router-dom";
+import PublicationModal from "../PublicationModal";
 
 const Dashboard = ({user}) => {
 	const initialState = {
@@ -12,6 +12,9 @@ const Dashboard = ({user}) => {
 	};
 	const [state, setState] = useState(initialState);
 	const [dropCap, setDropCap] = useState("");
+	const [modalVisibility, setModalVisibility] = useState(false);
+	const handleModalVisibility = () => setModalVisibility(true);
+	const hideModalVisibility = () => setModalVisibility(false);
 
 	useEffect(() => {
 		const userName = state.loggedUser.fullName;
@@ -28,8 +31,71 @@ const Dashboard = ({user}) => {
 
 	useEffect(getActivities, []);
 
-	let activities;
+	let filterBox, activities;
 	if (state.activities.length > 0) {
+		filterBox = (
+			<div className="filter-box d-flex align-items-center justify-content-between">
+				<Button variant="none">Image</Button>
+				<Button variant="none" className="filter">
+					Title
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-arrows-sort"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#212529"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<path d="M3 9l4-4l4 4m-4 -4v14" />
+						<path d="M21 15l-4 4l-4-4m4 4v-14" />
+					</svg>
+				</Button>
+				<Button variant="none" className="filter">
+					Subtitle
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-arrows-sort"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#212529"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<path d="M3 9l4-4l4 4m-4 -4v14" />
+						<path d="M21 15l-4 4l-4-4m4 4v-14" />
+					</svg>
+				</Button>
+				<Button variant="none" className="filter">
+					Date
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-arrows-sort"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#212529"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<path d="M3 9l4-4l4 4m-4 -4v14" />
+						<path d="M21 15l-4 4l-4-4m4 4v-14" />
+					</svg>
+				</Button>
+				<Button variant="none">Actions</Button>
+			</div>
+		);
 		activities = state.activities.map((el) => (
 			<ContentBox
 				key={el._id}
@@ -37,9 +103,11 @@ const Dashboard = ({user}) => {
 				title={el.title}
 				subtitle={el.subtitle}
 				publicationDate={el.createdAt}
+				getActivities={getActivities}
 			/>
 		));
 	} else {
+		filterBox = null;
 		activities = (
 			<div className="box empty d-flex">
 				<div className="media">
@@ -51,9 +119,12 @@ const Dashboard = ({user}) => {
 						<br />
 						Let's create your first activity to inspire others.
 					</p>
-					<Link to="/activity-composer" className="btn btn-primary">
-						Create activity
-					</Link>
+					<Button
+						className="btn btn-primary text-center"
+						onClick={handleModalVisibility}
+					>
+						Add getaway
+					</Button>
 				</div>
 			</div>
 		);
@@ -62,7 +133,9 @@ const Dashboard = ({user}) => {
 	return (
 		<div id="dashboard">
 			<NavigationBar
-				logo_url={"../logo-getaways-guru.svg"}
+				logo_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+				}
 				user={user}
 				dropCap={dropCap}
 			/>
@@ -156,74 +229,30 @@ const Dashboard = ({user}) => {
 									Stories
 								</li>
 							</ul>
+							<div className="new">
+								<ul>
+									<li>
+										<Button
+											className="btn btn-primary text-center sidebar"
+											onClick={handleModalVisibility}
+										>
+											Add getaway
+										</Button>
+									</li>
+								</ul>
+							</div>
 						</div>
 						<div className="col right">
-							<div className="filter-box d-flex align-items-center justify-content-between">
-								<Button variant="none">Image</Button>
-								<Button variant="none" className="filter">
-									Title
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-arrows-sort"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										strokeWidth="1.5"
-										stroke="#212529"
-										fill="none"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M3 9l4-4l4 4m-4 -4v14" />
-										<path d="M21 15l-4 4l-4-4m4 4v-14" />
-									</svg>
-								</Button>
-								<Button variant="none" className="filter">
-									Subtitle
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-arrows-sort"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										strokeWidth="1.5"
-										stroke="#212529"
-										fill="none"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M3 9l4-4l4 4m-4 -4v14" />
-										<path d="M21 15l-4 4l-4-4m4 4v-14" />
-									</svg>
-								</Button>
-								<Button variant="none" className="filter">
-									Date
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-arrows-sort"
-										width="20"
-										height="20"
-										viewBox="0 0 24 24"
-										strokeWidth="1.5"
-										stroke="#212529"
-										fill="none"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M3 9l4-4l4 4m-4 -4v14" />
-										<path d="M21 15l-4 4l-4-4m4 4v-14" />
-									</svg>
-								</Button>
-								<Button variant="none">Actions</Button>
-							</div>
+							{filterBox}
 							<div className="content-box-wrapper">{activities}</div>
 						</div>
 					</div>
 				</Row>
 			</Container>
+			<PublicationModal
+				visibility={modalVisibility}
+				hideModal={hideModalVisibility}
+			/>
 		</div>
 	);
 };

@@ -1,8 +1,15 @@
 import React from "react";
-import {Dropdown} from "react-bootstrap";
+import {Dropdown, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import ContentService from "../../services/contentService";
 
-const ContentBox = ({id, title, subtitle, publicationDate}) => {
+const ContentBox = ({id, title, subtitle, publicationDate, getActivities}) => {
+	const service = new ContentService();
+	const removeActivity = () => {
+		service.removeActivity(id).then(() => {
+			getActivities();
+		});
+	};
 	return (
 		<div className="content box d-flex align-items-center">
 			<Link to={`/activities/${id}`} className="d-flex align-items-center">
@@ -59,7 +66,7 @@ const ContentBox = ({id, title, subtitle, publicationDate}) => {
 								</Link>
 							</li>
 							<li>
-								<Link to="/">
+								<Link to={`/activities/${id}/edit`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-pencil"
@@ -126,7 +133,7 @@ const ContentBox = ({id, title, subtitle, publicationDate}) => {
 								</Link>
 							</li>
 							<li>
-								<Link to="/">
+								<Button variant="none" onClick={removeActivity}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-trash"
@@ -147,7 +154,7 @@ const ContentBox = ({id, title, subtitle, publicationDate}) => {
 										<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
 									</svg>
 									Remove
-								</Link>
+								</Button>
 							</li>
 						</ul>
 					</Dropdown.Menu>

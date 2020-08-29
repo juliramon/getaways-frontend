@@ -1,34 +1,27 @@
-import React, {useState, useEffect} from "react";
-import NavigationBar from "../NavigationBar";
-import {
-	Container,
-	Row,
-	Col,
-	Breadcrumb,
-	Form,
-	Button,
-	Toast,
-} from "react-bootstrap";
-import ContentService from "../../services/contentService";
+import React, {useState, useEffect, useCallback} from "react";
 import {useHistory} from "react-router-dom";
+import NavigationBar from "../NavigationBar";
+import {Container, Row, Col, Breadcrumb, Form, Button} from "react-bootstrap";
+import ContentService from "../../services/contentService";
 
-const ActivityForm = ({user}) => {
+const EditionForm = (props) => {
 	const initialState = {
-		loggedUser: user,
-		formData: {
-			emptyForm: true,
-			title: "",
-			subtitle: "",
-			image: "",
-			description: "",
-			location: "",
-			isSubmitted: false,
-		},
+		loggedUser: props.user,
+		id: props.match.params.id,
+		activity: {},
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
-	const [dropCap, setDropCap] = useState("");
 	const history = useHistory();
+	const [dropCap, setDropCap] = useState("");
+
+	const getActivityDetails = useCallback(() => {
+		service.activityDetails(state.id).then((res) => {
+			setState({...state, activity: res});
+		});
+	}, [state, service]);
+
+	useEffect(getActivityDetails, []);
 
 	useEffect(() => {
 		const userName = state.loggedUser.fullName;
@@ -36,91 +29,32 @@ const ActivityForm = ({user}) => {
 		setDropCap(dropCap);
 	}, [state.loggedUser]);
 
-	const handleChange = (e) => {
+	const {title, subtitle, image, description, location} = state.activity;
+
+	const handleChange = (e) =>
 		setState({
 			...state,
-			formData: {
-				...state.formData,
-				[e.target.name]: e.target.value,
-				emptyForm: false,
-			},
+			activity: {...state.activity, [e.target.name]: e.target.value},
 		});
-	};
-
-	const submitActivity = () => {
-		const {title, subtitle, description, location} = state.formData;
-		service
-			.activity(title, subtitle, description, location)
-			.then(() => {
-				setState({
-					...state,
-					formData: {
-						emptyForm: true,
-						title: "",
-						subtitle: "",
-						image: "",
-						description: "",
-						location: "",
-						isSubmitted: true,
-					},
-				});
-				history.push("/dashboard");
-			})
-			.catch((err) => console.log(err));
-	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		submitActivity();
+		const {_id, title, subtitle, description, location} = state.activity;
+		service
+			.editActivity(_id, title, subtitle, description, location)
+			.then(() => history.push("/dashboard"));
 	};
 
-	const toast = (
-		<Toast
-			onClose={() =>
-				setState({...state, formData: {...state.formData, isSubmitted: false}})
-			}
-			show={state.formData.isSubmitted}
-			delay={5000}
-			autohide
-		>
-			<Toast.Header>
-				<img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-				<strong className="mr-auto">Getaways.guru</strong>
-				<small>1 secs ago</small>
-			</Toast.Header>
-			<Toast.Body>Woohoo, your new activity has been posted!</Toast.Body>
-		</Toast>
-	);
-
-	let contentPreview;
-	if (state.formData.emptyForm) {
-		contentPreview = (
-			<div className="preview">
-				<h1>Create an Activity</h1>
-				<p>Fill the form to preview your activity before posting it</p>
-			</div>
-		);
-	} else {
-		contentPreview = (
-			<div className="preview">
-				<h1>{state.formData.title}</h1>
-				<p>{state.formData.subtitle}</p>
-				<p>{state.formData.description}</p>
-				<p>{state.formData.location}</p>
-			</div>
-		);
-	}
 	return (
 		<div id="activity" className="composer">
 			<NavigationBar
 				logo_url={
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
-				user={user}
+				user={props.user}
 				dropCap={dropCap}
 			/>
 			<Container fluid className="mw-1600">
-				{state.formData.isSubmitted ? toast : null}
 				<Row>
 					<Col lg={4} className="sided-shadow">
 						<Breadcrumb>
@@ -137,8 +71,8 @@ const ActivityForm = ({user}) => {
 									type="text"
 									name="title"
 									placeholder="Activity title"
+									defaultValue={title}
 									onChange={handleChange}
-									value={state.formData.title}
 								/>
 							</Form.Group>
 							<Form.Group>
@@ -147,8 +81,8 @@ const ActivityForm = ({user}) => {
 									type="text"
 									name="subtitle"
 									placeholder="Activity subtitle"
+									defaultValue={subtitle}
 									onChange={handleChange}
-									value={state.formData.subtitle}
 								/>
 							</Form.Group>
 							<Form.Group>
@@ -157,8 +91,8 @@ const ActivityForm = ({user}) => {
 									type="text"
 									name="image"
 									placeholder="Activity image"
+									defaultValue={image}
 									onChange={handleChange}
-									value={state.formData.image}
 								/>
 							</Form.Group>
 							<Form.Group>
@@ -169,8 +103,8 @@ const ActivityForm = ({user}) => {
 									type="text"
 									name="description"
 									placeholder="Activity description"
+									defaultValue={description}
 									onChange={handleChange}
-									value={state.formData.description}
 								/>
 							</Form.Group>
 							<Form.Group>
@@ -179,8 +113,8 @@ const ActivityForm = ({user}) => {
 									type="text"
 									name="location"
 									placeholder="Activity location"
+									defaultValue={location}
 									onChange={handleChange}
-									value={state.formData.location}
 								/>
 							</Form.Group>
 							<div className="buttons d-flex justify-space-between">
@@ -191,11 +125,11 @@ const ActivityForm = ({user}) => {
 							</div>
 						</Form>
 					</Col>
-					<Col lg={8}>{contentPreview}</Col>
+					<Col lg={8}></Col>
 				</Row>
 			</Container>
 		</div>
 	);
 };
 
-export default ActivityForm;
+export default EditionForm;

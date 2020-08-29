@@ -14,6 +14,7 @@ import ActivityForm from "./components/composer/ActivityForm";
 import Dashboard from "./components/dashboard/Dashboard";
 import ActivityList from "./components/listings/ActivityList";
 import Listing from "./components/listingPage/Listing";
+import EditionForm from "./components/composer/EditionForm";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -25,6 +26,8 @@ function App() {
 		setState({loggedUser: user});
 		Cookies.set("user", user, {expires: 7});
 	};
+
+	console.log("app =>", state.loggedUser);
 
 	return (
 		<div className="app">
@@ -75,6 +78,11 @@ function App() {
 					path="/activities"
 					user={state.loggedUser}
 					component={ActivityList}
+				/>
+				<ProtectedRoute
+					path="/activities/:id/edit"
+					user={state.loggedUser}
+					component={EditionForm}
 				/>
 				<Route
 					exact
