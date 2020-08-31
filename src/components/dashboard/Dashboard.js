@@ -3,7 +3,7 @@ import {Container, Row, Button} from "react-bootstrap";
 import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
 import ContentBox from "./ContentBox";
-import PublicationModal from "../PublicationModal";
+import PublicationModal from "../modals/PublicationModal";
 
 const Dashboard = ({user}) => {
 	const initialState = {

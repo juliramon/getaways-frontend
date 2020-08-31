@@ -5,6 +5,10 @@ import AuthService from "../../services/authService";
 import GoogleLogin from "react-google-login";
 
 const Signup = (props) => {
+	const history = useHistory();
+	if (props.user !== null) {
+		history.push("/feed");
+	}
 	const initialState = {
 		formData: {
 			fullName: "",
@@ -19,7 +23,6 @@ const Signup = (props) => {
 	};
 	const [state, setState] = useState(initialState);
 	const service = new AuthService();
-	const history = useHistory();
 	const handleChange = (e) => {
 		setState({
 			...state,

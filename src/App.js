@@ -15,6 +15,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import ActivityList from "./components/listings/ActivityList";
 import Listing from "./components/listingPage/Listing";
 import EditionForm from "./components/composer/EditionForm";
+import UserProfile from "./components/userProfile/UserProfile";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -33,19 +34,31 @@ function App() {
 		<div className="app">
 			<GlobalStyle />
 			<Switch>
-				<Route exact path="/" render={() => <Homepage />} />
+				<Route
+					exact
+					path="/"
+					render={(props) => <Homepage {...props} user={state.loggedUser} />}
+				/>
 				<Route
 					exact
 					path="/signup"
 					render={(props) => (
-						<Signup {...props} getUserDetails={getLoggedUser} />
+						<Signup
+							{...props}
+							user={state.loggedUser}
+							getUserDetails={getLoggedUser}
+						/>
 					)}
 				/>
 				<Route
 					exact
 					path="/login"
 					render={(props) => (
-						<Login {...props} getUserDetails={getLoggedUser} />
+						<Login
+							{...props}
+							user={state.loggedUser}
+							getUserDetails={getLoggedUser}
+						/>
 					)}
 				/>
 				<Route
@@ -88,6 +101,11 @@ function App() {
 					exact
 					path="/activities/:id"
 					render={(props) => <Listing {...props} user={state.loggedUser} />}
+				/>
+				<Route
+					exact
+					path="/users/:id"
+					render={(props) => <UserProfile {...props} user={state.loggedUser} />}
 				/>
 			</Switch>
 		</div>

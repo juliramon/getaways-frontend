@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import NavigationBar from "../NavigationBar";
 import {Container, Row, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import PublicationModal from "../PublicationModal";
+import PublicationModal from "../modals/PublicationModal";
 
 const Feed = ({user}) => {
 	const initialState = {

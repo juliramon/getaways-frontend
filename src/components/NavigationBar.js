@@ -43,7 +43,7 @@ const NavigationBar = (props) => {
 					<Dropdown.Menu>
 						<ul>
 							<li>
-								<Nav.Link href="/profile">
+								<Nav.Link href={`/users/${state.loggedUser._id}`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-user"
