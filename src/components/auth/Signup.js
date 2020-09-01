@@ -1,9 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Form, Button, Alert} from "react-bootstrap";
 import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../services/authService";
+import GoogleLogin from "react-google-login";
 
 const Signup = (props) => {
+	const history = useHistory();
+	if (props.user !== null) {
+		history.push("/feed");
+	}
 	const initialState = {
 		formData: {
 			fullName: "",
@@ -11,10 +16,13 @@ const Signup = (props) => {
 			password: "",
 		},
 		errorMessage: {},
+		googleResponse: {
+			received: false,
+			data: {},
+		},
 	};
 	const [state, setState] = useState(initialState);
 	const service = new AuthService();
-	const history = useHistory();
 	const handleChange = (e) => {
 		setState({
 			...state,
@@ -35,13 +43,60 @@ const Signup = (props) => {
 					});
 				} else {
 					console.log("signed up =>", res);
+					setState(initialState);
 					props.getUserDetails(res);
 					history.push("/feed");
-					setState(initialState);
 				}
 			})
 			.catch((err) => console.log(err));
 	};
+
+	const responseGoogle = (response) => {
+		console.log(response);
+		setState({
+			...state,
+			googleResponse: {
+				received: true,
+				data: response.profileObj,
+			},
+		});
+	};
+
+	const signupGoogle = () => {
+		const {name, email, imageUrl} = state.googleResponse.data;
+		console.log({
+			name,
+			email,
+			imageUrl,
+		});
+		service
+			.googleAuth(name, email, imageUrl)
+			.then((res) => {
+				if (res.status) {
+					console.log("error =>", res);
+					setState({
+						...state,
+						errorMessage: res,
+						googleResponse: {
+							...state.googleResponse,
+							received: false,
+						},
+					});
+				} else {
+					console.log("respuesta del servidor =>", res);
+					setState(initialState);
+					props.getUserDetails(res);
+					history.push("/feed");
+				}
+			})
+			.catch((err) => console.log(err));
+	};
+
+	useEffect(() => {
+		if (state.googleResponse.received) {
+			signupGoogle();
+		}
+	});
 
 	let errorMessage;
 	if (state.errorMessage.message) {
@@ -156,24 +211,41 @@ const Signup = (props) => {
 							</p>
 						</div>
 						<div className="social-signup d-flex align-items-center">
-							<button type="submit" className="btn google">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="icon icon-tabler icon-tabler-brand-google"
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									strokeWidth="3"
-									stroke="#ffffff"
-									fill="none"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<path stroke="none" d="M0 0h24v24H0z" />
-									<path d="M17.788 5.108A9 9 0 1021 12h-8" />
-								</svg>
-								Sign up with Google
-							</button>
+							<GoogleLogin
+								clientId={
+									"1001464092709-hi8kknnaqhokalsior0s2kukhtupa7a8.apps.googleusercontent.com"
+								}
+								render={(renderProps) => (
+									<button
+										type="submit"
+										className="btn google"
+										onClick={renderProps.onClick}
+										disabled={renderProps.disabled}
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="icon icon-tabler icon-tabler-brand-google"
+											width="18"
+											height="18"
+											viewBox="0 0 24 24"
+											strokeWidth="3"
+											stroke="#ffffff"
+											fill="none"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										>
+											<path stroke="none" d="M0 0h24v24H0z" />
+											<path d="M17.788 5.108A9 9 0 1021 12h-8" />
+										</svg>
+										Sign up with Google
+									</button>
+								)}
+								buttonText="Sign up with Google"
+								onSuccess={responseGoogle}
+								onFailure={responseGoogle}
+								cookiePolicy={"single_host_origin"}
+							/>
+
 							<button type="submit" className="btn facebook">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +262,7 @@ const Signup = (props) => {
 									<path stroke="none" d="M0 0h24v24H0z" />
 									<path
 										d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"
-										style={{fill: "#666666"}}
+										style={{fill: "#173572"}}
 									/>
 								</svg>
 							</button>

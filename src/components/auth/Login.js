@@ -4,6 +4,10 @@ import {Form, Button, Alert} from "react-bootstrap";
 import AuthService from "../../services/authService";
 
 const Login = (props) => {
+	const history = useHistory();
+	if (props.user !== null) {
+		history.push("/feed");
+	}
 	const initialState = {
 		formData: {
 			email: "",
@@ -13,7 +17,6 @@ const Login = (props) => {
 	};
 	const [state, setState] = useState(initialState);
 	const service = new AuthService();
-	const history = useHistory();
 	const handleChange = (e) => {
 		setState({
 			...state,

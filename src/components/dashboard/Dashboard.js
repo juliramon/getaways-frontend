@@ -3,7 +3,7 @@ import {Container, Row, Button} from "react-bootstrap";
 import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
 import ContentBox from "./ContentBox";
-import PublicationModal from "../PublicationModal";
+import PublicationModal from "../modals/PublicationModal";
 
 const Dashboard = ({user}) => {
 	const initialState = {
@@ -158,7 +158,7 @@ const Dashboard = ({user}) => {
 										height="28"
 										viewBox="0 0 24 24"
 										strokeWidth="1.5"
-										stroke="#2c3e50"
+										stroke="#0d1f44"
 										fill="none"
 										strokeLinecap="round"
 										strokeLinejoin="round"
@@ -177,7 +177,7 @@ const Dashboard = ({user}) => {
 										height="28"
 										viewBox="0 0 24 24"
 										strokeWidth="1.5"
-										stroke="#2c3e50"
+										stroke="#0d1f44"
 										fill="none"
 										strokeLinecap="round"
 										strokeLinejoin="round"
@@ -197,7 +197,7 @@ const Dashboard = ({user}) => {
 										height="28"
 										viewBox="0 0 24 24"
 										strokeWidth="1.5"
-										stroke="#2c3e50"
+										stroke="#0d1f44"
 										fill="none"
 										strokeLinecap="round"
 										strokeLinejoin="round"
@@ -216,7 +216,7 @@ const Dashboard = ({user}) => {
 										height="28"
 										viewBox="0 0 24 24"
 										strokeWidth="1.5"
-										stroke="#2c3e50"
+										stroke="#0d1f44"
 										fill="none"
 										strokeLinecap="round"
 										strokeLinejoin="round"

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import Hero from "./Hero";
 import NavigationBar from "../NavigationBar";
 
-const Homepage = () => {
+const Homepage = (props) => {
 	const [span, setSpan] = useState("perfect");
 
 	const headerSpans = [
