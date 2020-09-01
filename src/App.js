@@ -16,6 +16,7 @@ import ActivityList from "./components/listings/ActivityList";
 import Listing from "./components/listingPage/Listing";
 import EditionForm from "./components/composer/EditionForm";
 import UserProfile from "./components/userProfile/UserProfile";
+import UsersList from "./components/listings/UsersList";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -27,9 +28,7 @@ function App() {
 		setState({loggedUser: user});
 		Cookies.set("user", user, {expires: 7});
 	};
-
 	console.log("app =>", state.loggedUser);
-
 	return (
 		<div className="app">
 			<GlobalStyle />
@@ -106,6 +105,11 @@ function App() {
 					exact
 					path="/users/:id"
 					render={(props) => <UserProfile {...props} user={state.loggedUser} />}
+				/>
+				<Route
+					exact
+					path="/users"
+					render={(props) => <UsersList {...props} user={state.loggedUser} />}
 				/>
 			</Switch>
 		</div>

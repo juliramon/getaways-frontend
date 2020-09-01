@@ -15,7 +15,7 @@ $soft-button-background: #ffffff;
 $soft-button-border: #2e6ae4;
 $soft-button-color: #2e6ae4;
 $links-color: #2e6ae4;
-$active-tab-background: #5787e9;
+$active-tab-background: #abc3f4;
 $hover-tab-background: #eaf0fc;
 
 .mw-1600 {
@@ -577,13 +577,16 @@ nav {
 /*---MODAL STYLES---*/
 
 .modal-backdrop {
-	background-color: #ffffff !important;
+	background-color: rgb(13, 31, 68) !important;
+}
+
+.modal-backdrop.show {
+	opacity: 0.75;
 }
 
 .publicationModal {
 	.modal-content {
-		border-radius: 0.5rem;
-		box-shadow: 0 9px 25px 0 rgba(0, 0, 0, 0.27);
+		border-radius: 8px;
 		border: none;
 	}
 	.modal-header {
@@ -689,12 +692,12 @@ nav {
 		margin-right: 6px;
 	}
 	.col.left .list-item.active {
-		//background-color: $active-tab-background;
+		background-color: $active-tab-background;
 		border-radius: 8px;
 		cursor: pointer;
-		color: $dark-button-color;
+		color: $dark-text;
 		svg {
-			stroke: $dark-button-color;
+			stroke: $dark-text;
 		}
 	}
 	.col.left .list-item:hover:not(.active) {
@@ -775,7 +778,7 @@ nav {
 		padding: 8px 12px;
 	}
 	.image {
-		width: 11%;
+		min-width: 125px;
 		display: flex;
 		justify-content: center;
 	}
@@ -791,14 +794,14 @@ nav {
 		margin: 0;
 		font-family: "INTER";
 		font-weight: bold;
-		width: 38%;
+		min-width: 437.5px;
 		overflow: hidden;
 	}
 	.subtitle {
-		width: 33%;
+		min-width: 375px;
 	}
 	.date {
-		width: 16%;
+		width: 187.5px;
 	}
 	.crud-buttons {
 		width: 10%;
@@ -975,10 +978,16 @@ nav {
 /*---LISTING PAGE DETAILS---*/
 /*---USER PROFILE STYLES---*/
 
+.spinner {
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
 #userProfile {
 	.box {
 		width: 100%;
-		padding: 50px 0;
+		padding: 20px 0;
 	}
 	.box .col.left,
 	.box .col.right {
@@ -1008,8 +1017,8 @@ nav {
 			}
 		}
 		.avatar.user-avatar {
-			width: 100px;
-			margin-bottom: 25px;
+			width: 130px;
+			margin-bottom: 15px;
 		}
 		.user-fullName {
 			font-size: 2em;
@@ -1029,6 +1038,12 @@ nav {
 	}
 	.box .col.center {
 		flex: 1;
+		.cover-picture {
+			min-height: 295px;
+			margin-bottom: 20px;
+			background-size: 100%;
+			background-position: center center;
+		}
 		.filter-bar {
 			display: flex;
 			justify-content: space-between;
@@ -1048,12 +1063,12 @@ nav {
 				margin-right: 0;
 			}
 			button.active {
-				background-color: $dark-button-background;
+				background-color: $active-tab-background;
 				border-radius: 8px;
 				cursor: pointer;
-				color: $dark-button-color;
+				color: $dark-text;
 				svg {
-					stroke: $dark-button-color;
+					stroke: $dark-text;
 				}
 			}
 			button:hover:not(.active) {
@@ -1091,3 +1106,40 @@ nav {
 }
 
 /*---END USER PROFILE STYLES---*/
+/*---USERS LIST STYLES---*/
+
+#usersList {
+	.box {
+		padding: 20px 0;
+		width: 100%;
+	}
+	.col.left {
+		max-width: 20%;
+	}
+	.col.right {
+		.box.wrapper {
+			margin: -15px;
+		}
+		#publicUserBox {
+			.avatar {
+				width: 100px;
+				margin-bottom: 15px;
+			}
+			h3 {
+				font-family: "INTER";
+				font-size: 1.4em;
+				font-weight: bold;
+				margin-bottom: 0;
+			}
+			width: 25%;
+			border: 1px solid $active-tab-background;
+			border-radius: 8px;
+			margin: 15px;
+			.box-wrapper {
+				padding: 20px;
+			}
+		}
+	}
+}
+
+/*---END USERS LIST STYLES---*/

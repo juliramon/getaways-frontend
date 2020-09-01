@@ -9,8 +9,8 @@ const Feed = ({user}) => {
 		loggedUser: user,
 	};
 	const [state] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
 	const [modalVisibility, setModalVisibility] = useState(false);
+	const [dropCap, setDropCap] = useState("");
 	useEffect(() => {
 		const userName = state.loggedUser.fullName;
 		const dropCap = userName.charAt(0);
@@ -140,7 +140,7 @@ const Feed = ({user}) => {
 											</Link>
 										</li>
 										<li>
-											<Link to="/">
+											<Link to="/users">
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													className="icon icon-tabler icon-tabler-users"
