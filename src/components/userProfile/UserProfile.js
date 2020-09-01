@@ -4,6 +4,7 @@ import {Container, Row, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import PublicContentBox from "../listings/PublicContentBox";
 import EditProfileModal from "../modals/EditProfileModal";
+import {Link} from "react-router-dom";
 
 const UserProfile = ({user}) => {
 	const initialState = {
@@ -111,6 +112,51 @@ const UserProfile = ({user}) => {
 											@innoget ~ Sharing life with @a_waterbalance ~ cat|eng|esp
 										</li>
 										<hr />
+										<li className="user-property d-flex align-items-center">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="icon icon-tabler icon-tabler-building-arch"
+												width="18"
+												height="18"
+												viewBox="0 0 24 24"
+												strokeWidth="1.5"
+												stroke="#2c3e50"
+												fill="none"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path stroke="none" d="M0 0h24v24H0z" />
+												<line x1="3" y1="21" x2="21" y2="21" />
+												<path d="M4 21v-15a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v15" />
+												<path d="M9 21v-8a3 3 0 0 1 6 0v8" />
+											</svg>
+											<div className="property-name">
+												Manages<Link to="/">Cal Ouaire</Link>
+											</div>
+										</li>
+										<li className="user-property d-flex align-items-center">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="icon icon-tabler icon-tabler-route"
+												width="18"
+												height="18"
+												viewBox="0 0 24 24"
+												strokeWidth="1.5"
+												stroke="#2c3e50"
+												fill="none"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path stroke="none" d="M0 0h24v24H0z" />
+												<circle cx="6" cy="19" r="2" />
+												<circle cx="18" cy="5" r="2" />
+												<path d="M12 19h4.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h3.5" />
+											</svg>
+											<div className="property-name">
+												Manages
+												<Link to="/">Comarcaventura: Rutes amb Seagway</Link>
+											</div>
+										</li>
 										<li className="user-location d-flex align-items-center">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +265,7 @@ const UserProfile = ({user}) => {
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-bed"
+										className="icon icon-tabler icon-tabler-building-arch"
 										width="28"
 										height="28"
 										viewBox="0 0 24 24"
@@ -230,8 +276,9 @@ const UserProfile = ({user}) => {
 										strokeLinejoin="round"
 									>
 										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M3 7v11m0 -4h18m0 4v-8a2 2 0 0 0 -2 -2h-8v6" />
-										<circle cx="7" cy="10" r="1" />
+										<line x1="3" y1="21" x2="21" y2="21" />
+										<path d="M4 21v-15a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v15" />
+										<path d="M9 21v-8a3 3 0 0 1 6 0v8" />
 									</svg>
 									Places
 								</Button>
