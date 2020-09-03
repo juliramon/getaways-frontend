@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import NavigationBar from "../NavigationBar";
 import {Container, Row, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
@@ -10,12 +10,6 @@ const Feed = ({user}) => {
 	};
 	const [state] = useState(initialState);
 	const [modalVisibility, setModalVisibility] = useState(false);
-	const [dropCap, setDropCap] = useState("");
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
 	return (
@@ -25,7 +19,6 @@ const Feed = ({user}) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="mw-1600">
 				<Row>
@@ -34,7 +27,6 @@ const Feed = ({user}) => {
 							<div className="user-meta">
 								<div className="user-meta-wrapper">
 									<div className="avatar avatar-s">
-										<span className="dropCap">{dropCap}</span>
 										<img
 											src={state.loggedUser.avatar}
 											alt={state.loggedUser.fullName}

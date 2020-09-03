@@ -35,7 +35,11 @@ const PublicationModal = ({visibility, hideModal}) => {
 							<h3>Place</h3>
 							<p>Lorem ipsum</p>
 						</div>
-						<div className="col"></div>
+						<div className="col">
+							<Link to="/place-composer" className="btn btn-primary">
+								Create
+							</Link>
+						</div>
 					</li>
 					<li>
 						<div className="col"></div>

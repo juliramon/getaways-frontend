@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from "react";
-import {Container, Row, Button} from "react-bootstrap";
+import {Container, Row, Button, Spinner} from "react-bootstrap";
 import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
 import ContentBox from "./ContentBox";
@@ -8,35 +8,171 @@ import PublicationModal from "../modals/PublicationModal";
 const Dashboard = ({user}) => {
 	const initialState = {
 		loggedUser: user,
+		allListings: [],
 		activities: [],
+		places: [],
+		stories: [],
+		hasListings: false,
+		hasActivities: false,
+		hasPlaces: false,
+		hasStories: false,
+		sortedTitle: false,
+		activeTab: "all",
 	};
 	const [state, setState] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
+
 	const [modalVisibility, setModalVisibility] = useState(false);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
 
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
-
 	const service = new ContentService();
-	const getActivities = useCallback(() => {
-		service.userActivities("/userActivities").then((res) => {
-			setState({...state, activities: res});
+
+	const getAllListings = async () => {
+		const userActivities = await service.userActivities(state.loggedUser._id);
+		const userPlaces = await service.getUserPlaces(state.loggedUser._id);
+		let allListings = [];
+		userActivities.map((el) => allListings.push(el));
+		userPlaces.map((el) => allListings.push(el));
+		setState({...state, allListings: allListings, activeTab: "all"});
+	};
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const userActivities = await service.userActivities(state.loggedUser._id);
+			const userPlaces = await service.getUserPlaces(state.loggedUser._id);
+			let getAllListings = [];
+			let hasListings, hasActivities, hasPlaces;
+			userActivities.length > 0
+				? (hasActivities = true)
+				: (hasActivities = false);
+			userPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
+			userActivities.length > 0 || userPlaces.length > 0
+				? (hasListings = true)
+				: (hasListings = false);
+			userActivities.map((el) => getAllListings.push(el));
+			userPlaces.map((el) => getAllListings.push(el));
+			setState({
+				...state,
+				allListings: getAllListings,
+				activities: userActivities,
+				places: userPlaces,
+				hasListings: hasListings,
+				hasActivities: hasActivities,
+				hasPlaces: hasPlaces,
+			});
+		};
+		fetchData();
+	}, []);
+
+	const fetchData = useCallback(async () => {
+		const userActivities = await service.userActivities(state.loggedUser._id);
+		const userPlaces = await service.getUserPlaces(state.loggedUser._id);
+		let hasListings, hasActivities, hasPlaces;
+		userActivities.length > 0
+			? (hasActivities = true)
+			: (hasActivities = false);
+		userPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
+		userActivities.length > 0 || userPlaces.length > 0
+			? (hasListings = true)
+			: (hasListings = false);
+		let getAllListings = [];
+		userActivities.map((el) => getAllListings.push(el));
+		userPlaces.map((el) => getAllListings.push(el));
+		setState({
+			...state,
+			allListings: getAllListings,
+			activities: userActivities,
+			places: userPlaces,
+			hasListings: hasListings,
+			hasActivities: hasActivities,
+			hasPlaces: hasPlaces,
 		});
-	}, [state, service]);
+	}, [service, state]);
 
-	useEffect(getActivities, []);
+	if (state.hasListings === false) {
+		return (
+			<Container className="spinner d-flex justify-space-between">
+				<Spinner animation="border" role="status" variant="primary">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			</Container>
+		);
+	}
 
-	let filterBox, activities;
-	if (state.activities.length > 0) {
+	let noresults = (
+		<div className="box empty d-flex">
+			<div className="media">
+				<img src="../../no-results.svg" alt="" />
+			</div>
+			<div className="text">
+				<p>
+					Oh no, this looks so empty.
+					<br />
+					Let's create your first activity to inspire others.
+				</p>
+				<Button
+					className="btn btn-primary text-center"
+					onClick={handleModalVisibility}
+				>
+					Add getaway
+				</Button>
+			</div>
+		</div>
+	);
+
+	const sortTitle = (arr) => {
+		if (state.sortedTitle === false || state.sortedTitle === "ZtoA") {
+			const sortedArr = arr
+				.sort((a, b) => {
+					if (a.title > b.title) {
+						return -1;
+					}
+					if (a.title < b.title) {
+						return 1;
+					}
+					return 0;
+				})
+				.reverse();
+			setState({...state, allListings: sortedArr, sortedTitle: "AtoZ"});
+		} else if (state.sortedTitle === "AtoZ") {
+			const sortedArr = arr.sort((a, b) => {
+				if (a.title > b.title) {
+					return -1;
+				}
+				if (a.title < b.title) {
+					return 1;
+				}
+				return 0;
+			});
+			setState({...state, allListings: sortedArr, sortedTitle: "ZtoA"});
+		}
+	};
+
+	let arrToSort;
+	if (state.activeTab === "all") {
+		arrToSort = state.allListings;
+		console.log(arrToSort);
+	} else if (state.activeTab === "activities") {
+		arrToSort = state.activities;
+		console.log(arrToSort);
+	} else if (state.activeTab === "places") {
+		arrToSort = state.places;
+		console.log(arrToSort);
+	} else {
+		arrToSort = state.stories;
+		console.log(arrToSort);
+	}
+
+	let filterBox, listings;
+	if (state.hasListings === true) {
 		filterBox = (
 			<div className="filter-box d-flex align-items-center justify-content-between">
 				<Button variant="none">Image</Button>
-				<Button variant="none" className="filter">
+				<Button
+					variant="none"
+					className="filter"
+					onClick={() => sortTitle(arrToSort)}
+				>
 					Title
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -57,78 +193,84 @@ const Dashboard = ({user}) => {
 				</Button>
 				<Button variant="none" className="filter">
 					Subtitle
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="icon icon-tabler icon-tabler-arrows-sort"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						strokeWidth="1.5"
-						stroke="#212529"
-						fill="none"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" />
-						<path d="M3 9l4-4l4 4m-4 -4v14" />
-						<path d="M21 15l-4 4l-4-4m4 4v-14" />
-					</svg>
 				</Button>
 				<Button variant="none" className="filter">
 					Date
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="icon icon-tabler icon-tabler-arrows-sort"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						strokeWidth="1.5"
-						stroke="#212529"
-						fill="none"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" />
-						<path d="M3 9l4-4l4 4m-4 -4v14" />
-						<path d="M21 15l-4 4l-4-4m4 4v-14" />
-					</svg>
 				</Button>
 				<Button variant="none">Actions</Button>
 			</div>
 		);
-		activities = state.activities.map((el) => (
-			<ContentBox
-				key={el._id}
-				id={el._id}
-				title={el.title}
-				subtitle={el.subtitle}
-				publicationDate={el.createdAt}
-				getActivities={getActivities}
-			/>
-		));
+		if (state.activeTab === "all") {
+			listings = state.allListings.map((el) => (
+				<ContentBox
+					key={el._id}
+					type={el.type}
+					id={el._id}
+					image={el.images[0]}
+					title={el.title}
+					subtitle={el.subtitle}
+					publicationDate={el.createdAt}
+					fetchData={fetchData}
+				/>
+			));
+		}
+		if (state.activeTab === "activities") {
+			listings = state.activities.map((el) => (
+				<ContentBox
+					key={el._id}
+					type={el.type}
+					id={el._id}
+					image={el.images[0]}
+					title={el.title}
+					subtitle={el.subtitle}
+					publicationDate={el.createdAt}
+					fetchData={fetchData}
+				/>
+			));
+		}
+		if (state.activeTab === "places") {
+			listings = state.places.map((el) => (
+				<ContentBox
+					key={el._id}
+					type={el.type}
+					id={el._id}
+					image={el.images[0]}
+					title={el.title}
+					subtitle={el.subtitle}
+					publicationDate={el.createdAt}
+					fetchData={fetchData}
+				/>
+			));
+		}
+		if (state.activeTab === "stories") {
+			if (state.hasStories === true) {
+				listings = state.places.map((el) => (
+					<ContentBox
+						key={el._id}
+						type={el.type}
+						id={el._id}
+						image={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						publicationDate={el.createdAt}
+						fetchData={fetchData}
+					/>
+				));
+			} else {
+				listings = noresults;
+			}
+		}
 	} else {
 		filterBox = null;
-		activities = (
-			<div className="box empty d-flex">
-				<div className="media">
-					<img src="../../no-results.svg" alt="" />
-				</div>
-				<div className="text">
-					<p>
-						Oh no, this looks so empty.
-						<br />
-						Let's create your first activity to inspire others.
-					</p>
-					<Button
-						className="btn btn-primary text-center"
-						onClick={handleModalVisibility}
-					>
-						Add getaway
-					</Button>
-				</div>
-			</div>
-		);
+		listings = noresults;
 	}
+
+	const activeTab = {
+		backgroundColor: "#abc3f4",
+		borderRadius: "8px",
+		cursor: "pointer",
+		color: "#0d1f44",
+	};
 
 	return (
 		<div id="dashboard">
@@ -137,7 +279,6 @@ const Dashboard = ({user}) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="top-nav">
 				<div className="top-nav-wrapper">
@@ -150,7 +291,13 @@ const Dashboard = ({user}) => {
 						<div className="col left">
 							<ul>
 								<li className="list-title">Your getaways</li>
-								<li className="list-item active">
+								<li
+									className="list-item"
+									style={state.activeTab === "all" ? activeTab : null}
+									onClick={() => {
+										getAllListings();
+									}}
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-layout-list"
@@ -169,7 +316,11 @@ const Dashboard = ({user}) => {
 									</svg>
 									All
 								</li>
-								<li className="list-item">
+								<li
+									className="list-item"
+									style={state.activeTab === "activities" ? activeTab : null}
+									onClick={() => setState({...state, activeTab: "activities"})}
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-route"
@@ -189,7 +340,11 @@ const Dashboard = ({user}) => {
 									</svg>
 									Activities
 								</li>
-								<li className="list-item">
+								<li
+									className="list-item"
+									style={state.activeTab === "places" ? activeTab : null}
+									onClick={() => setState({...state, activeTab: "places"})}
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-bed"
@@ -208,7 +363,11 @@ const Dashboard = ({user}) => {
 									</svg>
 									Places
 								</li>
-								<li className="list-item">
+								<li
+									className="list-item"
+									style={state.activeTab === "stories" ? activeTab : null}
+									onClick={() => setState({...state, activeTab: "stories"})}
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-notebook"
@@ -244,7 +403,7 @@ const Dashboard = ({user}) => {
 						</div>
 						<div className="col right">
 							{filterBox}
-							<div className="content-box-wrapper">{activities}</div>
+							<div className="content-box-wrapper">{listings}</div>
 						</div>
 					</div>
 				</Row>

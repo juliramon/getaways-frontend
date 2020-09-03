@@ -8,11 +8,13 @@ class ContentService {
 		});
 		this.service = service;
 	}
-	activity = (title, subtitle, description, location, status) => {
+	activity = (type, title, subtitle, image, description, location, status) => {
 		return this.service
 			.post("/activity", {
+				type,
 				title,
 				subtitle,
+				image,
 				description,
 				location,
 				status,
@@ -22,8 +24,8 @@ class ContentService {
 
 	activities = () => this.service.get("/activities").then((res) => res.data);
 
-	userActivities = () =>
-		this.service.get("/userActivities").then((res) => res.data);
+	userActivities = (id) =>
+		this.service.get(`/users/${id}/activities`).then((res) => res.data);
 
 	activityDetails = (id) =>
 		this.service.get(`/activities/${id}`).then((res) => res.data);
@@ -56,6 +58,31 @@ class ContentService {
 		});
 
 	getAllUsers = () => this.service.get("/users").then((res) => res.data);
+
+	place = (type, title, subtitle, image, description, location, status) => {
+		return this.service
+			.post("/place", {
+				type,
+				title,
+				subtitle,
+				image,
+				description,
+				location,
+				status,
+			})
+			.then((res) => res.data);
+	};
+
+	getAllPlaces = () => this.service.get("/places").then((res) => res.data);
+
+	getPlaceDetails = (id) =>
+		this.service.get(`/places/${id}`).then((res) => res.data);
+
+	getUserPlaces = (id) =>
+		this.service.get(`/users/${id}/places`).then((res) => res.data);
+
+	removePlace = (id) =>
+		this.service.delete(`/places/${id}`).then((res) => res.data);
 }
 
 export default ContentService;

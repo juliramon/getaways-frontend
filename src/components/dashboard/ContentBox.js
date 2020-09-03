@@ -3,18 +3,38 @@ import {Dropdown, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import ContentService from "../../services/contentService";
 
-const ContentBox = ({id, title, subtitle, publicationDate, getActivities}) => {
+const ContentBox = ({
+	type,
+	id,
+	image,
+	title,
+	subtitle,
+	publicationDate,
+	fetchData,
+}) => {
 	const service = new ContentService();
-	const removeActivity = () => {
-		service.removeActivity(id).then(() => {
-			getActivities();
-		});
+	const removeItem = () => {
+		if (type === "activity") {
+			service.removeActivity(id).then(() => {
+				fetchData();
+			});
+		} else if (type === "place") {
+			service.removePlace(id).then(() => {
+				fetchData();
+			});
+		}
 	};
+	let path;
+	if (type === "activity") {
+		path = "activities";
+	} else if (type === "place") {
+		path = "places";
+	}
 	return (
 		<div className="content box d-flex align-items-center">
-			<Link to={`/activities/${id}`} className="d-flex align-items-center">
+			<Link to={`/${path}/${id}`} className="d-flex align-items-center">
 				<div className="image">
-					<img src="" alt={title} />
+					<img src={image} alt={title} />
 				</div>
 				<h1 className="title">{title}</h1>
 				<p className="subtitle">{subtitle}</p>
@@ -44,7 +64,7 @@ const ContentBox = ({id, title, subtitle, publicationDate, getActivities}) => {
 					<Dropdown.Menu>
 						<ul>
 							<li>
-								<Link to={`/activities/${id}`}>
+								<Link to={`/${path}/${id}`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-eye"
@@ -66,7 +86,7 @@ const ContentBox = ({id, title, subtitle, publicationDate, getActivities}) => {
 								</Link>
 							</li>
 							<li>
-								<Link to={`/activities/${id}/edit`}>
+								<Link to={`/${path}/${id}/edit`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-pencil"
@@ -133,7 +153,7 @@ const ContentBox = ({id, title, subtitle, publicationDate, getActivities}) => {
 								</Link>
 							</li>
 							<li>
-								<Button variant="none" onClick={removeActivity}>
+								<Button variant="none" onClick={removeItem}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-trash"

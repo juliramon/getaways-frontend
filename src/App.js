@@ -13,10 +13,12 @@ import Logout from "./components/auth/Logout";
 import ActivityForm from "./components/composer/ActivityForm";
 import Dashboard from "./components/dashboard/Dashboard";
 import ActivityList from "./components/listings/ActivityList";
-import Listing from "./components/listingPage/Listing";
+import ActivityListing from "./components/listingPage/ActivityListing";
 import EditionForm from "./components/composer/EditionForm";
 import UserProfile from "./components/userProfile/UserProfile";
 import UsersList from "./components/listings/UsersList";
+import PlaceForm from "./components/composer/PlaceForm";
+import PlaceListing from "./components/listingPage/PlaceListing";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -81,11 +83,17 @@ function App() {
 				/>
 				<ProtectedRoute
 					exact
+					path="/place-composer"
+					user={state.loggedUser}
+					component={PlaceForm}
+				/>
+				<ProtectedRoute
+					exact
 					path="/dashboard"
 					user={state.loggedUser}
 					component={Dashboard}
 				/>
-				<ProtectedRoute
+				<Route
 					exact
 					path="/activities"
 					user={state.loggedUser}
@@ -99,12 +107,27 @@ function App() {
 				<Route
 					exact
 					path="/activities/:id"
-					render={(props) => <Listing {...props} user={state.loggedUser} />}
+					render={(props) => (
+						<ActivityListing {...props} user={state.loggedUser} />
+					)}
+				/>
+				<Route
+					exact
+					path="/places/:id"
+					render={(props) => (
+						<PlaceListing {...props} user={state.loggedUser} />
+					)}
 				/>
 				<Route
 					exact
 					path="/users/:id"
-					render={(props) => <UserProfile {...props} user={state.loggedUser} />}
+					render={(props) => (
+						<UserProfile
+							{...props}
+							user={state.loggedUser}
+							getUserDetails={getLoggedUser}
+						/>
+					)}
 				/>
 				<Route
 					exact

@@ -1,31 +1,26 @@
 import React, {useState} from "react";
 import NavigationBar from "../NavigationBar";
-import {
-	Container,
-	Row,
-	Col,
-	Breadcrumb,
-	Form,
-	Button,
-	Toast,
-} from "react-bootstrap";
+import {Container, Row, Col, Breadcrumb, Form, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import {useHistory} from "react-router-dom";
 
-const ActivityForm = ({user}) => {
+const PlaceForm = ({user}) => {
 	const initialState = {
 		loggedUser: user,
 		formData: {
 			emptyForm: true,
-			type: "activity",
+			type: "place",
 			title: "",
 			subtitle: "",
 			images: [],
 			description: "",
 			location: "",
+			price: "",
+			category: "",
 			isSubmitted: false,
 		},
 	};
+
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
 	const history = useHistory();
@@ -56,7 +51,7 @@ const ActivityForm = ({user}) => {
 		});
 	};
 
-	const submitActivity = () => {
+	const submitPlace = () => {
 		const {
 			type,
 			title,
@@ -64,21 +59,36 @@ const ActivityForm = ({user}) => {
 			images,
 			description,
 			location,
+			status,
+			price,
+			category,
 		} = state.formData;
 		service
-			.activity(type, title, subtitle, images, description, location)
+			.place(
+				type,
+				title,
+				subtitle,
+				images,
+				description,
+				location,
+				status,
+				price,
+				category
+			)
 			.then(() => {
 				setState({
 					...state,
 					formData: {
 						emptyForm: true,
-						type: "activity",
+						type: "place",
 						title: "",
 						subtitle: "",
 						images: [],
 						description: "",
 						location: "",
-						isSubmitted: true,
+						price: "",
+						category: "",
+						isSubmitted: false,
 					},
 				});
 				history.push("/dashboard");
@@ -88,47 +98,11 @@ const ActivityForm = ({user}) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		submitActivity();
+		submitPlace();
 	};
 
-	const toast = (
-		<Toast
-			onClose={() =>
-				setState({...state, formData: {...state.formData, isSubmitted: false}})
-			}
-			show={state.formData.isSubmitted}
-			delay={5000}
-			autohide
-		>
-			<Toast.Header>
-				<img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-				<strong className="mr-auto">Getaways.guru</strong>
-				<small>1 secs ago</small>
-			</Toast.Header>
-			<Toast.Body>Woohoo, your new activity has been posted!</Toast.Body>
-		</Toast>
-	);
-
-	let contentPreview;
-	if (state.formData.emptyForm) {
-		contentPreview = (
-			<div className="preview">
-				<h1>Create an Activity</h1>
-				<p>Fill the form to preview your activity before posting it</p>
-			</div>
-		);
-	} else {
-		contentPreview = (
-			<div className="preview">
-				<h1>{state.formData.title}</h1>
-				<p>{state.formData.subtitle}</p>
-				<p>{state.formData.description}</p>
-				<p>{state.formData.location}</p>
-			</div>
-		);
-	}
 	return (
-		<div id="activity" className="composer">
+		<div id="place">
 			<NavigationBar
 				logo_url={
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
@@ -136,15 +110,14 @@ const ActivityForm = ({user}) => {
 				user={user}
 			/>
 			<Container fluid className="mw-1600">
-				{state.formData.isSubmitted ? toast : null}
 				<Row>
 					<Col lg={4} className="sided-shadow">
 						<Breadcrumb>
 							<Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-							<Breadcrumb.Item href="#">Create Activity</Breadcrumb.Item>
+							<Breadcrumb.Item href="#">Create Place</Breadcrumb.Item>
 						</Breadcrumb>
 						<div className="form-composer">
-							<h1>Create Activity</h1>
+							<h1>Create Place</h1>
 						</div>
 						<Form onSubmit={handleSubmit}>
 							<Form.Group>
@@ -210,18 +183,17 @@ const ActivityForm = ({user}) => {
 								/>
 							</Form.Group>
 							<div className="buttons d-flex justify-space-between">
-								<Button type="submit">Save draft</Button>
 								<Button type="submit" variant="primary">
 									Post
 								</Button>
 							</div>
 						</Form>
 					</Col>
-					<Col lg={8}>{contentPreview}</Col>
+					<Col lg={8}></Col>
 				</Row>
 			</Container>
 		</div>
 	);
 };
 
-export default ActivityForm;
+export default PlaceForm;

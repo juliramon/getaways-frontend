@@ -10,13 +10,7 @@ const ActivityList = ({user}) => {
 		activities: [],
 	};
 	const [state, setState] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
 	const service = new ContentService();
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
 	const getAllActivities = useCallback(() => {
 		service.activities("/activities").then((res) => {
 			setState({...state, activities: res});
@@ -27,6 +21,7 @@ const ActivityList = ({user}) => {
 		<PublicContentBox
 			key={el._id}
 			id={el._id}
+			image={el.images[0]}
 			title={el.title}
 			subtitle={el.subtitle}
 			location={el.location}
@@ -39,7 +34,6 @@ const ActivityList = ({user}) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="top-nav">
 				<div className="top-nav-wrapper">

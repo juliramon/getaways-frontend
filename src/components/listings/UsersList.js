@@ -10,13 +10,7 @@ const UsersList = ({user}) => {
 		users: [],
 	};
 	const [state, setState] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
 	const service = new ContentService();
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
 	const getAllUsers = useCallback(() => {
 		service
 			.getAllUsers("/users")
@@ -38,7 +32,6 @@ const UsersList = ({user}) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="top-nav">
 				<div className="top-nav-wrapper">

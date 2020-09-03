@@ -1,13 +1,12 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useEffect, useState} from "react";
 import NavigationBar from "../NavigationBar";
 import {Container, Row, Button, Spinner} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import EditProfileModal from "../modals/EditProfileModal";
-import Cookies from "js-cookie";
 import {Link} from "react-router-dom";
+import PublicContentBox from "../listings/PublicContentBox";
 
 const UserProfile = (props) => {
-	console.log("hello");
 	const initialState = {
 		loggedUser: props.user,
 		id: props.match.params.id,
@@ -18,44 +17,36 @@ const UserProfile = (props) => {
 		hasActivities: false,
 	};
 	const [state, setState] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
-
 	const service = new ContentService();
-
-	const getUserDetails = useCallback(() => {
-		service.getUserProfile(state.id).then((res) => {
-			console.log("user =>", res);
-			setState({...state, userProfile: res, isUserAvailable: true});
-		});
-	}, [state, service]);
-
-	useEffect(getUserDetails, []);
-
+	useEffect(() => {
+		const fetchData = async () => {
+			const userDetails = await service.getUserProfile(state.id);
+			const userActivities = await service.userActivities(state.id);
+			setState({
+				...state,
+				activities: userActivities,
+				userProfile: userDetails,
+				isUserAvailable: true,
+				hasActivities: true,
+			});
+		};
+		fetchData();
+	}, []);
 	const [modalVisibility, setModalVisibility] = useState(false);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
-
 	const refreshUserData = () => {
 		service.getUserProfile(state.id).then((res) => {
-			Cookies.set("user", res, {expires: 7});
-			setState({...state, userProfile: res});
-			console.log("usuario actualizado =>", res);
+			props.getUserDetails(res);
+			setState({...state, userProfile: res, loggedUser: res});
 		});
 	};
-
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
-
 	const getJoinedDate = () => {
 		const joinedDate = new Date(state.userProfile.createdAt);
 		const yearJoined = joinedDate.getFullYear();
 		setState({...state, joinedYear: yearJoined});
 	};
 	useEffect(getJoinedDate, [state.joinedYear]);
-
 	if (state.isUserAvailable === false) {
 		return (
 			<Container className="spinner d-flex justify-space-between">
@@ -65,17 +56,40 @@ const UserProfile = (props) => {
 			</Container>
 		);
 	}
-
 	let mainButton;
-	if (state.userProfile._id === state.loggedUser._id) {
-		mainButton = (
-			<Button
-				className="btn btn-primary text-center sidebar"
-				onClick={handleModalVisibility}
-			>
-				Edit profile
-			</Button>
-		);
+	if (state.loggedUser) {
+		if (state.userProfile._id === state.loggedUser._id) {
+			mainButton = (
+				<Button
+					className="btn btn-primary text-center sidebar"
+					onClick={handleModalVisibility}
+				>
+					Edit profile
+				</Button>
+			);
+		} else {
+			mainButton = (
+				<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-plus"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#fff"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<line x1="12" y1="5" x2="12" y2="19" />
+						<line x1="5" y1="12" x2="19" y2="12" />
+					</svg>{" "}
+					Follow
+				</Button>
+			);
+		}
 	} else {
 		mainButton = (
 			<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
@@ -95,10 +109,22 @@ const UserProfile = (props) => {
 					<line x1="12" y1="5" x2="12" y2="19" />
 					<line x1="5" y1="12" x2="19" y2="12" />
 				</svg>{" "}
-				Follow
+				Sign up
 			</Button>
 		);
 	}
+
+	const activities = state.activities;
+	const activitiesList = activities.map((el) => (
+		<PublicContentBox
+			key={el._id}
+			id={el._id}
+			title={el.title}
+			subtitle={el.subtitle}
+			image={el.images[0]}
+			location={el.location}
+		/>
+	));
 
 	return (
 		<div id="userProfile">
@@ -107,7 +133,6 @@ const UserProfile = (props) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={props.user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="mw-1600">
 				<Row>
@@ -370,6 +395,7 @@ const UserProfile = (props) => {
 									Reviews
 								</Button>
 							</div>
+							<div className="content-bar">{activitiesList}</div>
 						</div>
 						<div className="col right">
 							<div className="box bordered"></div>
@@ -380,7 +406,7 @@ const UserProfile = (props) => {
 			<EditProfileModal
 				visibility={modalVisibility}
 				hideModal={hideModalVisibility}
-				user={state.loggedUser}
+				user={state.userProfile}
 				refreshUserData={refreshUserData}
 			/>
 		</div>
