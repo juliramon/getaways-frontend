@@ -47,7 +47,11 @@ const PublicationModal = ({visibility, hideModal}) => {
 							<h3>Story</h3>
 							<p>Lorem ipsum</p>
 						</div>
-						<div className="col"></div>
+						<div className="col">
+							<Link to="/story-composer" className="btn btn-primary">
+								Create
+							</Link>
+						</div>
 					</li>
 				</ul>
 			</Modal.Body>

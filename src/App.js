@@ -14,11 +14,15 @@ import ActivityForm from "./components/composer/ActivityForm";
 import Dashboard from "./components/dashboard/Dashboard";
 import ActivityList from "./components/listings/ActivityList";
 import ActivityListing from "./components/listingPage/ActivityListing";
-import EditionForm from "./components/composer/EditionForm";
 import UserProfile from "./components/userProfile/UserProfile";
 import UsersList from "./components/listings/UsersList";
 import PlaceForm from "./components/composer/PlaceForm";
 import PlaceListing from "./components/listingPage/PlaceListing";
+import StoryForm from "./components/composer/StoryForm";
+import StoryListing from "./components/listingPage/StoryListing";
+import ActivityEditionForm from "./components/composer/ActivityEditionForm";
+import PlaceEditionForm from "./components/composer/PlaceEditionForm";
+import StoryEditionForm from "./components/composer/StoryEditionForm";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -89,6 +93,12 @@ function App() {
 				/>
 				<ProtectedRoute
 					exact
+					path="/story-composer"
+					user={state.loggedUser}
+					component={StoryForm}
+				/>
+				<ProtectedRoute
+					exact
 					path="/dashboard"
 					user={state.loggedUser}
 					component={Dashboard}
@@ -102,7 +112,17 @@ function App() {
 				<ProtectedRoute
 					path="/activities/:id/edit"
 					user={state.loggedUser}
-					component={EditionForm}
+					component={ActivityEditionForm}
+				/>
+				<ProtectedRoute
+					path="/places/:id/edit"
+					user={state.loggedUser}
+					component={PlaceEditionForm}
+				/>
+				<ProtectedRoute
+					path="/stories/:id/edit"
+					user={state.loggedUser}
+					component={StoryEditionForm}
 				/>
 				<Route
 					exact
@@ -116,6 +136,13 @@ function App() {
 					path="/places/:id"
 					render={(props) => (
 						<PlaceListing {...props} user={state.loggedUser} />
+					)}
+				/>
+				<Route
+					exact
+					path="/stories/:id"
+					render={(props) => (
+						<StoryListing {...props} user={state.loggedUser} />
 					)}
 				/>
 				<Route

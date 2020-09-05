@@ -15,13 +15,11 @@ const ContentBox = ({
 	const service = new ContentService();
 	const removeItem = () => {
 		if (type === "activity") {
-			service.removeActivity(id).then(() => {
-				fetchData();
-			});
+			service.removeActivity(id).then(() => fetchData());
 		} else if (type === "place") {
-			service.removePlace(id).then(() => {
-				fetchData();
-			});
+			service.removePlace(id).then(() => fetchData());
+		} else if (type === "story") {
+			service.removeStory(id).then(() => fetchData());
 		}
 	};
 	let path;
@@ -29,6 +27,8 @@ const ContentBox = ({
 		path = "activities";
 	} else if (type === "place") {
 		path = "places";
+	} else if (type === "story") {
+		path = "stories";
 	}
 	return (
 		<div className="content box d-flex align-items-center">
@@ -106,7 +106,7 @@ const ContentBox = ({
 									Edit
 								</Link>
 							</li>
-							<li>
+							{/* <li>
 								<Link to="/">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -129,8 +129,8 @@ const ContentBox = ({
 									</svg>
 									Share
 								</Link>
-							</li>
-							<li>
+							</li> */}
+							{/* <li>
 								<Link to="/">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +151,7 @@ const ContentBox = ({
 									</svg>
 									Archive
 								</Link>
-							</li>
+							</li> */}
 							<li>
 								<Button variant="none" onClick={removeItem}>
 									<svg

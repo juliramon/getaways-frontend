@@ -4,6 +4,7 @@ import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
 import ContentBox from "./ContentBox";
 import PublicationModal from "../modals/PublicationModal";
+import {Link} from "react-router-dom";
 
 const Dashboard = ({user}) => {
 	const initialState = {
@@ -12,6 +13,7 @@ const Dashboard = ({user}) => {
 		activities: [],
 		places: [],
 		stories: [],
+		isFetching: false,
 		hasListings: false,
 		hasActivities: false,
 		hasPlaces: false,
@@ -20,76 +22,82 @@ const Dashboard = ({user}) => {
 		activeTab: "all",
 	};
 	const [state, setState] = useState(initialState);
-
 	const [modalVisibility, setModalVisibility] = useState(false);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
 
 	const service = new ContentService();
 
-	const getAllListings = async () => {
-		const userActivities = await service.userActivities(state.loggedUser._id);
-		const userPlaces = await service.getUserPlaces(state.loggedUser._id);
-		let allListings = [];
-		userActivities.map((el) => allListings.push(el));
-		userPlaces.map((el) => allListings.push(el));
-		setState({...state, allListings: allListings, activeTab: "all"});
-	};
-
 	useEffect(() => {
 		const fetchData = async () => {
+			setState({...state, isFetching: true});
 			const userActivities = await service.userActivities(state.loggedUser._id);
 			const userPlaces = await service.getUserPlaces(state.loggedUser._id);
+			const userStories = await service.getUserStories(state.loggedUser._id);
 			let getAllListings = [];
-			let hasListings, hasActivities, hasPlaces;
+			let hasListings, hasActivities, hasPlaces, hasStories;
 			userActivities.length > 0
 				? (hasActivities = true)
 				: (hasActivities = false);
 			userPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
-			userActivities.length > 0 || userPlaces.length > 0
+			userStories.length > 0 ? (hasStories = true) : (hasStories = false);
+			userActivities.length > 0 ||
+			userPlaces.length > 0 ||
+			userStories.length > 0
 				? (hasListings = true)
 				: (hasListings = false);
 			userActivities.map((el) => getAllListings.push(el));
 			userPlaces.map((el) => getAllListings.push(el));
+			userStories.map((el) => getAllListings.push(el));
 			setState({
 				...state,
 				allListings: getAllListings,
 				activities: userActivities,
 				places: userPlaces,
+				stories: userStories,
+				isFetching: false,
 				hasListings: hasListings,
 				hasActivities: hasActivities,
 				hasPlaces: hasPlaces,
+				hasStories: hasStories,
 			});
 		};
 		fetchData();
 	}, []);
 
 	const fetchData = useCallback(async () => {
+		setState({...state, isFetching: true});
 		const userActivities = await service.userActivities(state.loggedUser._id);
 		const userPlaces = await service.getUserPlaces(state.loggedUser._id);
-		let hasListings, hasActivities, hasPlaces;
+		const userStories = await service.getUserStories(state.loggedUser._id);
+		let hasListings, hasActivities, hasPlaces, hasStories;
 		userActivities.length > 0
 			? (hasActivities = true)
 			: (hasActivities = false);
 		userPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
-		userActivities.length > 0 || userPlaces.length > 0
+		userStories.length > 0 ? (hasStories = true) : (hasStories = false);
+		userActivities.length > 0 || userPlaces.length > 0 || userStories.length > 0
 			? (hasListings = true)
 			: (hasListings = false);
 		let getAllListings = [];
 		userActivities.map((el) => getAllListings.push(el));
 		userPlaces.map((el) => getAllListings.push(el));
+		userStories.map((el) => getAllListings.push(el));
 		setState({
 			...state,
 			allListings: getAllListings,
 			activities: userActivities,
 			places: userPlaces,
+			stories: userStories,
+			isFetching: false,
 			hasListings: hasListings,
 			hasActivities: hasActivities,
 			hasPlaces: hasPlaces,
+			hasStories: hasStories,
 		});
 	}, [service, state]);
 
-	if (state.hasListings === false) {
+	if (state.isFetching === true && state.hasListings === false) {
 		return (
 			<Container className="spinner d-flex justify-space-between">
 				<Spinner animation="border" role="status" variant="primary">
@@ -99,71 +107,99 @@ const Dashboard = ({user}) => {
 		);
 	}
 
-	let noresults = (
-		<div className="box empty d-flex">
-			<div className="media">
-				<img src="../../no-results.svg" alt="" />
-			</div>
-			<div className="text">
-				<p>
-					Oh no, this looks so empty.
-					<br />
-					Let's create your first activity to inspire others.
-				</p>
+	let filterBox,
+		listings,
+		arrToSort,
+		listToSort,
+		contentType,
+		linkTo,
+		noResultsCTA;
+
+	switch (state.activeTab) {
+		case "activities":
+			contentType = "activity";
+			linkTo = "/activity-composer";
+			noResultsCTA = (
+				<Link to={linkTo} className="btn btn-primary text-center">
+					Add {contentType}
+				</Link>
+			);
+			break;
+		case "places":
+			contentType = "place";
+			linkTo = "/place-composer";
+			noResultsCTA = (
+				<Link to={linkTo} className="btn btn-primary text-center">
+					Add {contentType}
+				</Link>
+			);
+			break;
+		case "stories":
+			contentType = "story";
+			linkTo = "/story-composer";
+			noResultsCTA = (
+				<Link to={linkTo} className="btn btn-primary text-center">
+					Add {contentType}
+				</Link>
+			);
+			break;
+		default:
+			contentType = "getaway";
+			linkTo = "/activity-composer";
+			noResultsCTA = (
 				<Button
 					className="btn btn-primary text-center"
 					onClick={handleModalVisibility}
 				>
 					Add getaway
 				</Button>
+			);
+	}
+
+	let noresults = (
+		<div className="box empty d-flex">
+			<div className="media">
+				<img src="../../no-results.svg" alt="Graphic no results" />
+			</div>
+			<div className="text">
+				<p>
+					Oh no, this looks so empty.
+					<br />
+					Create your first {contentType} to inspire others.
+				</p>
+				{noResultsCTA}
 			</div>
 		</div>
 	);
 
-	const sortTitle = (arr) => {
+	const sortTitle = (arr, listToSort) => {
 		if (state.sortedTitle === false || state.sortedTitle === "ZtoA") {
 			const sortedArr = arr
 				.sort((a, b) => {
-					if (a.title > b.title) {
+					if (a.title.toLowerCase() > b.title.toLowerCase()) {
 						return -1;
 					}
-					if (a.title < b.title) {
+					if (a.title.toLowerCase() < b.title.toLowerCase()) {
 						return 1;
 					}
 					return 0;
 				})
 				.reverse();
-			setState({...state, allListings: sortedArr, sortedTitle: "AtoZ"});
+			setState({...state, [listToSort]: sortedArr, sortedTitle: "AtoZ"});
 		} else if (state.sortedTitle === "AtoZ") {
 			const sortedArr = arr.sort((a, b) => {
-				if (a.title > b.title) {
+				if (a.title.toLowerCase() > b.title.toLowerCase()) {
 					return -1;
 				}
-				if (a.title < b.title) {
+				if (a.title.toLowerCase() < b.title.toLowerCase()) {
 					return 1;
 				}
 				return 0;
 			});
-			setState({...state, allListings: sortedArr, sortedTitle: "ZtoA"});
+			setState({...state, [listToSort]: sortedArr, sortedTitle: "ZtoA"});
 		}
 	};
 
-	let arrToSort;
-	if (state.activeTab === "all") {
-		arrToSort = state.allListings;
-		console.log(arrToSort);
-	} else if (state.activeTab === "activities") {
-		arrToSort = state.activities;
-		console.log(arrToSort);
-	} else if (state.activeTab === "places") {
-		arrToSort = state.places;
-		console.log(arrToSort);
-	} else {
-		arrToSort = state.stories;
-		console.log(arrToSort);
-	}
-
-	let filterBox, listings;
 	if (state.hasListings === true) {
 		filterBox = (
 			<div className="filter-box d-flex align-items-center justify-content-between">
@@ -171,7 +207,7 @@ const Dashboard = ({user}) => {
 				<Button
 					variant="none"
 					className="filter"
-					onClick={() => sortTitle(arrToSort)}
+					onClick={() => sortTitle(arrToSort, listToSort)}
 				>
 					Title
 					<svg
@@ -201,6 +237,8 @@ const Dashboard = ({user}) => {
 			</div>
 		);
 		if (state.activeTab === "all") {
+			arrToSort = state.allListings;
+			listToSort = "allListings";
 			listings = state.allListings.map((el) => (
 				<ContentBox
 					key={el._id}
@@ -215,35 +253,30 @@ const Dashboard = ({user}) => {
 			));
 		}
 		if (state.activeTab === "activities") {
-			listings = state.activities.map((el) => (
-				<ContentBox
-					key={el._id}
-					type={el.type}
-					id={el._id}
-					image={el.images[0]}
-					title={el.title}
-					subtitle={el.subtitle}
-					publicationDate={el.createdAt}
-					fetchData={fetchData}
-				/>
-			));
+			if (state.hasActivities === true) {
+				arrToSort = state.activities;
+				listToSort = "activities";
+				listings = state.activities.map((el) => (
+					<ContentBox
+						key={el._id}
+						type={el.type}
+						id={el._id}
+						image={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						publicationDate={el.createdAt}
+						fetchData={fetchData}
+					/>
+				));
+			} else {
+				filterBox = null;
+				listings = noresults;
+			}
 		}
 		if (state.activeTab === "places") {
-			listings = state.places.map((el) => (
-				<ContentBox
-					key={el._id}
-					type={el.type}
-					id={el._id}
-					image={el.images[0]}
-					title={el.title}
-					subtitle={el.subtitle}
-					publicationDate={el.createdAt}
-					fetchData={fetchData}
-				/>
-			));
-		}
-		if (state.activeTab === "stories") {
-			if (state.hasStories === true) {
+			if (state.hasPlaces === true) {
+				listToSort = "places";
+				arrToSort = state.places;
 				listings = state.places.map((el) => (
 					<ContentBox
 						key={el._id}
@@ -257,6 +290,27 @@ const Dashboard = ({user}) => {
 					/>
 				));
 			} else {
+				filterBox = null;
+				listings = noresults;
+			}
+		}
+		if (state.activeTab === "stories") {
+			if (state.hasStories === true) {
+				arrToSort = state.stories;
+				listings = state.stories.map((el) => (
+					<ContentBox
+						key={el._id}
+						type={el.type}
+						id={el._id}
+						image={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						publicationDate={el.createdAt}
+						fetchData={fetchData}
+					/>
+				));
+			} else {
+				filterBox = null;
 				listings = noresults;
 			}
 		}
@@ -294,9 +348,7 @@ const Dashboard = ({user}) => {
 								<li
 									className="list-item"
 									style={state.activeTab === "all" ? activeTab : null}
-									onClick={() => {
-										getAllListings();
-									}}
+									onClick={() => setState({...state, activeTab: "all"})}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"

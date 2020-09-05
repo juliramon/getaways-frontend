@@ -708,8 +708,9 @@ nav {
 	.box.empty {
 		flex-flow: column nowrap;
 		align-items: center;
+		text-align: center;
 		img {
-			width: 330px;
+			width: 290px;
 		}
 		p {
 			margin: 35px 0 25px 0;
@@ -717,10 +718,10 @@ nav {
 			font-size: 1.1em;
 			font-weight: bold;
 		}
-		a {
-			display: block;
-			max-width: 200px;
+		a,
+		button {
 			margin: 0 auto;
+			padding: 12px 45px;
 		}
 	}
 	.col.right {
