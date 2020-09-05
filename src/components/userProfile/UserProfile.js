@@ -1,60 +1,128 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useEffect, useState} from "react";
 import NavigationBar from "../NavigationBar";
-import {Container, Row, Button} from "react-bootstrap";
+import {Container, Row, Button, Spinner} from "react-bootstrap";
 import ContentService from "../../services/contentService";
-import PublicContentBox from "../listings/PublicContentBox";
 import EditProfileModal from "../modals/EditProfileModal";
 import {Link} from "react-router-dom";
+import PublicContentBox from "../listings/PublicContentBox";
 
-const UserProfile = ({user}) => {
+const UserProfile = (props) => {
 	const initialState = {
-		loggedUser: user,
+		loggedUser: props.user,
+		id: props.match.params.id,
 		joinedYear: 0,
+		userProfile: {},
+		isUserAvailable: false,
 		activities: [],
+		hasActivities: false,
 	};
 	const [state, setState] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
+	const service = new ContentService();
+	useEffect(() => {
+		const fetchData = async () => {
+			const userDetails = await service.getUserProfile(state.id);
+			const userActivities = await service.userActivities(state.id);
+			setState({
+				...state,
+				activities: userActivities,
+				userProfile: userDetails,
+				isUserAvailable: true,
+				hasActivities: true,
+			});
+		};
+		fetchData();
+	}, []);
 	const [modalVisibility, setModalVisibility] = useState(false);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
-
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
-
+	const refreshUserData = () => {
+		service.getUserProfile(state.id).then((res) => {
+			props.getUserDetails(res);
+			setState({...state, userProfile: res, loggedUser: res});
+		});
+	};
 	const getJoinedDate = () => {
-		const joinedDate = new Date(state.loggedUser.createdAt);
+		const joinedDate = new Date(state.userProfile.createdAt);
 		const yearJoined = joinedDate.getFullYear();
 		setState({...state, joinedYear: yearJoined});
 	};
 	useEffect(getJoinedDate, [state.joinedYear]);
-
-	const service = new ContentService();
-	const getActivities = useCallback(() => {
-		service.userActivities("/userActivities").then((res) => {
-			setState({...state, activities: res});
-		});
-	}, [state, service]);
-
-	useEffect(getActivities, []);
-
-	let activityCopy = "";
-	if (state.activities.length === 0 || state.activities.length > 1) {
-		activityCopy = "activities";
+	if (state.isUserAvailable === false) {
+		return (
+			<Container className="spinner d-flex justify-space-between">
+				<Spinner animation="border" role="status" variant="primary">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			</Container>
+		);
+	}
+	let mainButton;
+	if (state.loggedUser) {
+		if (state.userProfile._id === state.loggedUser._id) {
+			mainButton = (
+				<Button
+					className="btn btn-primary text-center sidebar"
+					onClick={handleModalVisibility}
+				>
+					Edit profile
+				</Button>
+			);
+		} else {
+			mainButton = (
+				<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-plus"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#fff"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<line x1="12" y1="5" x2="12" y2="19" />
+						<line x1="5" y1="12" x2="19" y2="12" />
+					</svg>{" "}
+					Follow
+				</Button>
+			);
+		}
 	} else {
-		activityCopy = "activity";
+		mainButton = (
+			<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="icon icon-tabler icon-tabler-plus"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					strokeWidth="1.5"
+					stroke="#fff"
+					fill="none"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" />
+					<line x1="12" y1="5" x2="12" y2="19" />
+					<line x1="5" y1="12" x2="19" y2="12" />
+				</svg>{" "}
+				Sign up
+			</Button>
+		);
 	}
 
-	const activities = state.activities.map((el) => (
+	const activities = state.activities;
+	const activitiesList = activities.map((el) => (
 		<PublicContentBox
 			key={el._id}
 			id={el._id}
 			title={el.title}
 			subtitle={el.subtitle}
-			publicationDate={el.createdAt}
-			getActivities={getActivities}
+			image={el.images[0]}
+			location={el.location}
 		/>
 	));
 
@@ -64,8 +132,7 @@ const UserProfile = ({user}) => {
 				logo_url={
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
-				user={user}
-				dropCap={dropCap}
+				user={props.user}
 			/>
 			<Container fluid className="mw-1600">
 				<Row>
@@ -74,12 +141,14 @@ const UserProfile = ({user}) => {
 							<div className="user box bordered">
 								<div className="avatar user-avatar">
 									<img
-										src={state.loggedUser.avatar}
-										alt={state.loggedUser.fullName}
+										src={state.userProfile.avatar}
+										alt={state.userProfile.fullName}
 									/>
 								</div>
 								<div className="user-meta">
-									<h1 className="user-fullName">{state.loggedUser.fullName}</h1>
+									<h1 className="user-fullName">
+										{state.userProfile.fullName}
+									</h1>
 									<ul>
 										<li className="user-username">
 											<svg
@@ -98,7 +167,7 @@ const UserProfile = ({user}) => {
 												<circle cx="12" cy="12" r="4" />
 												<path d="M16 12v1.5a2.5 2.5 0 0 0 5 0v-1.5a9 9 0 1 0 -5.5 8.28" />
 											</svg>{" "}
-											username
+											{state.userProfile.username || "username"}
 										</li>
 										<li className="user-followers">
 											<span>225</span> following
@@ -108,8 +177,7 @@ const UserProfile = ({user}) => {
 										</li>
 										<hr />
 										<li className="user-bio">
-											Coding, designing and writing for @escapaenparella and
-											@innoget ~ Sharing life with @a_waterbalance ~ cat|eng|esp
+											{state.userProfile.bio || "No bio"}
 										</li>
 										<hr />
 										<li className="user-property d-flex align-items-center">
@@ -174,7 +242,7 @@ const UserProfile = ({user}) => {
 												<circle cx="12" cy="11" r="3" />
 												<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
 											</svg>
-											Lives in Barcelona
+											Lives in {state.userProfile.location || "not set"}
 										</li>
 										<li className="user-registration d-flex align-items-center">
 											<svg
@@ -221,20 +289,20 @@ const UserProfile = ({user}) => {
 									</ul>
 									<div className="new">
 										<ul>
-											<li>
-												<Button
-													className="btn btn-primary text-center sidebar"
-													onClick={handleModalVisibility}
-												>
-													Edit profile
-												</Button>
-											</li>
+											<li>{mainButton}</li>
 										</ul>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div className="col center">
+							<div
+								className="cover-picture box bordered"
+								style={{
+									backgroundImage:
+										"url('https://scontent.fbcn3-1.fna.fbcdn.net/v/t1.0-0/p640x640/42371153_10215257735108761_2713689869531480064_o.jpg?_nc_cat=109&_nc_sid=e3f864&_nc_ohc=mubppHdLPOIAX8DFIMn&_nc_ht=scontent.fbcn3-1.fna&tp=6&oh=619f73c10d39d9489d2b5e233a2b8257&oe=5F75520A')",
+								}}
+							></div>
 							<div className="filter-bar">
 								<Button
 									className="active d-flex align-items-center justify-content-center"
@@ -327,13 +395,7 @@ const UserProfile = ({user}) => {
 									Reviews
 								</Button>
 							</div>
-							<div className="user-listings activities">
-								<div className="box bordered">
-									{state.loggedUser.fullName} published {""}
-									{state.activities.length} {activityCopy}
-								</div>
-								{activities}
-							</div>
+							<div className="content-bar">{activitiesList}</div>
 						</div>
 						<div className="col right">
 							<div className="box bordered"></div>
@@ -344,7 +406,8 @@ const UserProfile = ({user}) => {
 			<EditProfileModal
 				visibility={modalVisibility}
 				hideModal={hideModalVisibility}
-				user={state.loggedUser}
+				user={state.userProfile}
+				refreshUserData={refreshUserData}
 			/>
 		</div>
 	);

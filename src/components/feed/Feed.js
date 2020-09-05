@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import NavigationBar from "../NavigationBar";
 import {Container, Row, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
@@ -9,13 +9,7 @@ const Feed = ({user}) => {
 		loggedUser: user,
 	};
 	const [state] = useState(initialState);
-	const [dropCap, setDropCap] = useState("");
 	const [modalVisibility, setModalVisibility] = useState(false);
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
 	return (
@@ -25,7 +19,6 @@ const Feed = ({user}) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="mw-1600">
 				<Row>
@@ -34,7 +27,6 @@ const Feed = ({user}) => {
 							<div className="user-meta">
 								<div className="user-meta-wrapper">
 									<div className="avatar avatar-s">
-										<span className="dropCap">{dropCap}</span>
 										<img
 											src={state.loggedUser.avatar}
 											alt={state.loggedUser.fullName}
@@ -140,7 +132,7 @@ const Feed = ({user}) => {
 											</Link>
 										</li>
 										<li>
-											<Link to="/">
+											<Link to="/users">
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													className="icon icon-tabler icon-tabler-users"

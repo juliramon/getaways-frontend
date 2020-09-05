@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-const PublicContentBox = ({id, title, subtitle, location}) => {
+const PublicContentBox = ({id, image, title, subtitle, location}) => {
 	return (
 		<div
 			id="listing"
@@ -13,7 +13,7 @@ const PublicContentBox = ({id, title, subtitle, location}) => {
 				className="listing-wrapper d-flex align-items-center"
 			>
 				<div className="listing-cover">
-					<img src="" alt={title} />
+					<img src={image} alt={title} />
 				</div>
 				<div className="listing-content">
 					<h3 className="listing-title">{title}</h3>

@@ -1,28 +1,20 @@
-import React, {useState} from "react";
+import React from "react";
 import {Navbar, Nav, Container, Form, Dropdown} from "react-bootstrap";
 import ContentBar from "./homepage/ContentBar";
 
 const NavigationBar = (props) => {
-	const {logo_url, user, dropCap} = props;
-	const initialState = {
-		loggedUser: user,
-	};
-	const [state] = useState(initialState);
+	const {logo_url, user} = props;
 	let navRight = undefined;
-	if (state.loggedUser) {
+	if (user) {
 		navRight = (
 			<Nav className="logged-user">
 				<Dropdown>
 					<Dropdown.Toggle variant="none" id="dropdown-basic">
 						<div className="avatar avatar-nav">
-							<span className="dropCap">{dropCap}</span>
-							<img
-								src={state.loggedUser.avatar}
-								alt={state.loggedUser.fullName}
-							/>
+							<img src={user.avatar} alt={user.fullName} />
 						</div>
 						<div className="user-meta">
-							{state.loggedUser.fullName}
+							{user.fullName}
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="icon icon-tabler icon-tabler-chevron-down"
@@ -43,7 +35,7 @@ const NavigationBar = (props) => {
 					<Dropdown.Menu>
 						<ul>
 							<li>
-								<Nav.Link href={`/users/${state.loggedUser._id}`}>
+								<Nav.Link href={`/users/${user._id}`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="icon icon-tabler icon-tabler-user"
@@ -124,7 +116,7 @@ const NavigationBar = (props) => {
 		boxShadow: "none",
 		borderBottom: "1px solid #e8e8e8",
 	};
-	let styledHeader = state.loggedUser ? notLoggedHeader : undefined;
+	let styledHeader = user ? notLoggedHeader : undefined;
 	return (
 		<header style={styledHeader}>
 			<Navbar>
@@ -224,7 +216,7 @@ const NavigationBar = (props) => {
 					</div>
 				</Container>
 			</Navbar>
-			<ContentBar user={state.loggedUser} />
+			<ContentBar user={user} />
 		</header>
 	);
 };

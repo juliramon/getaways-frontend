@@ -4,65 +4,57 @@ import NavigationBar from "../NavigationBar";
 import {Container, Row, Col, Breadcrumb, Form, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 
-const EditionForm = (props) => {
+const StoryEditionForm = (props) => {
 	const initialState = {
 		loggedUser: props.user,
 		id: props.match.params.id,
-		activity: {},
+		story: {},
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
 	const history = useHistory();
-	const [dropCap, setDropCap] = useState("");
 
-	const getActivityDetails = useCallback(() => {
-		service.activityDetails(state.id).then((res) => {
-			setState({...state, activity: res});
+	const getStoryDetails = useCallback(() => {
+		service.getStoryDetails(state.id).then((res) => {
+			setState({...state, story: res});
 		});
 	}, [state, service]);
 
-	useEffect(getActivityDetails, []);
+	useEffect(getStoryDetails, []);
 
-	useEffect(() => {
-		const userName = state.loggedUser.fullName;
-		const dropCap = userName.charAt(0);
-		setDropCap(dropCap);
-	}, [state.loggedUser]);
-
-	const {title, subtitle, image, description, location} = state.activity;
+	const {title, subtitle, image, description} = state.story;
 
 	const handleChange = (e) =>
 		setState({
 			...state,
-			activity: {...state.activity, [e.target.name]: e.target.value},
+			story: {...state.story, [e.target.name]: e.target.value},
 		});
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const {_id, title, subtitle, description, location} = state.activity;
+		const {_id, title, subtitle, description} = state.story;
 		service
-			.editActivity(_id, title, subtitle, description, location)
+			.editStory(_id, title, subtitle, description)
 			.then(() => history.push("/dashboard"));
 	};
 
 	return (
-		<div id="activity" className="composer">
+		<div id="editForm" className="composer">
 			<NavigationBar
 				logo_url={
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={props.user}
-				dropCap={dropCap}
 			/>
 			<Container fluid className="mw-1600">
 				<Row>
 					<Col lg={4} className="sided-shadow">
 						<Breadcrumb>
 							<Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-							<Breadcrumb.Item href="#">Create Activity</Breadcrumb.Item>
+							<Breadcrumb.Item href="#">Edit Story</Breadcrumb.Item>
 						</Breadcrumb>
 						<div className="form-composer">
-							<h1>Create Activity</h1>
+							<h1>Edit Story</h1>
 						</div>
 						<Form onSubmit={handleSubmit}>
 							<Form.Group>
@@ -70,7 +62,7 @@ const EditionForm = (props) => {
 								<Form.Control
 									type="text"
 									name="title"
-									placeholder="Activity title"
+									placeholder="Story title"
 									defaultValue={title}
 									onChange={handleChange}
 								/>
@@ -80,7 +72,7 @@ const EditionForm = (props) => {
 								<Form.Control
 									type="text"
 									name="subtitle"
-									placeholder="Activity subtitle"
+									placeholder="Story subtitle"
 									defaultValue={subtitle}
 									onChange={handleChange}
 								/>
@@ -90,7 +82,7 @@ const EditionForm = (props) => {
 								<Form.Control
 									type="text"
 									name="image"
-									placeholder="Activity image"
+									placeholder="Story image"
 									defaultValue={image}
 									onChange={handleChange}
 								/>
@@ -102,23 +94,12 @@ const EditionForm = (props) => {
 									rows="5"
 									type="text"
 									name="description"
-									placeholder="Activity description"
+									placeholder="Story description"
 									defaultValue={description}
 									onChange={handleChange}
 								/>
 							</Form.Group>
-							<Form.Group>
-								<Form.Label>Location</Form.Label>
-								<Form.Control
-									type="text"
-									name="location"
-									placeholder="Activity location"
-									defaultValue={location}
-									onChange={handleChange}
-								/>
-							</Form.Group>
 							<div className="buttons d-flex justify-space-between">
-								<Button type="submit">Save draft</Button>
 								<Button type="submit" variant="primary">
 									Post
 								</Button>
@@ -132,4 +113,4 @@ const EditionForm = (props) => {
 	);
 };
 
-export default EditionForm;
+export default StoryEditionForm;
