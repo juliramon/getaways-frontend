@@ -64,6 +64,8 @@ class ContentService {
 			location,
 		});
 
+	editUserCover = (_id, cover) => this.service.put(`/users/${_id}`, {cover});
+
 	getAllUsers = () => this.service.get("/users").then((res) => res.data);
 
 	// PLACES ENDPOINTS

@@ -14,48 +14,218 @@ const UserProfile = (props) => {
 		userProfile: {},
 		isUserAvailable: false,
 		activities: [],
+		places: [],
+		stories: [],
+		isFetching: false,
+		hasListings: false,
 		hasActivities: false,
+		hasPlaces: false,
+		hasStories: false,
+		activeTab: "activities",
+		cover: "",
+		isCoverReadyToUpload: false,
 	};
 	const [state, setState] = useState(initialState);
+	const [modalVisibility, setModalVisibility] = useState(false);
+	const handleModalVisibility = () => setModalVisibility(true);
+	const hideModalVisibility = () => setModalVisibility(false);
+
 	const service = new ContentService();
+
 	useEffect(() => {
 		const fetchData = async () => {
+			setState({...state, isFetching: true});
 			const userDetails = await service.getUserProfile(state.id);
 			const userActivities = await service.userActivities(state.id);
+			const userPlaces = await service.getUserPlaces(state.loggedUser._id);
+			const userStories = await service.getUserStories(state.loggedUser._id);
+			let hasListings, hasActivities, hasPlaces, hasStories, yearJoined;
+			userActivities.length > 0
+				? (hasActivities = true)
+				: (hasActivities = false);
+			userPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
+			userStories.length > 0 ? (hasStories = true) : (hasStories = false);
+			userActivities.length > 0 ||
+			userPlaces.length > 0 ||
+			userStories.length > 0
+				? (hasListings = true)
+				: (hasListings = false);
+
+			const getJoinedDate = () => {
+				const joinedDate = new Date(userDetails.createdAt);
+				return (yearJoined = joinedDate.getFullYear());
+			};
+			getJoinedDate();
 			setState({
 				...state,
-				activities: userActivities,
 				userProfile: userDetails,
+				joinedYear: yearJoined,
 				isUserAvailable: true,
-				hasActivities: true,
+				activities: userActivities,
+				places: userPlaces,
+				stories: userStories,
+				isFetching: false,
+				hasListings: hasListings,
+				hasActivities: hasActivities,
+				hasPlaces: hasPlaces,
+				hasStories: hasStories,
 			});
 		};
 		fetchData();
 	}, []);
-	const [modalVisibility, setModalVisibility] = useState(false);
-	const handleModalVisibility = () => setModalVisibility(true);
-	const hideModalVisibility = () => setModalVisibility(false);
-	const refreshUserData = () => {
-		service.getUserProfile(state.id).then((res) => {
-			props.getUserDetails(res);
-			setState({...state, userProfile: res, loggedUser: res});
+
+	const fetchData = async () => {
+		setState({...state, isFetching: true});
+		const userActivities = await service.userActivities(state.id);
+		const userPlaces = await service.getUserPlaces(state.loggedUser._id);
+		const userStories = await service.getUserStories(state.loggedUser._id);
+		let hasListings, hasActivities, hasPlaces, hasStories;
+		userActivities.length > 0
+			? (hasActivities = true)
+			: (hasActivities = false);
+		userPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
+		userStories.length > 0 ? (hasStories = true) : (hasStories = false);
+		userActivities.length > 0 || userPlaces.length > 0 || userStories.length > 0
+			? (hasListings = true)
+			: (hasListings = false);
+		setState({
+			...state,
+			activities: userActivities,
+			places: userPlaces,
+			stories: userStories,
+			isFetching: false,
+			hasListings: hasListings,
+			hasActivities: hasActivities,
+			hasPlaces: hasPlaces,
+			hasStories: hasStories,
 		});
 	};
-	const getJoinedDate = () => {
-		const joinedDate = new Date(state.userProfile.createdAt);
-		const yearJoined = joinedDate.getFullYear();
-		setState({...state, joinedYear: yearJoined});
-	};
-	useEffect(getJoinedDate, [state.joinedYear]);
-	if (state.isUserAvailable === false) {
-		return (
-			<Container className="spinner d-flex justify-space-between">
-				<Spinner animation="border" role="status" variant="primary">
-					<span className="sr-only">Loading...</span>
-				</Spinner>
-			</Container>
-		);
+
+	let listings, contentType, linkTo, noResultsCTA;
+
+	switch (state.activeTab) {
+		case "activities":
+			contentType = "activity";
+			linkTo = "/activity-composer";
+			noResultsCTA = (
+				<Link to={linkTo} className="btn btn-primary text-center">
+					Add {contentType}
+				</Link>
+			);
+			break;
+		case "places":
+			contentType = "place";
+			linkTo = "/place-composer";
+			noResultsCTA = (
+				<Link to={linkTo} className="btn btn-primary text-center">
+					Add {contentType}
+				</Link>
+			);
+			break;
+		case "stories":
+			contentType = "story";
+			linkTo = "/story-composer";
+			noResultsCTA = (
+				<Link to={linkTo} className="btn btn-primary text-center">
+					Add {contentType}
+				</Link>
+			);
+			break;
+		default:
+			contentType = "getaway";
+			linkTo = "/activity-composer";
+			noResultsCTA = (
+				<Button
+					className="btn btn-primary text-center"
+					onClick={handleModalVisibility}
+				>
+					Add getaway
+				</Button>
+			);
 	}
+
+	let noresults = (
+		<div className="box empty d-flex">
+			<div className="media">
+				<img src="../../no-results.svg" alt="Graphic no results" />
+			</div>
+			<div className="text">
+				<p>
+					Oh no, this looks so empty.
+					<br />
+					Create your first {contentType} to inspire others.
+				</p>
+				{noResultsCTA}
+			</div>
+		</div>
+	);
+
+	if (state.hasListings === true) {
+		if (state.activeTab === "activities") {
+			if (state.hasActivities === true) {
+				listings = state.activities.map((el) => (
+					<PublicContentBox
+						key={el._id}
+						type={el.type}
+						id={el._id}
+						image={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						publicationDate={el.createdAt}
+						fetchData={fetchData}
+					/>
+				));
+			} else {
+				listings = noresults;
+			}
+		}
+		if (state.activeTab === "places") {
+			if (state.hasPlaces === true) {
+				listings = state.places.map((el) => (
+					<PublicContentBox
+						key={el._id}
+						type={el.type}
+						id={el._id}
+						image={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						publicationDate={el.createdAt}
+						fetchData={fetchData}
+					/>
+				));
+			} else {
+				listings = noresults;
+			}
+		}
+		if (state.activeTab === "stories") {
+			if (state.hasStories === true) {
+				listings = state.stories.map((el) => (
+					<PublicContentBox
+						key={el._id}
+						type={el.type}
+						id={el._id}
+						image={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						publicationDate={el.createdAt}
+						fetchData={fetchData}
+					/>
+				));
+			} else {
+				listings = noresults;
+			}
+		}
+	} else {
+		listings = noresults;
+	}
+
+	const activeTab = {
+		backgroundColor: "#abc3f4",
+		borderRadius: "8px",
+		cursor: "pointer",
+		color: "#0d1f44",
+	};
+
 	let mainButton;
 	if (state.loggedUser) {
 		if (state.userProfile._id === state.loggedUser._id) {
@@ -114,18 +284,51 @@ const UserProfile = (props) => {
 		);
 	}
 
-	const activities = state.activities;
-	const activitiesList = activities.map((el) => (
-		<PublicContentBox
-			key={el._id}
-			type={el.type}
-			id={el._id}
-			title={el.title}
-			subtitle={el.subtitle}
-			image={el.images[0]}
-			location={el.location}
-		/>
-	));
+	const handleFileUpload = async (e) => {
+		const fileToUpload = e.target.files[0];
+		const uploadData = new FormData();
+		uploadData.append("imageUrl", fileToUpload);
+		const uploadedFile = await service.uploadFile(uploadData);
+		setState({...state, cover: uploadedFile.path, isCoverReadyToUpload: true});
+	};
+
+	const refreshUserData = () => {
+		service.getUserProfile(state.id).then((res) => {
+			props.getUserDetails(res);
+			setState({
+				...state,
+				userProfile: res,
+				loggedUser: res,
+				isCoverReadyToUpload: false,
+			});
+		});
+	};
+
+	const handleSubmit = () => {
+		console.log("cover =>", state.cover);
+		const {_id} = state.loggedUser;
+		const {cover} = state;
+		service.editUserCover(_id, cover).then(() => {
+			refreshUserData();
+		});
+		setState({...state, isCoverReadyToUpload: false});
+	};
+
+	useEffect(() => {
+		if (state.isCoverReadyToUpload === true) {
+			handleSubmit();
+		}
+	}, [handleSubmit, state.isCoverReadyToUpload]);
+
+	if (state.isFetching === true) {
+		return (
+			<Container className="spinner d-flex justify-space-between">
+				<Spinner animation="border" role="status" variant="primary">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			</Container>
+		);
+	}
 
 	return (
 		<div id="userProfile">
@@ -181,7 +384,7 @@ const UserProfile = (props) => {
 											{state.userProfile.bio || "No bio"}
 										</li>
 										<hr />
-										<li className="user-property d-flex align-items-center">
+										{/* <li className="user-property d-flex align-items-center">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												className="icon icon-tabler icon-tabler-building-arch"
@@ -225,7 +428,7 @@ const UserProfile = (props) => {
 												Manages
 												<Link to="/">Comarcaventura: Rutes amb Seagway</Link>
 											</div>
-										</li>
+										</li> */}
 										<li className="user-location d-flex align-items-center">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -300,14 +503,38 @@ const UserProfile = (props) => {
 							<div
 								className="cover-picture box bordered"
 								style={{
-									backgroundImage:
-										"url('https://scontent.fbcn3-1.fna.fbcdn.net/v/t1.0-0/p640x640/42371153_10215257735108761_2713689869531480064_o.jpg?_nc_cat=109&_nc_sid=e3f864&_nc_ohc=mubppHdLPOIAX8DFIMn&_nc_ht=scontent.fbcn3-1.fna&tp=6&oh=619f73c10d39d9489d2b5e233a2b8257&oe=5F75520A')",
+									backgroundImage: `url("${state.userProfile.cover}")`,
 								}}
-							></div>
+							>
+								<label className="edit-cover">
+									<input type="file" onChange={handleFileUpload} />
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="icon icon-tabler icon-tabler-photo"
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										strokeWidth="1.5"
+										stroke="#ffffff"
+										fill="none"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<path stroke="none" d="M0 0h24v24H0z" />
+										<line x1="15" y1="8" x2="15.01" y2="8" />
+										<rect x="4" y="4" width="16" height="16" rx="3" />
+										<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+										<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+									</svg>{" "}
+									Edit cover
+								</label>
+							</div>
 							<div className="filter-bar">
 								<Button
-									className="active d-flex align-items-center justify-content-center"
+									className="d-flex align-items-center justify-content-center"
 									variant="none"
+									style={state.activeTab === "activities" ? activeTab : null}
+									onClick={() => setState({...state, activeTab: "activities"})}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -331,6 +558,8 @@ const UserProfile = (props) => {
 								<Button
 									variant="none"
 									className="d-flex align-items-center justify-content-center"
+									style={state.activeTab === "places" ? activeTab : null}
+									onClick={() => setState({...state, activeTab: "places"})}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -354,6 +583,8 @@ const UserProfile = (props) => {
 								<Button
 									variant="none"
 									className="d-flex align-items-center justify-content-center"
+									style={state.activeTab === "stories" ? activeTab : null}
+									onClick={() => setState({...state, activeTab: "stories"})}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -374,29 +605,8 @@ const UserProfile = (props) => {
 									</svg>
 									Stories
 								</Button>
-								<Button
-									variant="none"
-									className="d-flex align-items-center justify-content-center"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-star"
-										width="28"
-										height="28"
-										viewBox="0 0 24 24"
-										strokeWidth="1.5"
-										stroke="#2c3e50"
-										fill="none"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
-									</svg>
-									Reviews
-								</Button>
 							</div>
-							<div className="content-bar">{activitiesList}</div>
+							<div className="content-bar">{listings}</div>
 						</div>
 						<div className="col right">
 							<div className="box bordered"></div>
