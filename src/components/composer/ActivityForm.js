@@ -1,14 +1,6 @@
 import React, {useState} from "react";
 import NavigationBar from "../NavigationBar";
-import {
-	Container,
-	Row,
-	Col,
-	Breadcrumb,
-	Form,
-	Button,
-	Toast,
-} from "react-bootstrap";
+import {Container, Row, Col, Breadcrumb, Form, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import {useHistory} from "react-router-dom";
 
@@ -91,24 +83,6 @@ const ActivityForm = ({user}) => {
 		submitActivity();
 	};
 
-	const toast = (
-		<Toast
-			onClose={() =>
-				setState({...state, formData: {...state.formData, isSubmitted: false}})
-			}
-			show={state.formData.isSubmitted}
-			delay={5000}
-			autohide
-		>
-			<Toast.Header>
-				<img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-				<strong className="mr-auto">Getaways.guru</strong>
-				<small>1 secs ago</small>
-			</Toast.Header>
-			<Toast.Body>Woohoo, your new activity has been posted!</Toast.Body>
-		</Toast>
-	);
-
 	let contentPreview;
 	if (state.formData.emptyForm) {
 		contentPreview = (
@@ -136,7 +110,6 @@ const ActivityForm = ({user}) => {
 				user={user}
 			/>
 			<Container fluid className="mw-1600">
-				{state.formData.isSubmitted ? toast : null}
 				<Row>
 					<Col lg={4} className="sided-shadow">
 						<Breadcrumb>

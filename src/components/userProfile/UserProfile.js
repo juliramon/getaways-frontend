@@ -118,6 +118,7 @@ const UserProfile = (props) => {
 	const activitiesList = activities.map((el) => (
 		<PublicContentBox
 			key={el._id}
+			type={el.type}
 			id={el._id}
 			title={el.title}
 			subtitle={el.subtitle}

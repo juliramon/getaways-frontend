@@ -30,14 +30,12 @@ const Login = (props) => {
 			.login(email, password)
 			.then((res) => {
 				if (res.status) {
-					console.log("error =>", res);
 					setState({
 						...state,
 						errorMessage: res,
 					});
 				} else {
 					setState(initialState);
-					console.log("looggedin =>", res);
 					props.getUserDetails(res);
 					history.push("/feed");
 				}

@@ -23,6 +23,9 @@ import StoryListing from "./components/listingPage/StoryListing";
 import ActivityEditionForm from "./components/composer/ActivityEditionForm";
 import PlaceEditionForm from "./components/composer/PlaceEditionForm";
 import StoryEditionForm from "./components/composer/StoryEditionForm";
+import PlaceList from "./components/listings/PlaceList";
+import StoryList from "./components/listings/StoryList";
+import BookmarksList from "./components/listings/BookmarksList";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -34,7 +37,6 @@ function App() {
 		setState({loggedUser: user});
 		Cookies.set("user", user, {expires: 7});
 	};
-	console.log("app =>", state.loggedUser);
 	return (
 		<div className="app">
 			<GlobalStyle />
@@ -106,8 +108,19 @@ function App() {
 				<Route
 					exact
 					path="/activities"
-					user={state.loggedUser}
-					component={ActivityList}
+					render={(props) => (
+						<ActivityList {...props} user={state.loggedUser} />
+					)}
+				/>
+				<Route
+					exact
+					path="/places"
+					render={(props) => <PlaceList {...props} user={state.loggedUser} />}
+				/>
+				<Route
+					exact
+					path="/stories"
+					render={(props) => <StoryList {...props} user={state.loggedUser} />}
 				/>
 				<ProtectedRoute
 					path="/activities/:id/edit"
@@ -160,6 +173,11 @@ function App() {
 					exact
 					path="/users"
 					render={(props) => <UsersList {...props} user={state.loggedUser} />}
+				/>
+				<ProtectedRoute
+					path="/bookmarks"
+					user={state.loggedUser}
+					component={BookmarksList}
 				/>
 			</Switch>
 		</div>

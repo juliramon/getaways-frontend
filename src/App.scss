@@ -95,6 +95,11 @@ button,
 	border-radius: 8px;
 }
 
+button:focus {
+	outline: none !important;
+	border: none !important;
+}
+
 form .form-label {
 	font-size: 0.9em;
 	font-weight: bold;
@@ -131,6 +136,18 @@ form button {
 	color: $dark-button-color !important;
 	font-weight: bold !important;
 }
+
+/*---TOAST STYLES---*/
+
+.toast {
+	min-width: 300px;
+	img.rounded.mr-2 {
+		width: 20px;
+		height: 20px;
+	}
+}
+
+/*---END TOAST STYLES---*/
 
 /*---GLOBAL STYLES---*/
 /*---HEADER STYLES---*/
@@ -796,6 +813,7 @@ nav {
 		font-family: "INTER";
 		font-weight: bold;
 		min-width: 437.5px;
+		max-width: 437.5px;
 		overflow: hidden;
 	}
 	.subtitle {
@@ -992,7 +1010,21 @@ nav {
 	.listing-title {
 		font-weight: bold;
 		font-size: 2.5em;
-		margin-bottom: 15px;
+		margin: 0 40px 15px 0;
+	}
+	.listing-bookmark {
+		border: none;
+		background-color: $hover-tab-background;
+		border-radius: 100px !important;
+		width: 50px;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: 0.3s;
+	}
+	.listing-bookmark:hover {
+		background-color: $active-tab-background;
 	}
 	.listing-subtitle {
 		font-size: 1.1em;
@@ -1235,3 +1267,59 @@ nav {
 }
 
 /*---END USERS LIST STYLES---*/
+/*---BOOKMARKS LIST STYLES---*/
+#bookmarksList {
+	.box {
+		width: 100%;
+		padding: 20px 0;
+	}
+	.box .col.left,
+	.box .col.right {
+		max-width: 20% !important;
+	}
+	.box.bordered {
+		border: 1px solid #e8e8e8;
+		padding: 20px;
+		border-radius: 8px;
+	}
+	.page-meta {
+		width: 100%;
+		.page-header {
+			align-items: center;
+		}
+	}
+	.page-title {
+		font-size: 2em;
+		margin-bottom: 0;
+	}
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	ul li {
+		padding: 3px 0;
+	}
+	li span {
+		font-weight: bold;
+	}
+	.box.empty {
+		flex-flow: column nowrap;
+		align-items: center;
+		text-align: center;
+		img {
+			width: 290px;
+		}
+		p {
+			margin: 35px 0 25px 0;
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+		}
+		a,
+		button {
+			margin: 0 auto;
+			padding: 12px 45px;
+		}
+	}
+}
