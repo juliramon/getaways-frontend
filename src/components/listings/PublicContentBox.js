@@ -1,14 +1,22 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-const PublicContentBox = ({id, image, title, subtitle, location}) => {
+const PublicContentBox = ({id, image, title, subtitle, location, type}) => {
+	let path;
+	if (type === "activity") {
+		path = "activities";
+	} else if (type === "place") {
+		path = "places";
+	} else if (type === "story") {
+		path = "stories";
+	}
 	return (
 		<div
 			id="listing"
 			className="d-flex align-items-center justify-content-between"
 		>
 			<Link
-				to={`/activities/${id}`}
+				to={`/${path}/${id}`}
 				title={title}
 				className="listing-wrapper d-flex align-items-center"
 			>
@@ -21,11 +29,6 @@ const PublicContentBox = ({id, image, title, subtitle, location}) => {
 					<p className="listing-location">{location}</p>
 				</div>
 			</Link>
-			<div className="listing-action">
-				<Link to="/" title="Book" className="btn btn-primary">
-					Book
-				</Link>
-			</div>
 		</div>
 	);
 };

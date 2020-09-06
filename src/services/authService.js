@@ -8,10 +8,7 @@ class AuthService {
 		});
 		let error, response;
 		service.interceptors.response.use(
-			(response) => {
-				console.log(response.data);
-				return (this.response = response.data);
-			},
+			(response) => (this.response = response.data),
 			(error) => {
 				if (error.response.status >= 400 && error.response.status <= 500) {
 					this.error = {

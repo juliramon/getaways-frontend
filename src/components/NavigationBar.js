@@ -35,6 +35,27 @@ const NavigationBar = (props) => {
 					<Dropdown.Menu>
 						<ul>
 							<li>
+								<Nav.Link href={`/dashboard`}>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="icon icon-tabler icon-tabler-layout-list"
+										width="44"
+										height="44"
+										viewBox="0 0 24 24"
+										strokeWidth="1.5"
+										stroke="#2c3e50"
+										fill="none"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<path stroke="none" d="M0 0h24v24H0z" />
+										<rect x="4" y="4" width="16" height="6" rx="2" />
+										<rect x="4" y="14" width="16" height="6" rx="2" />
+									</svg>
+									Dashboard
+								</Nav.Link>
+							</li>
+							<li>
 								<Nav.Link href={`/users/${user._id}`}>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"

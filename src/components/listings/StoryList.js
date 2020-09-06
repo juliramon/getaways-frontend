@@ -4,28 +4,28 @@ import PublicContentBox from "./PublicContentBox";
 import NavigationBar from "../NavigationBar";
 import {Container, Row, Form} from "react-bootstrap";
 
-const ActivityList = ({user}) => {
+const StoryList = ({user}) => {
 	const initialState = {
 		loggedUser: user,
-		activities: [],
+		stories: [],
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
-	const getAllActivities = useCallback(() => {
-		service.activities("/activities").then((res) => {
-			setState({...state, activities: res});
+	const getAllStories = useCallback(() => {
+		service.getAllStories("/stories").then((res) => {
+			setState({...state, stories: res});
 		});
 	}, [state, service]);
-	useEffect(getAllActivities, []);
-	const activitiesList = state.activities.map((el) => (
+	useEffect(getAllStories, []);
+	const storiesList = state.stories.map((el) => (
 		<PublicContentBox
 			key={el._id}
-			type={el.type}
 			id={el._id}
 			image={el.images[0]}
 			title={el.title}
 			subtitle={el.subtitle}
 			location={el.location}
+			type={el.type}
 		/>
 	));
 	return (
@@ -38,14 +38,14 @@ const ActivityList = ({user}) => {
 			/>
 			<Container fluid className="top-nav">
 				<div className="top-nav-wrapper">
-					<h1 className="top-nav-title">Activities</h1>
+					<h1 className="top-nav-title">Stories</h1>
 					<p className="top-nav-subtitle">
 						Wear your best boots, your swimsuit, your backpack or your skis.
 						There's a whole world waiting to be discovered. Get away and enjoy
 						with the activities below.
 					</p>
 					<ul className="top-nav-meta d-flex align-items-center">
-						<li>3 activities</li>
+						<li>3 stories</li>
 						<li>2 contributors</li>
 					</ul>
 				</div>
@@ -86,7 +86,7 @@ const ActivityList = ({user}) => {
 								</div>
 							</div>
 						</div>
-						<div className="col center">{activitiesList}</div>
+						<div className="col center">{storiesList}</div>
 						<div className="col right">
 							<div className="an-wrapper">
 								<div className="an-block"></div>
@@ -99,4 +99,4 @@ const ActivityList = ({user}) => {
 	);
 };
 
-export default ActivityList;
+export default StoryList;

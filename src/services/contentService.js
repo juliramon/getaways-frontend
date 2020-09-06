@@ -135,6 +135,19 @@ class ContentService {
 
 	removeStory = (id) =>
 		this.service.delete(`/stories/${id}`).then((res) => res.data);
+
+	// PLACES ENDPOINTS
+
+	bookmark = (listingId, listingType) =>
+		this.service
+			.post("/bookmark", {listingId, listingType})
+			.then((res) => res.data);
+
+	getUserActiveBookmarks = () =>
+		this.service.get("/activebookmarks").then((res) => res.data);
+
+	getUserAllBookmarks = () =>
+		this.service.get("/bookmarks").then((res) => res.data);
 }
 
 export default ContentService;

@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect} from "react";
 import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
-import {Container, Row} from "react-bootstrap";
+import {Container, Row, Spinner, Toast} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 const ActivityListing = (props) => {
@@ -10,29 +10,52 @@ const ActivityListing = (props) => {
 		loggedUser: props.user,
 		id: props.match.params.id,
 		activity: {},
-		activityLoaded: false,
+		isActivityLoaded: false,
 		owner: {},
+		bookmarkDetails: {},
+		isBookmarked: false,
+		showBookmarkToast: false,
+		toastMessage: "",
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
-	const getActivityDetails = useCallback(() => {
-		service.activityDetails(state.id).then((res) => {
-			console.log(res);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const userBookmarks = await service.getUserAllBookmarks();
+			const activityDetails = await service.activityDetails(state.id);
+			let bookmarkDetails;
+			userBookmarks.map((el) =>
+				el.bookmarkActivityRef._id === activityDetails._id
+					? (bookmarkDetails = el)
+					: null
+			);
 			setState({
 				...state,
-				activity: res,
-				activityLoaded: true,
-				owner: res.owner,
+				activity: activityDetails,
+				isActivityLoaded: true,
+				owner: activityDetails.owner,
+				bookmarkDetails: bookmarkDetails,
+				isBookmarked: !bookmarkDetails.isRemoved,
 			});
-		});
-	}, [state, service]);
+		};
+		fetchData();
+	}, []);
 
-	useEffect(getActivityDetails, []);
+	if (state.isActivityLoaded === false) {
+		return (
+			<Container className="spinner d-flex justify-space-between">
+				<Spinner animation="border" role="status" variant="primary">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			</Container>
+		);
+	}
 
 	let {title, subtitle, location, description} = state.activity;
 	let image0, image1, image2, image3, image4;
 
-	if (state.activityLoaded) {
+	if (state.isActivityLoaded) {
 		const imageslist = state.activity.images;
 		image0 = imageslist[0];
 		image1 = imageslist[1];
@@ -40,6 +63,85 @@ const ActivityListing = (props) => {
 		image3 = imageslist[3];
 		image4 = imageslist[4];
 	}
+
+	const bookmarkListing = () => {
+		const listingId = state.activity._id;
+		const listingType = state.activity.type;
+		service.bookmark(listingId, listingType).then((res) => {
+			setState({
+				...state,
+				isBookmarked: !state.isBookmarked,
+				showBookmarkToast: true,
+				toastMessage: res.message,
+			});
+		});
+	};
+
+	let bookmarkButton;
+	if (state.isBookmarked === false) {
+		bookmarkButton = (
+			<button className="listing-bookmark" onClick={() => bookmarkListing()}>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="icon icon-tabler icon-tabler-bookmark"
+					width="44"
+					height="44"
+					viewBox="0 0 24 24"
+					strokeWidth="1.5"
+					stroke="#0d1f44"
+					fill="none"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" />
+					<path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
+				</svg>
+			</button>
+		);
+	} else {
+		bookmarkButton = (
+			<button className="listing-bookmark" onClick={() => bookmarkListing()}>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="icon icon-tabler icon-tabler-bookmark"
+					width="44"
+					height="44"
+					viewBox="0 0 24 24"
+					strokeWidth="1.5"
+					stroke="#0d1f44"
+					fill="none"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" />
+					<path
+						fill="#0d1f44"
+						d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2"
+					/>
+				</svg>
+			</button>
+		);
+	}
+
+	const toast = (
+		<Toast
+			onClose={() =>
+				setState({...state, showBookmarkToast: false, toastMessage: ""})
+			}
+			show={state.showBookmarkToast}
+			delay={5000}
+			autohide
+		>
+			<Toast.Header>
+				<img src="../../logo-xs.svg" className="rounded mr-2" alt="" />
+				<strong className="mr-auto">Getaways.guru</strong>
+			</Toast.Header>
+			<Toast.Body>
+				{state.toastMessage} <br />{" "}
+				<Link to={"/bookmarks"}>See all bookmarks</Link>{" "}
+			</Toast.Body>
+		</Toast>
+	);
 
 	return (
 		<div id="listingPage">
@@ -50,6 +152,7 @@ const ActivityListing = (props) => {
 				user={props.user}
 			/>
 			<Container className="mw-1600">
+				{state.showBookmarkToast ? toast : null}
 				<Row>
 					<div className="box">
 						<section className="col">
@@ -82,7 +185,11 @@ const ActivityListing = (props) => {
 							<div className="col left">
 								<div className="listing-wrapper">
 									<div className="listing-header">
-										<h1 className="listing-title">{title}</h1>
+										<div className="d-flex justify-content-between listing-header-wrapper">
+											<h1 className="listing-title">{title}</h1>
+											{bookmarkButton}
+										</div>
+
 										<div className="d-flex listing-meta-wrapper">
 											<div className="col left">
 												<div className="listing-owner">
