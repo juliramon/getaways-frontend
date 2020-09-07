@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import NavigationBar from "../NavigationBar";
 import {Container, Row, Spinner} from "react-bootstrap";
 import ContentService from "../../services/contentService";
-import {Link} from "react-router-dom";
 import PublicContentBox from "../listings/PublicContentBox";
 
 const BookmarksList = (props) => {

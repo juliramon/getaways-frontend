@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import NavigationBar from "../NavigationBar";
-import {Container, Row, Col, Breadcrumb, Form, Button} from "react-bootstrap";
+import {Container, Row, Col, Form, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import {useHistory} from "react-router-dom";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
-const ActivityForm = ({user}) => {
+const ActivityForm = ({user, match}) => {
 	const initialState = {
 		loggedUser: user,
 		formData: {
@@ -14,11 +15,14 @@ const ActivityForm = ({user}) => {
 			subtitle: "",
 			images: [],
 			description: "",
-			location: "",
-			isSubmitted: false,
+			status: "",
+			duration: "",
+			price: "",
+			isReadyToSubmit: false,
 		},
 	};
 	const [state, setState] = useState(initialState);
+	const [location, setLocation] = useState("");
 	const service = new ContentService();
 	const history = useHistory();
 
@@ -55,10 +59,24 @@ const ActivityForm = ({user}) => {
 			subtitle,
 			images,
 			description,
-			location,
+			status,
+			duration,
+			price,
 		} = state.formData;
+		const {secondary_text} = location.value.structured_formatting;
+		let listingLocation = secondary_text;
 		service
-			.activity(type, title, subtitle, images, description, location)
+			.activity(
+				type,
+				title,
+				subtitle,
+				images,
+				description,
+				listingLocation,
+				status,
+				duration,
+				price
+			)
 			.then(() => {
 				setState({
 					...state,
@@ -69,10 +87,13 @@ const ActivityForm = ({user}) => {
 						subtitle: "",
 						images: [],
 						description: "",
-						location: "",
-						isSubmitted: true,
+						status: "",
+						duration: 0,
+						price: 0,
+						isReadyToSubmit: false,
 					},
 				});
+				setLocation("");
 				history.push("/dashboard");
 			})
 			.catch((err) => console.log(err));
@@ -83,24 +104,34 @@ const ActivityForm = ({user}) => {
 		submitActivity();
 	};
 
-	let contentPreview;
-	if (state.formData.emptyForm) {
-		contentPreview = (
-			<div className="preview">
-				<h1>Create an Activity</h1>
-				<p>Fill the form to preview your activity before posting it</p>
-			</div>
-		);
-	} else {
-		contentPreview = (
-			<div className="preview">
-				<h1>{state.formData.title}</h1>
-				<p>{state.formData.subtitle}</p>
-				<p>{state.formData.description}</p>
-				<p>{state.formData.location}</p>
-			</div>
-		);
-	}
+	useEffect(() => {
+		if (location.value) {
+			const {
+				title,
+				subtitle,
+				images,
+				description,
+				duration,
+				price,
+			} = state.formData;
+
+			const {secondary_text} = location.value.structured_formatting;
+
+			if (
+				title &&
+				subtitle &&
+				images.length > 0 &&
+				description &&
+				secondary_text &&
+				duration &&
+				price
+			) {
+				console.log("helo");
+				setState((state) => ({...state, isReadyToSubmit: true}));
+			}
+		}
+	}, [state.formData]);
+
 	return (
 		<div id="activity" className="composer">
 			<NavigationBar
@@ -108,18 +139,18 @@ const ActivityForm = ({user}) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 				user={user}
+				path={match.path}
 			/>
-			<Container fluid className="mw-1600">
+			<Container className="mw-1600">
 				<Row>
-					<Col lg={4} className="sided-shadow">
-						<Breadcrumb>
-							<Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-							<Breadcrumb.Item href="#">Create Activity</Breadcrumb.Item>
-						</Breadcrumb>
+					<Col lg={12} className="sided-shadow">
 						<div className="form-composer">
 							<h1>Create Activity</h1>
+							<p className="sub-h1">
+								Describe and publish your activity so others start enjoying it.
+							</p>
 						</div>
-						<Form onSubmit={handleSubmit}>
+						<Form>
 							<Form.Group>
 								<Form.Label>Title</Form.Label>
 								<Form.Control
@@ -141,25 +172,196 @@ const ActivityForm = ({user}) => {
 								/>
 							</Form.Group>
 							<Form.Group>
-								<Form.Label>Image</Form.Label>
-								<Form.Control type="file" onChange={handleFileUpload} />
+								<Form.Label>Location</Form.Label>
+								<GooglePlacesAutocomplete
+									apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
+									selectProps={{
+										location,
+										onChange: setLocation,
+									}}
+								/>
 							</Form.Group>
-							<Form.Group>
-								<Form.Label>Image</Form.Label>
-								<Form.Control type="file" onChange={handleFileUpload} />
-							</Form.Group>
-							<Form.Group>
-								<Form.Label>Image</Form.Label>
-								<Form.Control type="file" onChange={handleFileUpload} />
-							</Form.Group>
-							<Form.Group>
-								<Form.Label>Image</Form.Label>
-								<Form.Control type="file" onChange={handleFileUpload} />
-							</Form.Group>
-							<Form.Group>
-								<Form.Label>Image</Form.Label>
-								<Form.Control type="file" onChange={handleFileUpload} />
-							</Form.Group>
+							<Form.Row>
+								<Col lg={6}>
+									<Form.Group>
+										<Form.Label>Price (€)</Form.Label>
+										<Form.Control
+											type="number"
+											name="price"
+											placeholder="Activity price"
+											onChange={handleChange}
+											value={state.formData.price}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={6}>
+									<Form.Group>
+										<Form.Label>Duration (h)</Form.Label>
+										<Form.Control
+											type="number"
+											name="duration"
+											placeholder="Activity duration"
+											onChange={handleChange}
+											value={state.formData.duration}
+										/>
+									</Form.Group>
+								</Col>
+							</Form.Row>
+							<div className="images">
+								<span>Images</span>
+								<Form.Row>
+									<Col lg={2}>
+										<Form.Group>
+											<div className="image-drop-zone">
+												<Form.Label>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-photo"
+														width="44"
+														height="44"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<line x1="15" y1="8" x2="15.01" y2="8" />
+														<rect x="4" y="4" width="16" height="16" rx="3" />
+														<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+														<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+													</svg>
+													<Form.Control
+														type="file"
+														onChange={handleFileUpload}
+													/>
+												</Form.Label>
+											</div>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<div className="image-drop-zone">
+												<Form.Label>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-photo"
+														width="44"
+														height="44"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<line x1="15" y1="8" x2="15.01" y2="8" />
+														<rect x="4" y="4" width="16" height="16" rx="3" />
+														<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+														<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+													</svg>
+													<Form.Control
+														type="file"
+														onChange={handleFileUpload}
+													/>
+												</Form.Label>
+											</div>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<div className="image-drop-zone">
+												<Form.Label>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-photo"
+														width="44"
+														height="44"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<line x1="15" y1="8" x2="15.01" y2="8" />
+														<rect x="4" y="4" width="16" height="16" rx="3" />
+														<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+														<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+													</svg>
+													<Form.Control
+														type="file"
+														onChange={handleFileUpload}
+													/>
+												</Form.Label>
+											</div>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<div className="image-drop-zone">
+												<Form.Label>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-photo"
+														width="44"
+														height="44"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<line x1="15" y1="8" x2="15.01" y2="8" />
+														<rect x="4" y="4" width="16" height="16" rx="3" />
+														<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+														<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+													</svg>
+													<Form.Control
+														type="file"
+														onChange={handleFileUpload}
+													/>
+												</Form.Label>
+											</div>
+										</Form.Group>
+									</Col>
+									<Col lg={2}>
+										<Form.Group>
+											<div className="image-drop-zone">
+												<Form.Label>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-photo"
+														width="44"
+														height="44"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<line x1="15" y1="8" x2="15.01" y2="8" />
+														<rect x="4" y="4" width="16" height="16" rx="3" />
+														<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+														<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+													</svg>
+													<Form.Control
+														type="file"
+														onChange={handleFileUpload}
+													/>
+												</Form.Label>
+											</div>
+										</Form.Group>
+									</Col>
+								</Form.Row>
+							</div>
 							<Form.Group>
 								<Form.Label>Description</Form.Label>
 								<Form.Control
@@ -172,27 +374,40 @@ const ActivityForm = ({user}) => {
 									value={state.formData.description}
 								/>
 							</Form.Group>
-							<Form.Group>
-								<Form.Label>Location</Form.Label>
-								<Form.Control
-									type="text"
-									name="location"
-									placeholder="Activity location"
-									onChange={handleChange}
-									value={state.formData.location}
-								/>
-							</Form.Group>
-							<div className="buttons d-flex justify-space-between">
-								<Button type="submit">Save draft</Button>
-								<Button type="submit" variant="primary">
-									Post
-								</Button>
-							</div>
 						</Form>
 					</Col>
-					<Col lg={8}>{contentPreview}</Col>
 				</Row>
 			</Container>
+			<div className="progress-bar-outter">
+				<Container className="d-flex align-items-center">
+					<div className="col left">{/* <span>Section 1 of 7 </span> */}</div>
+					<div className="col center">
+						{/* <div className="progress">
+							<div
+								className="progress-bar"
+								role="progressbar"
+								style={{width: "33%"}}
+								aria-valuenow="25"
+								aria-valuemin="0"
+								aria-valuemax="100"
+							></div>
+						</div> */}
+					</div>
+					<div className="col right">
+						<div className="buttons d-flex justify-space-between justify-content-end">
+							{state.isReadyToSubmit ? (
+								<Button type="submit" variant="none" onClick={handleSubmit}>
+									Publish
+								</Button>
+							) : (
+								<Button type="submit" variant="none" disabled>
+									Publish
+								</Button>
+							)}
+						</div>
+					</div>
+				</Container>
+			</div>
 		</div>
 	);
 };

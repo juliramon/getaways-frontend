@@ -679,29 +679,96 @@ nav {
 /*---COMPOSER STYLES---*/
 
 .composer {
-	.breadcrumb {
-		background-color: #ffffff;
-		padding: 50px 0 0 0;
-		margin-bottom: 5px;
-		font-size: 0.8em;
+	.form-composer {
+		padding-top: 40px;
 	}
 	h1 {
-		font-size: 2.25rem;
+		font-size: 2.1rem;
 	}
 	form button {
 		width: 100%;
 	}
-	.sided-shadow {
-		border-right: 1px solid #e8e8e8;
-		height: calc(100vh - 61px);
-		padding: 0 30px 0 0;
+	.box {
+		position: sticky;
+		top: 120px;
+		z-index: 1000;
 	}
-	.buttons button:first-child {
-		max-width: 100px;
-		background-color: #b6b6b6;
-		color: #000;
-		border: none;
-		margin-right: 10px;
+	.sided-shadow {
+		padding-bottom: 50px;
+	}
+	.images {
+		span {
+			font-size: 0.9em;
+			font-weight: bold;
+			display: inline-block;
+			margin-bottom: 0.5rem;
+		}
+		.form-label {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer !important;
+		}
+		.image-drop-zone {
+			background-color: $input-background;
+			width: 100%;
+			height: 176px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 8px;
+			border: 1px dashed $active-tab-background;
+
+			svg {
+				stroke: $active-tab-background;
+			}
+		}
+		input[type="file"] {
+			display: none;
+		}
+	}
+	.progress-bar-outter {
+		position: sticky;
+		bottom: 0;
+		background: $white-text;
+		border-top: 1px solid rgb(232, 232, 232);
+		padding: 15px 0;
+		.buttons button:last-child {
+			background-color: $dark-button-background;
+			color: $dark-button-color;
+			padding: 12px 15px;
+			min-width: 160px;
+			font-weight: bold;
+		}
+		.buttons button:disabled {
+			opacity: 1;
+			background-color: $active-tab-background;
+			cursor: not-allowed;
+		}
+		.col {
+			padding: 0;
+		}
+		.col.left {
+			max-width: 13%;
+		}
+		.col.right {
+			max-width: 30%;
+		}
+		span {
+			color: $input-text;
+			opacity: 0.6;
+		}
+		.progress {
+			background-color: $hover-tab-background;
+			border-radius: 100px;
+			height: 0.8rem;
+		}
+		.progress-bar {
+			background-color: $dark-button-background;
+			border-radius: 100px;
+		}
 	}
 }
 
@@ -1210,7 +1277,7 @@ nav {
 				input {
 					display: none;
 				}
-
+				cursor: pointer;
 				display: flex;
 				align-items: center;
 				padding: 5px 10px;

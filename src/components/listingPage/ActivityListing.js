@@ -24,19 +24,24 @@ const ActivityListing = (props) => {
 		const fetchData = async () => {
 			const userBookmarks = await service.getUserAllBookmarks();
 			const activityDetails = await service.activityDetails(state.id);
-			let bookmarkDetails;
+			let bookmarkDetails, isBookmarked;
 			userBookmarks.map((el) =>
 				el.bookmarkActivityRef._id === activityDetails._id
 					? (bookmarkDetails = el)
 					: null
 			);
+			if (bookmarkDetails) {
+				isBookmarked = !bookmarkDetails.isRemoved;
+			} else {
+				isBookmarked = false;
+			}
 			setState({
 				...state,
 				activity: activityDetails,
 				isActivityLoaded: true,
 				owner: activityDetails.owner,
 				bookmarkDetails: bookmarkDetails,
-				isBookmarked: !bookmarkDetails.isRemoved,
+				isBookmarked: isBookmarked,
 			});
 		};
 		fetchData();
@@ -72,7 +77,7 @@ const ActivityListing = (props) => {
 				...state,
 				isBookmarked: !state.isBookmarked,
 				showBookmarkToast: true,
-				toastMessage: res.message,
+				toastMessage: res.message || "Listing bookmarked!",
 			});
 		});
 	};
