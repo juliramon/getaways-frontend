@@ -3,7 +3,7 @@ import NavigationBar from "../NavigationBar";
 import {Container, Row, Col, Form, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import {useHistory} from "react-router-dom";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import Autocomplete from "react-google-autocomplete";
 
 const ActivityForm = ({user, match}) => {
 	const initialState = {
@@ -15,14 +15,23 @@ const ActivityForm = ({user, match}) => {
 			subtitle: "",
 			images: [],
 			description: "",
-			status: "",
+			phone: "",
+			website: "",
+			activity_location_full_address: "",
+			activity_location_locality: "",
+			activity_location_administrative_area_level: "",
+			activity_location_country: "",
+			activity_location_lat: "",
+			activity_location_lng: "",
+			activity_rating: 0,
+			activity_place_id: "",
+			activity_opening_hours: "",
 			duration: "",
 			price: "",
 			isReadyToSubmit: false,
 		},
 	};
 	const [state, setState] = useState(initialState);
-	const [location, setLocation] = useState("");
 	const service = new ContentService();
 	const history = useHistory();
 
@@ -59,12 +68,20 @@ const ActivityForm = ({user, match}) => {
 			subtitle,
 			images,
 			description,
-			status,
+			phone,
+			website,
+			activity_location_full_address,
+			activity_location_locality,
+			activity_location_administrative_area_level,
+			activity_location_country,
+			activity_location_lat,
+			activity_location_lng,
+			activity_rating,
+			activity_place_id,
+			activity_opening_hours,
 			duration,
 			price,
 		} = state.formData;
-		const {secondary_text} = location.value.structured_formatting;
-		let listingLocation = secondary_text;
 		service
 			.activity(
 				type,
@@ -72,8 +89,17 @@ const ActivityForm = ({user, match}) => {
 				subtitle,
 				images,
 				description,
-				listingLocation,
-				status,
+				phone,
+				website,
+				activity_location_full_address,
+				activity_location_locality,
+				activity_location_administrative_area_level,
+				activity_location_country,
+				activity_location_lat,
+				activity_location_lng,
+				activity_rating,
+				activity_place_id,
+				activity_opening_hours,
 				duration,
 				price
 			)
@@ -87,13 +113,22 @@ const ActivityForm = ({user, match}) => {
 						subtitle: "",
 						images: [],
 						description: "",
-						status: "",
-						duration: 0,
-						price: 0,
+						phone: "",
+						website: "",
+						activity_location_full_address: "",
+						activity_location_locality: "",
+						activity_location_administrative_area_level: "",
+						activity_location_country: "",
+						activity_location_lat: "",
+						activity_location_lng: "",
+						activity_rating: 0,
+						activity_place_id: "",
+						activity_opening_hours: "",
+						duration: "",
+						price: "",
 						isReadyToSubmit: false,
 					},
 				});
-				setLocation("");
 				history.push("/dashboard");
 			})
 			.catch((err) => console.log(err));
@@ -105,30 +140,30 @@ const ActivityForm = ({user, match}) => {
 	};
 
 	useEffect(() => {
-		if (location.value) {
-			const {
-				title,
-				subtitle,
-				images,
-				description,
-				duration,
-				price,
-			} = state.formData;
+		const {
+			title,
+			subtitle,
+			activity_location_full_address,
+			phone,
+			website,
+			images,
+			price,
+			duration,
+			description,
+		} = state.formData;
 
-			const {secondary_text} = location.value.structured_formatting;
-
-			if (
-				title &&
-				subtitle &&
-				images.length > 0 &&
-				description &&
-				secondary_text &&
-				duration &&
-				price
-			) {
-				console.log("helo");
-				setState((state) => ({...state, isReadyToSubmit: true}));
-			}
+		if (
+			title &&
+			subtitle &&
+			activity_location_full_address &&
+			phone &&
+			website &&
+			images.length > 0 &&
+			description &&
+			duration &&
+			price
+		) {
+			setState((state) => ({...state, isReadyToSubmit: true}));
 		}
 	}, [state.formData]);
 
@@ -173,14 +208,97 @@ const ActivityForm = ({user, match}) => {
 							</Form.Group>
 							<Form.Group>
 								<Form.Label>Location</Form.Label>
-								<GooglePlacesAutocomplete
+								<Autocomplete
+									className="location-control"
 									apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
-									selectProps={{
-										location,
-										onChange: setLocation,
+									style={{width: "100%"}}
+									onPlaceSelected={(place) => {
+										let activity_location_full_address,
+											activity_location_locality,
+											activity_location_administrative_area_level,
+											activity_location_country,
+											activity_location_lat,
+											activity_location_lng,
+											activity_rating,
+											activity_place_id,
+											activity_opening_hours;
+
+										activity_location_full_address = place.formatted_address;
+										activity_location_locality =
+											place.address_components[
+												place.address_components.length - 4
+											].long_name;
+										activity_location_administrative_area_level =
+											place.address_components[
+												place.address_components.length - 3
+											].long_name;
+										activity_location_country =
+											place.address_components[
+												place.address_components.length - 2
+											].long_name;
+
+										activity_location_lat = place.geometry.viewport.Va.i;
+										activity_location_lng = place.geometry.viewport.Za.i;
+										activity_rating = place.rating;
+										activity_place_id = place.place_id;
+										activity_opening_hours = place.opening_hours.weekday_text;
+
+										setState({
+											...state,
+											formData: {
+												...state.formData,
+												activity_location_full_address: activity_location_full_address,
+												activity_location_locality: activity_location_locality,
+												activity_location_administrative_area_level: activity_location_administrative_area_level,
+												activity_location_country: activity_location_country,
+												activity_location_lat: activity_location_lat,
+												activity_location_lng: activity_location_lng,
+												activity_rating: activity_rating,
+												activity_place_id: activity_place_id,
+												activity_opening_hours: activity_opening_hours,
+											},
+										});
+
+										console.log(place);
 									}}
+									types={["establishment"]}
+									placeholder={"Type the activity address"}
+									fields={[
+										"rating",
+										"place_id",
+										"opening_hours",
+										"address_components",
+										"formatted_address",
+										"geometry",
+									]}
 								/>
 							</Form.Group>
+							<Form.Row>
+								<Col lg={6}>
+									<Form.Group>
+										<Form.Label>Phone Number</Form.Label>
+										<Form.Control
+											type="tel"
+											name="phone"
+											placeholder="Phone number for contact details"
+											onChange={handleChange}
+											value={state.formData.phone}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={6}>
+									<Form.Group>
+										<Form.Label>Website</Form.Label>
+										<Form.Control
+											type="url"
+											name="website"
+											placeholder="Activity website"
+											onChange={handleChange}
+											value={state.formData.website}
+										/>
+									</Form.Group>
+								</Col>
+							</Form.Row>
 							<Form.Row>
 								<Col lg={6}>
 									<Form.Group>
@@ -208,7 +326,7 @@ const ActivityForm = ({user, match}) => {
 								</Col>
 							</Form.Row>
 							<div className="images">
-								<span>Images</span>
+								<span>Activity Images</span>
 								<Form.Row>
 									<Col lg={2}>
 										<Form.Group>

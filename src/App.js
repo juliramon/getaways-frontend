@@ -26,6 +26,7 @@ import StoryEditionForm from "./components/composer/StoryEditionForm";
 import PlaceList from "./components/listings/PlaceList";
 import StoryList from "./components/listings/StoryList";
 import BookmarksList from "./components/listings/BookmarksList";
+import PageNotFound from "./components/errorPage/PageNotFound";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
@@ -179,6 +180,7 @@ function App() {
 					user={state.loggedUser}
 					component={BookmarksList}
 				/>
+				<Route path="*" component={PageNotFound} />
 			</Switch>
 		</div>
 	);

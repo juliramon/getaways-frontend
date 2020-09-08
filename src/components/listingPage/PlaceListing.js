@@ -1,8 +1,9 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect} from "react";
 import NavigationBar from "../NavigationBar";
 import ContentService from "../../services/contentService";
-import {Container, Row, Spinner} from "react-bootstrap";
+import {Container, Row, Spinner, Toast, Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import GoogleMapReact from "google-map-react";
 
 const PlaceListing = (props) => {
 	const initialState = {
@@ -11,24 +12,58 @@ const PlaceListing = (props) => {
 		place: {},
 		placeLoaded: false,
 		owner: {},
+		bookmarkDetails: {},
+		isBookmarked: false,
+		showBookmarkToast: false,
+		toastMessage: "",
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
-	const getPlaceDetails = useCallback(() => {
-		service.getPlaceDetails(state.id).then((res) => {
-			console.log(res);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const userBookmarks = await service.getUserActiveBookmarks();
+			const placeDetails = await service.getPlaceDetails(state.id);
+			let bookmarkDetails, isBookmarked;
+			if (userBookmarks) {
+				userBookmarks.map((el) => {
+					if (el.bookmarkPlaceRef) {
+						if (el.bookmarkPlaceRef._id === placeDetails._id) {
+							bookmarkDetails = el;
+						} else {
+							bookmarkDetails = null;
+						}
+					}
+				});
+			}
+			if (bookmarkDetails) {
+				isBookmarked = !bookmarkDetails.isRemoved;
+			} else {
+				isBookmarked = false;
+			}
 			setState({
 				...state,
-				place: res,
+				place: placeDetails,
 				placeLoaded: true,
-				owner: res.owner,
+				owner: placeDetails.owner,
+				bookmarkDetails: userBookmarks,
+				isBookmarked: isBookmarked,
 			});
-		});
-	}, [state, service]);
+		};
+		fetchData();
+	}, []);
 
-	useEffect(getPlaceDetails, []);
+	if (state.placeLoaded === false) {
+		return (
+			<Container className="spinner d-flex justify-space-between">
+				<Spinner animation="border" role="status" variant="primary">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			</Container>
+		);
+	}
 
-	let {title, subtitle, location, description} = state.place;
+	let {title, subtitle, description} = state.place;
 	let image0, image1, image2, image3, image4;
 
 	if (state.placeLoaded) {
@@ -38,15 +73,124 @@ const PlaceListing = (props) => {
 		image2 = imageslist[2];
 		image3 = imageslist[3];
 		image4 = imageslist[4];
+	}
+
+	const bookmarkListing = () => {
+		const listingId = state.place._id;
+		const listingType = state.place.type;
+		service.bookmark(listingId, listingType).then((res) => {
+			setState({
+				...state,
+				isBookmarked: !state.isBookmarked,
+				showBookmarkToast: true,
+				toastMessage: res.message || "Listing bookmarked!",
+			});
+		});
+	};
+
+	let bookmarkButton;
+	if (state.isBookmarked === false) {
+		bookmarkButton = (
+			<div
+				className="listing-bookmark-wrapper"
+				onClick={() => bookmarkListing()}
+			>
+				<button className="listing-bookmark">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-bookmark"
+						width="44"
+						height="44"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#0d1f44"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
+					</svg>
+				</button>
+				<span>Bookmark</span>
+			</div>
+		);
 	} else {
-		return (
-			<Container className="spinner d-flex justify-space-between">
-				<Spinner animation="border" role="status" variant="primary">
-					<span className="sr-only">Loading...</span>
-				</Spinner>
-			</Container>
+		bookmarkButton = (
+			<div
+				className="listing-bookmark-wrapper"
+				onClick={() => bookmarkListing()}
+			>
+				<button className="listing-bookmark">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-bookmark"
+						width="44"
+						height="44"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#0d1f44"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<path
+							fill="#0d1f44"
+							d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2"
+						/>
+					</svg>
+				</button>
+				<span>Unbookmark</span>
+			</div>
 		);
 	}
+
+	const toast = (
+		<Toast
+			onClose={() =>
+				setState({...state, showBookmarkToast: false, toastMessage: ""})
+			}
+			show={state.showBookmarkToast}
+			delay={5000}
+			autohide
+		>
+			<Toast.Header>
+				<img src="../../logo-xs.svg" className="rounded mr-2" alt="" />
+				<strong className="mr-auto">Getaways.guru</strong>
+			</Toast.Header>
+			<Toast.Body>
+				{state.toastMessage} <br />{" "}
+				<Link to={"/bookmarks"}>See all bookmarks</Link>{" "}
+			</Toast.Body>
+		</Toast>
+	);
+
+	const center = {
+		lat: parseFloat(state.place.place_location_lng),
+		lng: parseFloat(state.place.place_location_lat),
+	};
+
+	const getMapOptions = (maps) => {
+		return {
+			disableDefaultUI: true,
+			styles: [
+				{
+					featureType: "poi",
+					elementType: "labels",
+					styles: [{visibility: "on"}],
+				},
+			],
+		};
+	};
+
+	const renderMarker = (map, maps) => {
+		const position = {
+			lat: parseFloat(state.place.place_location_lng),
+			lng: parseFloat(state.place.place_location_lat),
+		};
+		new maps.Marker({position: position, map, title: "Hello"});
+	};
 
 	return (
 		<div id="listingPage">
@@ -57,58 +201,57 @@ const PlaceListing = (props) => {
 				user={props.user}
 			/>
 			<Container className="mw-1600">
-				<Row>
-					<div className="box">
-						<section className="col">
-							<div className="listing-cover d-flex justify-space-between">
-								<div
-									className="cover"
-									style={{backgroundImage: `url('${image0}')`}}
-								></div>
-								<div
-									className="cover"
-									style={{backgroundImage: `url('${image1}')`}}
-								></div>
-								<div className="d-flex">
-									<div
-										className="cover"
-										style={{backgroundImage: `url('${image2}')`}}
-									></div>
-									<div
-										className="cover"
-										style={{backgroundImage: `url('${image3}')`}}
-									></div>
-								</div>
-								<div
-									className="cover"
-									style={{backgroundImage: `url('${image4}')`}}
-								></div>
-							</div>
-						</section>
-						<article className="d-flex listing-content">
-							<div className="col left">
-								<div className="listing-wrapper">
-									<div className="listing-header">
-										<h1 className="listing-title">{title}</h1>
-										<div className="d-flex listing-meta-wrapper">
-											<div className="col left">
-												<div className="listing-owner">
-													<Link to={`/users/${state.owner._id}`}>
-														<div className="avatar">
-															<img
-																src={state.owner.avatar}
-																alt={state.owner.fullName}
-															/>
-														</div>
-														<p className="listing-owner-name">
-															{state.owner.fullName}
-														</p>
-													</Link>
-												</div>
-											</div>
-											<div className="col right">
-												<p className="listing-subtitle">{subtitle}</p>
-												<p className="listing-location d-flex align-items-center">
+				{state.showBookmarkToast ? toast : null}
+				<div className="box">
+					<Row>
+						<section className="listing-header-wrapper">
+							<Col lg={12}>
+								<div className="listing-header">
+									<div className="col left">
+										<div className="listing-title-wrapper">
+											<h1 className="listing-title">{title}</h1>
+										</div>
+										<div className="listing-meta-bar">
+											<ul>
+												<li className="listing-type">
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-route"
+														width="20"
+														height="20"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<circle cx="6" cy="19" r="2" />
+														<circle cx="18" cy="5" r="2" />
+														<path d="M12 19h4.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h3.5" />
+													</svg>
+													<span>{state.place.type}</span>
+												</li>
+												<li className="listing-rating">
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-star"
+														width="20"
+														height="20"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<path d="M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z" />
+													</svg>
+													<span>{state.place.place_rating}</span>
+												</li>
+												<li className="listing-location">
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
 														className="icon icon-tabler icon-tabler-map-pin"
@@ -124,23 +267,149 @@ const PlaceListing = (props) => {
 														<path stroke="none" d="M0 0h24v24H0z" />
 														<circle cx="12" cy="11" r="3" />
 														<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
-													</svg>{" "}
-													{location}
-												</p>
-											</div>
+													</svg>
+													<span>{`${state.place.place_location_locality}, ${state.place.place_location_country}`}</span>
+												</li>
+											</ul>
 										</div>
 									</div>
-									<div className="listing-body">
-										<div className="listing-description">{description}</div>
+									<div className="col right">{bookmarkButton}</div>
+								</div>
+								<div className="listing-cover d-flex justify-space-between">
+									<div
+										className="cover"
+										style={{backgroundImage: `url('${image0}')`}}
+									></div>
+									<div
+										className="cover"
+										style={{backgroundImage: `url('${image1}')`}}
+									></div>
+									<div className="d-flex">
+										<div
+											className="cover"
+											style={{backgroundImage: `url('${image2}')`}}
+										></div>
+										<div
+											className="cover"
+											style={{backgroundImage: `url('${image3}')`}}
+										></div>
+									</div>
+									<div
+										className="cover"
+										style={{backgroundImage: `url('${image4}')`}}
+									></div>
+								</div>
+							</Col>
+						</section>
+					</Row>
+
+					<Row>
+						<article className="listing-body">
+							<Col lg={7}>
+								<div className="listing-body-wrapper d-flex justify-content-between align-items-center">
+									<p className="listing-subtitle">{subtitle}</p>
+									<div className="listing-owner">
+										<Link to={`/users/${state.owner._id}`}>
+											<div className="avatar">
+												<img
+													src={state.owner.avatar}
+													alt={state.owner.fullName}
+												/>
+											</div>
+											<p className="listing-owner-name">
+												{state.owner.fullName}
+											</p>
+										</Link>
 									</div>
 								</div>
-							</div>
-							<div className="col right">
-								<div className="listing-details-box"></div>
-							</div>
+								<div className="listing-description">{description}</div>
+							</Col>
+							<Col lg={1}></Col>
+							<Col lg={4}>
+								<div className="listing-details-box">
+									<div className="listing-map">
+										<GoogleMapReact
+											bootstrapURLKeys={{
+												key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
+											}}
+											defaultCenter={center}
+											defaultZoom={11}
+											options={getMapOptions}
+											yesIWantToUseGoogleMapApiInternals
+											onGoogleApiLoaded={({map, maps}) =>
+												renderMarker(map, maps)
+											}
+										/>
+									</div>
+									<ul className="listing-details-list">
+										<li className="listing-location">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="icon icon-tabler icon-tabler-map-pin"
+												width="22"
+												height="22"
+												viewBox="0 0 24 24"
+												strokeWidth="1.5"
+												stroke="#2c3e50"
+												fill="none"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path stroke="none" d="M0 0h24v24H0z" />
+												<circle cx="12" cy="11" r="3" />
+												<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
+											</svg>
+											{state.place.place_location_full_address}
+										</li>
+										<li className="listing-phone">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="icon icon-tabler icon-tabler-phone-call"
+												width="22"
+												height="22"
+												viewBox="0 0 24 24"
+												strokeWidth="1.5"
+												stroke="#2c3e50"
+												fill="none"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path stroke="none" d="M0 0h24v24H0z" />
+												<path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
+												<path d="M15 7a2 2 0 0 1 2 2" />
+												<path d="M15 3a6 6 0 0 1 6 6" />
+											</svg>
+											<a href={`tel:${state.place.phone}`}>
+												{state.place.phone}
+											</a>
+										</li>
+										<li className="listing-website">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="icon icon-tabler icon-tabler-link"
+												width="22"
+												height="22"
+												viewBox="0 0 24 24"
+												strokeWidth="1.5"
+												stroke="#2c3e50"
+												fill="none"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path stroke="none" d="M0 0h24v24H0z" />
+												<path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+												<path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+											</svg>
+											<a href={`http://${state.place.website}`}>
+												{state.place.website}
+											</a>
+										</li>
+									</ul>
+								</div>
+							</Col>
 						</article>
-					</div>
-				</Row>
+					</Row>
+				</div>
 			</Container>
 		</div>
 	);
