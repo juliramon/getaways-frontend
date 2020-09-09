@@ -13,6 +13,10 @@ const PlaceForm = ({user}) => {
 			type: "place",
 			title: "",
 			subtitle: "",
+			categories: [],
+			seasons: [],
+			region: "",
+			placeType: "",
 			images: [],
 			description: "",
 			phone: "",
@@ -50,6 +54,48 @@ const PlaceForm = ({user}) => {
 		});
 	};
 
+	const handleCheckCategory = (e) => {
+		let categories = state.formData.categories;
+		if (e.target.checked === true) {
+			categories.push(e.target.id);
+		} else {
+			let index = categories.indexOf(e.target.id);
+			categories.splice(index, 1);
+		}
+		setState({
+			...state,
+			formData: {...state.formData, categories: categories},
+		});
+	};
+
+	const handleCheckSeason = (e) => {
+		let seasons = state.formData.seasons;
+		if (e.target.checked === true) {
+			seasons.push(e.target.id);
+		} else {
+			let index = seasons.indexOf(e.target.id);
+			seasons.splice(index, 1);
+		}
+		setState({
+			...state,
+			formData: {...state.formData, seasons: seasons},
+		});
+	};
+
+	const handleCheckRegion = (e) => {
+		setState({
+			...state,
+			formData: {...state.formData, region: e.target.id},
+		});
+	};
+
+	const handleCheckPlaceType = (e) => {
+		setState({
+			...state,
+			formData: {...state.formData, placeType: e.target.id},
+		});
+	};
+
 	const handleChange = (e) => {
 		setState({
 			...state,
@@ -66,6 +112,10 @@ const PlaceForm = ({user}) => {
 			type,
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
+			placeType,
 			images,
 			description,
 			phone,
@@ -86,6 +136,10 @@ const PlaceForm = ({user}) => {
 				type,
 				title,
 				subtitle,
+				categories,
+				seasons,
+				region,
+				placeType,
 				images,
 				description,
 				phone,
@@ -109,6 +163,10 @@ const PlaceForm = ({user}) => {
 						type: "place",
 						title: "",
 						subtitle: "",
+						categories: [],
+						seasons: [],
+						region: "",
+						placeType: "",
 						images: [],
 						description: "",
 						phone: "",
@@ -140,6 +198,10 @@ const PlaceForm = ({user}) => {
 		const {
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
+			placeType,
 			place_location_full_address,
 			phone,
 			website,
@@ -151,6 +213,10 @@ const PlaceForm = ({user}) => {
 		if (
 			title &&
 			subtitle &&
+			categories &&
+			seasons &&
+			region &&
+			placeType &&
 			place_location_full_address &&
 			phone &&
 			website &&
@@ -200,6 +266,186 @@ const PlaceForm = ({user}) => {
 									value={state.formData.subtitle}
 								/>
 							</Form.Group>
+							<Form.Row>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Label>Place Category</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="romantic"
+											id="romantic"
+											label="Romantic"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="adventure"
+											id="adventure"
+											label="Adventure"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="gastronomic"
+											id="gastronomic"
+											label="Gastronomic"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="cultural"
+											id="cultural"
+											label="Cultural"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="relax"
+											id="relax"
+											label="Relax"
+											onChange={handleCheckCategory}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Label>Place Season</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="winter"
+											id="winter"
+											label="Winter"
+											onChange={handleCheckSeason}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="spring"
+											id="spring"
+											label="Spring"
+											onChange={handleCheckSeason}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="summer"
+											id="summer"
+											label="Summer"
+											onChange={handleCheckSeason}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="autumn"
+											id="autumn"
+											label="Autumn"
+											onChange={handleCheckSeason}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Group>
+											<Form.Label>Place Region</Form.Label>
+											<Form.Check
+												type="radio"
+												id="barcelona"
+												label="Barcelona"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="tarragona"
+												label="Tarragona"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="girona"
+												label="Girona"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="lleida"
+												label="Lleida"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaBrava"
+												label="Costa Brava"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaDaurada"
+												label="Costa Daurada"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="pirineus"
+												label="Pirineus"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+											/>
+										</Form.Group>
+									</Form.Group>
+								</Col>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Group>
+											<Form.Label>Place Type</Form.Label>
+											<Form.Check
+												type="radio"
+												id="hotel"
+												label="Hotel"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+											/>
+											<Form.Check
+												type="radio"
+												id="apartment"
+												label="Apartment"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+											/>
+											<Form.Check
+												type="radio"
+												id="cabin"
+												label="Cabin"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+											/>
+											<Form.Check
+												type="radio"
+												id="treeHouse"
+												label="Treehouse"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+											/>
+											<Form.Check
+												type="radio"
+												id="ruralHouse"
+												label="Rural house"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+											/>
+											<Form.Check
+												type="radio"
+												id="trailer"
+												label="Trailer"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+											/>
+										</Form.Group>
+									</Form.Group>
+								</Col>
+							</Form.Row>
 							<Form.Group>
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
@@ -220,7 +466,7 @@ const PlaceForm = ({user}) => {
 										place_location_full_address = place.formatted_address;
 										place_location_locality =
 											place.address_components[
-												place.address_components.length - 4
+												place.address_components.length - 5
 											].long_name;
 										place_location_administrative_area_level =
 											place.address_components[
@@ -231,8 +477,14 @@ const PlaceForm = ({user}) => {
 												place.address_components.length - 2
 											].long_name;
 
-										place_location_lat = place.geometry.viewport.Va.i;
-										place_location_lng = place.geometry.viewport.Za.i;
+										if (place.geometry.viewport) {
+											if (place.geometry.viewport.Za) {
+												place_location_lat = place.geometry.viewport.Za.i;
+											} else {
+												place_location_lat = place.geometry.viewport.ab.i;
+											}
+											place_location_lng = place.geometry.viewport.Va.i;
+										}
 										place_rating = place.rating;
 										place_id = place.place_id;
 										if (place.opening_hours) {

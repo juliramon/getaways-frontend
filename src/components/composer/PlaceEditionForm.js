@@ -10,6 +10,7 @@ const PlaceEditionForm = (props) => {
 		loggedUser: props.user,
 		id: props.match.params.id,
 		place: {},
+		isPlaceLoaded: false,
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
@@ -18,10 +19,102 @@ const PlaceEditionForm = (props) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const placeDetails = await service.getPlaceDetails(state.id);
-			setState({...state, place: placeDetails});
+			setState({...state, place: placeDetails, isPlaceLoaded: true});
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	let isRomantic,
+		isAdventure,
+		isGastronomic,
+		isCultural,
+		isRelax,
+		isWinter,
+		isSpring,
+		isSummer,
+		isAutumn,
+		isBarcelona,
+		isTarragona,
+		isGirona,
+		isLleida,
+		isCostaBrava,
+		isCostaDaurada,
+		isPirineus,
+		isApartment,
+		isCabin,
+		isTreehouse,
+		isRuralHouse,
+		isTrailer,
+		isHotel;
+	if (state.isPlaceLoaded === true) {
+		state.place.categories.includes("romantic")
+			? (isRomantic = true)
+			: (isRomantic = false);
+		state.place.categories.includes("adventure")
+			? (isAdventure = true)
+			: (isAdventure = false);
+		state.place.categories.includes("gastronomic")
+			? (isGastronomic = true)
+			: (isGastronomic = false);
+		state.place.categories.includes("cultural")
+			? (isCultural = true)
+			: (isCultural = false);
+		state.place.categories.includes("relax")
+			? (isRelax = true)
+			: (isRelax = false);
+		state.place.seasons.includes("winter")
+			? (isWinter = true)
+			: (isWinter = false);
+		state.place.seasons.includes("spring")
+			? (isSpring = true)
+			: (isSpring = false);
+		state.place.seasons.includes("summer")
+			? (isSummer = true)
+			: (isSummer = false);
+		state.place.seasons.includes("autumn")
+			? (isAutumn = true)
+			: (isAutumn = false);
+		state.place.region.includes("barcelona")
+			? (isBarcelona = true)
+			: (isBarcelona = false);
+		state.place.region.includes("tarragona")
+			? (isTarragona = true)
+			: (isTarragona = false);
+		state.place.region.includes("girona")
+			? (isGirona = true)
+			: (isGirona = false);
+		state.place.region.includes("lleida")
+			? (isLleida = true)
+			: (isLleida = false);
+		state.place.region.includes("costaBrava")
+			? (isCostaBrava = true)
+			: (isCostaBrava = false);
+		state.place.region.includes("costaDaurada")
+			? (isCostaDaurada = true)
+			: (isCostaDaurada = false);
+		state.place.region.includes("pirineus")
+			? (isPirineus = true)
+			: (isPirineus = false);
+		state.place.placeType.includes("apartment")
+			? (isApartment = true)
+			: (isApartment = false);
+		state.place.placeType.includes("cabin")
+			? (isCabin = true)
+			: (isCabin = false);
+		state.place.placeType.includes("treeHouse")
+			? (isTreehouse = true)
+			: (isTreehouse = false);
+		state.place.placeType.includes("ruralHouse")
+			? (isRuralHouse = true)
+			: (isRuralHouse = false);
+		state.place.placeType.includes("trailer")
+			? (isTrailer = true)
+			: (isTrailer = false);
+		state.place.placeType.includes("hotel")
+			? (isHotel = true)
+			: (isHotel = false);
+	}
 
 	const {
 		title,
@@ -48,6 +141,48 @@ const PlaceEditionForm = (props) => {
 		});
 	};
 
+	const handleCheckCategory = (e) => {
+		let categories = state.place.categories;
+		if (e.target.checked === true) {
+			categories.push(e.target.id);
+		} else {
+			let index = categories.indexOf(e.target.id);
+			categories.splice(index, 1);
+		}
+		setState({
+			...state,
+			place: {...state.place, categories: categories},
+		});
+	};
+
+	const handleCheckSeason = (e) => {
+		let seasons = state.place.seasons;
+		if (e.target.checked === true) {
+			seasons.push(e.target.id);
+		} else {
+			let index = seasons.indexOf(e.target.id);
+			seasons.splice(index, 1);
+		}
+		setState({
+			...state,
+			place: {...state.place, seasons: seasons},
+		});
+	};
+
+	const handleCheckRegion = (e) => {
+		setState({
+			...state,
+			place: {...state.place, region: e.target.id},
+		});
+	};
+
+	const handleCheckPlaceType = (e) => {
+		setState({
+			...state,
+			place: {...state.place, placeType: e.target.id},
+		});
+	};
+
 	const handleChange = (e) =>
 		setState({
 			...state,
@@ -60,6 +195,10 @@ const PlaceEditionForm = (props) => {
 			_id,
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
+			placeType,
 			images,
 			description,
 			phone,
@@ -80,6 +219,10 @@ const PlaceEditionForm = (props) => {
 				_id,
 				title,
 				subtitle,
+				categories,
+				seasons,
+				region,
+				placeType,
 				images,
 				description,
 				phone,
@@ -136,6 +279,208 @@ const PlaceEditionForm = (props) => {
 									onChange={handleChange}
 								/>
 							</Form.Group>
+							<Form.Row>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Label>Place Category</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="romantic"
+											id="romantic"
+											label="Romantic"
+											onChange={handleCheckCategory}
+											checked={isRomantic}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="adventure"
+											id="adventure"
+											label="Adventure"
+											onChange={handleCheckCategory}
+											checked={isAdventure}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="gastronomic"
+											id="gastronomic"
+											label="Gastronomic"
+											onChange={handleCheckCategory}
+											checked={isGastronomic}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="cultural"
+											id="cultural"
+											label="Cultural"
+											onChange={handleCheckCategory}
+											checked={isCultural}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="relax"
+											id="relax"
+											label="Relax"
+											onChange={handleCheckCategory}
+											checked={isRelax}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Label>Place Season</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="winter"
+											id="winter"
+											label="Winter"
+											onChange={handleCheckSeason}
+											checked={isWinter}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="spring"
+											id="spring"
+											label="Spring"
+											onChange={handleCheckSeason}
+											checked={isSpring}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="summer"
+											id="summer"
+											label="Summer"
+											onChange={handleCheckSeason}
+											checked={isSummer}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="autumn"
+											id="autumn"
+											label="Autumn"
+											onChange={handleCheckSeason}
+											checked={isAutumn}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Group>
+											<Form.Label>Place Region</Form.Label>
+											<Form.Check
+												type="radio"
+												id="barcelona"
+												label="Barcelona"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isBarcelona}
+											/>
+											<Form.Check
+												type="radio"
+												id="tarragona"
+												label="Tarragona"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isTarragona}
+											/>
+											<Form.Check
+												type="radio"
+												id="girona"
+												label="Girona"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isGirona}
+											/>
+											<Form.Check
+												type="radio"
+												id="lleida"
+												label="Lleida"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isLleida}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaBrava"
+												label="Costa Brava"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isCostaBrava}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaDaurada"
+												label="Costa Daurada"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isCostaDaurada}
+											/>
+											<Form.Check
+												type="radio"
+												id="pirineus"
+												label="Pirineus"
+												name="placeRegion"
+												onChange={handleCheckRegion}
+												checked={isPirineus}
+											/>
+										</Form.Group>
+									</Form.Group>
+								</Col>
+								<Col lg={3}>
+									<Form.Group>
+										<Form.Group>
+											<Form.Label>Place Type</Form.Label>
+											<Form.Check
+												type="radio"
+												id="hotel"
+												label="Hotel"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+												checked={isHotel}
+											/>
+											<Form.Check
+												type="radio"
+												id="apartment"
+												label="Apartment"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+												checked={isApartment}
+											/>
+											<Form.Check
+												type="radio"
+												id="cabin"
+												label="Cabin"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+												checked={isCabin}
+											/>
+											<Form.Check
+												type="radio"
+												id="treeHouse"
+												label="Treehouse"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+												checked={isTreehouse}
+											/>
+											<Form.Check
+												type="radio"
+												id="ruralHouse"
+												label="Rural house"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+												checked={isRuralHouse}
+											/>
+											<Form.Check
+												type="radio"
+												id="trailer"
+												label="Trailer"
+												name="placeType"
+												onChange={handleCheckPlaceType}
+												checked={isTrailer}
+											/>
+										</Form.Group>
+									</Form.Group>
+								</Col>
+							</Form.Row>
 							<Form.Group>
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
@@ -155,24 +500,46 @@ const PlaceEditionForm = (props) => {
 											place_opening_hours;
 
 										place_location_full_address = place.formatted_address;
-										place_location_locality =
-											place.address_components[
-												place.address_components.length - 4
-											].long_name;
-										place_location_administrative_area_level =
-											place.address_components[
-												place.address_components.length - 3
-											].long_name;
-										place_location_country =
-											place.address_components[
-												place.address_components.length - 2
-											].long_name;
+										if (place.address_components) {
+											if (place.address_components.length >= 7) {
+												place_location_locality =
+													place.address_components[
+														place.address_components.length - 5
+													].long_name;
+											} else {
+												place_location_locality = undefined;
+											}
+											if (place.address_components.length >= 3) {
+												place_location_administrative_area_level =
+													place.address_components[
+														place.address_components.length - 3
+													].long_name;
+											} else {
+												place_location_administrative_area_level = undefined;
+											}
+											if (place.address_components.length - 2) {
+												place_location_country =
+													place.address_components[
+														place.address_components.length - 2
+													].long_name;
+											} else {
+												place_location_country = undefined;
+											}
+										}
 
-										place_location_lat = place.geometry.viewport.Va.i;
-										place_location_lng = place.geometry.viewport.Za.i;
+										if (place.geometry.viewport) {
+											if (place.geometry.viewport.Za) {
+												place_location_lat = place.geometry.viewport.Za.i;
+											} else {
+												place_location_lat = place.geometry.viewport.ab.i;
+											}
+											place_location_lng = place.geometry.viewport.Va.i;
+										}
 										place_rating = place.rating;
 										place_id = place.place_id;
-										place_opening_hours = place.opening_hours.weekday_text;
+										if (place.opening_hours) {
+											place_opening_hours = place.opening_hours.weekday_text;
+										}
 
 										setState({
 											...state,
@@ -193,7 +560,7 @@ const PlaceEditionForm = (props) => {
 										console.log(place);
 									}}
 									types={["establishment"]}
-									placeholder={"Type the activity address"}
+									placeholder={"Type the place address"}
 									fields={[
 										"rating",
 										"place_id",

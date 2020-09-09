@@ -27,6 +27,7 @@ const BookmarksList = (props) => {
 			});
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (state.hasBookmarks === false) {

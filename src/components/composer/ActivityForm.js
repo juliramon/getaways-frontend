@@ -13,6 +13,9 @@ const ActivityForm = ({user, match}) => {
 			type: "activity",
 			title: "",
 			subtitle: "",
+			categories: [],
+			seasons: [],
+			region: "",
 			images: [],
 			description: "",
 			phone: "",
@@ -50,6 +53,41 @@ const ActivityForm = ({user, match}) => {
 		});
 	};
 
+	const handleCheckCategory = (e) => {
+		let categories = state.formData.categories;
+		if (e.target.checked === true) {
+			categories.push(e.target.id);
+		} else {
+			let index = categories.indexOf(e.target.id);
+			categories.splice(index, 1);
+		}
+		setState({
+			...state,
+			formData: {...state.formData, categories: categories},
+		});
+	};
+
+	const handleCheckSeason = (e) => {
+		let seasons = state.formData.seasons;
+		if (e.target.checked === true) {
+			seasons.push(e.target.id);
+		} else {
+			let index = seasons.indexOf(e.target.id);
+			seasons.splice(index, 1);
+		}
+		setState({
+			...state,
+			formData: {...state.formData, seasons: seasons},
+		});
+	};
+
+	const handleCheckRegion = (e) => {
+		setState({
+			...state,
+			formData: {...state.formData, region: e.target.id},
+		});
+	};
+
 	const handleChange = (e) => {
 		setState({
 			...state,
@@ -66,6 +104,9 @@ const ActivityForm = ({user, match}) => {
 			type,
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
 			images,
 			description,
 			phone,
@@ -87,6 +128,9 @@ const ActivityForm = ({user, match}) => {
 				type,
 				title,
 				subtitle,
+				categories,
+				seasons,
+				region,
 				images,
 				description,
 				phone,
@@ -111,6 +155,9 @@ const ActivityForm = ({user, match}) => {
 						type: "activity",
 						title: "",
 						subtitle: "",
+						categories: [],
+						seasons: [],
+						region: "",
 						images: [],
 						description: "",
 						phone: "",
@@ -143,6 +190,9 @@ const ActivityForm = ({user, match}) => {
 		const {
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
 			activity_location_full_address,
 			phone,
 			website,
@@ -155,6 +205,9 @@ const ActivityForm = ({user, match}) => {
 		if (
 			title &&
 			subtitle &&
+			categories &&
+			seasons &&
+			region &&
 			activity_location_full_address &&
 			phone &&
 			website &&
@@ -206,6 +259,137 @@ const ActivityForm = ({user, match}) => {
 									value={state.formData.subtitle}
 								/>
 							</Form.Group>
+							<Form.Row>
+								<Col lg={4}>
+									<Form.Group>
+										<Form.Label>Activity Category</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="romantic"
+											id="romantic"
+											label="Romantic"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="adventure"
+											id="adventure"
+											label="Adventure"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="gastronomic"
+											id="gastronomic"
+											label="Gastronomic"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="cultural"
+											id="cultural"
+											label="Cultural"
+											onChange={handleCheckCategory}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="relax"
+											id="relax"
+											label="Relax"
+											onChange={handleCheckCategory}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={4}>
+									<Form.Group>
+										<Form.Label>Activity Season</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="winter"
+											id="winter"
+											label="Winter"
+											onChange={handleCheckSeason}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="spring"
+											id="spring"
+											label="Spring"
+											onChange={handleCheckSeason}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="summer"
+											id="summer"
+											label="Summer"
+											onChange={handleCheckSeason}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="autumn"
+											id="autumn"
+											label="Autumn"
+											onChange={handleCheckSeason}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={4}>
+									<Form.Group>
+										<Form.Group>
+											<Form.Label>Activity Region</Form.Label>
+											<Form.Check
+												type="radio"
+												id="barcelona"
+												label="Barcelona"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="tarragona"
+												label="Tarragona"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="girona"
+												label="Girona"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="lleida"
+												label="Lleida"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaBrava"
+												label="Costa Brava"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaDaurada"
+												label="Costa Daurada"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+											<Form.Check
+												type="radio"
+												id="pirineus"
+												label="Pirineus"
+												name="activityRegion"
+												onChange={handleCheckRegion}
+											/>
+										</Form.Group>
+									</Form.Group>
+								</Col>
+							</Form.Row>
 							<Form.Group>
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
@@ -226,7 +410,7 @@ const ActivityForm = ({user, match}) => {
 										activity_location_full_address = place.formatted_address;
 										activity_location_locality =
 											place.address_components[
-												place.address_components.length - 4
+												place.address_components.length - 5
 											].long_name;
 										activity_location_administrative_area_level =
 											place.address_components[
@@ -236,13 +420,19 @@ const ActivityForm = ({user, match}) => {
 											place.address_components[
 												place.address_components.length - 2
 											].long_name;
-
-										activity_location_lat = place.geometry.viewport.Va.i;
-										activity_location_lng = place.geometry.viewport.Za.i;
+										if (place.geometry.viewport) {
+											if (place.geometry.viewport.Za) {
+												activity_location_lat = place.geometry.viewport.Za.i;
+											} else {
+												activity_location_lat = place.geometry.viewport.ab.i;
+											}
+											activity_location_lng = place.geometry.viewport.Va.i;
+										}
 										activity_rating = place.rating;
 										activity_place_id = place.place_id;
-										activity_opening_hours = place.opening_hours.weekday_text;
-
+										if (place.opening_hours) {
+											activity_opening_hours = place.opening_hours.weekday_text;
+										}
 										setState({
 											...state,
 											formData: {

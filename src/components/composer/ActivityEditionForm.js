@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import NavigationBar from "../NavigationBar";
-import {Container, Row, Col, Breadcrumb, Form, Button} from "react-bootstrap";
+import {Container, Row, Col, Form, Button} from "react-bootstrap";
 import ContentService from "../../services/contentService";
 import Autocomplete from "react-google-autocomplete";
 
@@ -10,6 +10,7 @@ const ActivityEditionForm = (props) => {
 		loggedUser: props.user,
 		id: props.match.params.id,
 		activity: {},
+		isActivityLoaded: false,
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
@@ -18,10 +19,78 @@ const ActivityEditionForm = (props) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const activityDetails = await service.activityDetails(state.id);
-			setState({...state, activity: activityDetails});
+			setState({...state, activity: activityDetails, isActivityLoaded: true});
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	let isRomantic,
+		isAdventure,
+		isGastronomic,
+		isCultural,
+		isRelax,
+		isWinter,
+		isSpring,
+		isSummer,
+		isAutumn,
+		isBarcelona,
+		isTarragona,
+		isGirona,
+		isLleida,
+		isCostaBrava,
+		isCostaDaurada,
+		isPirineus;
+	if (state.isActivityLoaded === true) {
+		state.activity.categories.includes("romantic")
+			? (isRomantic = true)
+			: (isRomantic = false);
+		state.activity.categories.includes("adventure")
+			? (isAdventure = true)
+			: (isAdventure = false);
+		state.activity.categories.includes("gastronomic")
+			? (isGastronomic = true)
+			: (isGastronomic = false);
+		state.activity.categories.includes("cultural")
+			? (isCultural = true)
+			: (isCultural = false);
+		state.activity.categories.includes("relax")
+			? (isRelax = true)
+			: (isRelax = false);
+		state.activity.seasons.includes("winter")
+			? (isWinter = true)
+			: (isWinter = false);
+		state.activity.seasons.includes("spring")
+			? (isSpring = true)
+			: (isSpring = false);
+		state.activity.seasons.includes("summer")
+			? (isSummer = true)
+			: (isSummer = false);
+		state.activity.seasons.includes("autumn")
+			? (isAutumn = true)
+			: (isAutumn = false);
+		state.activity.region.includes("barcelona")
+			? (isBarcelona = true)
+			: (isBarcelona = false);
+		state.activity.region.includes("tarragona")
+			? (isTarragona = true)
+			: (isTarragona = false);
+		state.activity.region.includes("girona")
+			? (isGirona = true)
+			: (isGirona = false);
+		state.activity.region.includes("lleida")
+			? (isLleida = true)
+			: (isLleida = false);
+		state.activity.region.includes("costaBrava")
+			? (isCostaBrava = true)
+			: (isCostaBrava = false);
+		state.activity.region.includes("costaDaurada")
+			? (isCostaDaurada = true)
+			: (isCostaDaurada = false);
+		state.activity.region.includes("pirineus")
+			? (isPirineus = true)
+			: (isPirineus = false);
+	}
 
 	const {
 		title,
@@ -49,6 +118,43 @@ const ActivityEditionForm = (props) => {
 		});
 	};
 
+	const handleCheckCategory = (e) => {
+		let categories = state.activity.categories;
+		if (e.target.checked === true) {
+			categories.push(e.target.id);
+		} else {
+			let index = categories.indexOf(e.target.id);
+			console.log(index);
+			categories.splice(index, 1);
+		}
+		setState({
+			...state,
+			activity: {...state.activity, categories: categories},
+		});
+	};
+
+	const handleCheckSeason = (e) => {
+		let seasons = state.activity.seasons;
+		if (e.target.checked === true) {
+			seasons.push(e.target.id);
+		} else {
+			let index = seasons.indexOf(e.target.id);
+
+			seasons.splice(index, 1);
+		}
+		setState({
+			...state,
+			activity: {...state.activity, seasons: seasons},
+		});
+	};
+
+	const handleCheckRegion = (e) => {
+		setState({
+			...state,
+			activity: {...state.activity, region: e.target.id},
+		});
+	};
+
 	const handleChange = (e) =>
 		setState({
 			...state,
@@ -61,6 +167,9 @@ const ActivityEditionForm = (props) => {
 			_id,
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
 			images,
 			description,
 			phone,
@@ -82,6 +191,9 @@ const ActivityEditionForm = (props) => {
 				_id,
 				title,
 				subtitle,
+				categories,
+				seasons,
+				region,
 				images,
 				description,
 				phone,
@@ -139,6 +251,154 @@ const ActivityEditionForm = (props) => {
 									onChange={handleChange}
 								/>
 							</Form.Group>
+							<Form.Row>
+								<Col lg={4}>
+									<Form.Group>
+										<Form.Label>Activity Category</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="romantic"
+											id="romantic"
+											label="Romantic"
+											onChange={handleCheckCategory}
+											checked={isRomantic}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="adventure"
+											id="adventure"
+											label="Adventure"
+											onChange={handleCheckCategory}
+											checked={isAdventure}
+										/>
+
+										<Form.Check
+											type="checkbox"
+											name="gastronomic"
+											id="gastronomic"
+											label="Gastronomic"
+											onChange={handleCheckCategory}
+											checked={isGastronomic}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="cultural"
+											id="cultural"
+											label="Cultural"
+											onChange={handleCheckCategory}
+											checked={isCultural}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="relax"
+											id="relax"
+											label="Relax"
+											onChange={handleCheckCategory}
+											checked={isRelax}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={4}>
+									<Form.Group>
+										<Form.Label>Activity Season</Form.Label>
+										<Form.Check
+											type="checkbox"
+											name="winter"
+											id="winter"
+											label="Winter"
+											onChange={handleCheckSeason}
+											checked={isWinter}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="spring"
+											id="spring"
+											label="Spring"
+											onChange={handleCheckSeason}
+											checked={isSpring}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="summer"
+											id="summer"
+											label="Summer"
+											onChange={handleCheckSeason}
+											checked={isSummer}
+										/>
+										<Form.Check
+											type="checkbox"
+											name="autumn"
+											id="autumn"
+											label="Autumn"
+											onChange={handleCheckSeason}
+											checked={isAutumn}
+										/>
+									</Form.Group>
+								</Col>
+								<Col lg={4}>
+									<Form.Group>
+										<Form.Group>
+											<Form.Label>Activity Region</Form.Label>
+											<Form.Check
+												type="radio"
+												id="barcelona"
+												label="Barcelona"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isBarcelona}
+											/>
+											<Form.Check
+												type="radio"
+												id="tarragona"
+												label="Tarragona"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isTarragona}
+											/>
+											<Form.Check
+												type="radio"
+												id="girona"
+												label="Girona"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isGirona}
+											/>
+											<Form.Check
+												type="radio"
+												id="lleida"
+												label="Lleida"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isLleida}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaBrava"
+												label="Costa Brava"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isCostaBrava}
+											/>
+											<Form.Check
+												type="radio"
+												id="costaDaurada"
+												label="Costa Daurada"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isCostaDaurada}
+											/>
+											<Form.Check
+												type="radio"
+												id="pirineus"
+												label="Pirineus"
+												name="activitySeason"
+												onChange={handleCheckRegion}
+												checked={isPirineus}
+											/>
+										</Form.Group>
+									</Form.Group>
+								</Col>
+							</Form.Row>
 							<Form.Group>
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
@@ -171,11 +431,19 @@ const ActivityEditionForm = (props) => {
 												place.address_components.length - 2
 											].long_name;
 
-										activity_location_lat = place.geometry.viewport.Va.i;
-										activity_location_lng = place.geometry.viewport.Za.i;
+										if (place.geometry.viewport) {
+											if (place.geometry.viewport.Za) {
+												activity_location_lat = place.geometry.viewport.Za.i;
+											} else {
+												activity_location_lat = place.geometry.viewport.ab.i;
+											}
+											activity_location_lng = place.geometry.viewport.Va.i;
+										}
 										activity_rating = place.rating;
 										activity_place_id = place.place_id;
-										activity_opening_hours = place.opening_hours.weekday_text;
+										if (place.opening_hours) {
+											activity_opening_hours = place.opening_hours.weekday_text;
+										}
 
 										setState({
 											...state,

@@ -26,7 +26,7 @@ const PlaceListing = (props) => {
 			const placeDetails = await service.getPlaceDetails(state.id);
 			let bookmarkDetails, isBookmarked;
 			if (userBookmarks) {
-				userBookmarks.map((el) => {
+				userBookmarks.forEach((el) => {
 					if (el.bookmarkPlaceRef) {
 						if (el.bookmarkPlaceRef._id === placeDetails._id) {
 							bookmarkDetails = el;
@@ -51,6 +51,7 @@ const PlaceListing = (props) => {
 			});
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (state.placeLoaded === false) {

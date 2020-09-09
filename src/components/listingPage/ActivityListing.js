@@ -6,7 +6,6 @@ import {Link} from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 
 const ActivityListing = (props) => {
-	console.log(props);
 	const initialState = {
 		loggedUser: props.user,
 		id: props.match.params.id,
@@ -27,7 +26,7 @@ const ActivityListing = (props) => {
 			const activityDetails = await service.activityDetails(state.id);
 			let bookmarkDetails, isBookmarked;
 			if (userBookmarks) {
-				userBookmarks.map((el) => {
+				userBookmarks.forEach((el) => {
 					if (el.bookmarkActivityRef) {
 						if (el.bookmarkActivityRef._id === activityDetails._id) {
 							bookmarkDetails = el;
@@ -52,6 +51,7 @@ const ActivityListing = (props) => {
 			});
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (state.isActivityLoaded === false) {
