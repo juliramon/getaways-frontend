@@ -1,25 +1,19 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
+import {useHistory, Link} from "react-router-dom";
 import {Form, Button, Alert} from "react-bootstrap";
-import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../services/authService";
-import GoogleLogin from "react-google-login";
 
-const Signup = (props) => {
+const Login = (props) => {
 	const history = useHistory();
 	if (props.user !== null) {
 		history.push("/feed");
 	}
 	const initialState = {
 		formData: {
-			fullName: "",
 			email: "",
 			password: "",
 		},
 		errorMessage: {},
-		googleResponse: {
-			received: false,
-			data: {},
-		},
 	};
 	const [state, setState] = useState(initialState);
 	const service = new AuthService();
@@ -31,18 +25,16 @@ const Signup = (props) => {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const {fullName, email, password} = state.formData;
+		const {email, password} = state.formData;
 		service
-			.signup(fullName, email, password)
+			.login(email, password)
 			.then((res) => {
 				if (res.status) {
-					console.log("error =>", res);
 					setState({
 						...state,
 						errorMessage: res,
 					});
 				} else {
-					console.log("signed up =>", res);
 					setState(initialState);
 					props.getUserDetails(res);
 					history.push("/feed");
@@ -50,62 +42,9 @@ const Signup = (props) => {
 			})
 			.catch((err) => console.log(err));
 	};
-
-	const responseGoogle = (response) => {
-		console.log(response);
-		setState({
-			...state,
-			googleResponse: {
-				received: true,
-				data: response.profileObj,
-			},
-		});
-	};
-
-	const signupGoogle = () => {
-		if (state.googleResponse.data) {
-			const {name, email, imageUrl} = state.googleResponse.data;
-			console.log({
-				name,
-				email,
-				imageUrl,
-			});
-			service
-				.googleAuth(name, email, imageUrl)
-				.then((res) => {
-					if (res.status) {
-						console.log("error =>", res);
-						setState({
-							...state,
-							errorMessage: res,
-							googleResponse: {
-								...state.googleResponse,
-								received: false,
-							},
-						});
-					} else {
-						console.log("respuesta del servidor =>", res);
-						setState(initialState);
-						props.getUserDetails(res);
-						history.push("/feed");
-					}
-				})
-				.catch((err) => console.log(err));
-		}
-	};
-
-	useEffect(() => {
-		if (state.googleResponse.received) {
-			signupGoogle();
-		}
-	});
-
 	let errorMessage;
 	if (state.errorMessage.message) {
-		if (
-			state.errorMessage.message ===
-			"Please provide fullname, email and password"
-		) {
+		if (state.errorMessage.message === "Missing credentials") {
 			errorMessage = (
 				<Alert variant="danger">
 					<svg
@@ -127,36 +66,7 @@ const Signup = (props) => {
 					{state.errorMessage.message}
 				</Alert>
 			);
-		} else if (
-			state.errorMessage.message ===
-			"Please provide a stronger password of at least 8 alphanumeric characters"
-		) {
-			errorMessage = (
-				<Alert variant="danger">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="icon icon-tabler icon-tabler-key"
-						width="18"
-						height="18"
-						viewBox="0 0 24 24"
-						strokeWidth="1.5"
-						stroke="#ffffff"
-						fill="none"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" />
-						<circle cx="8" cy="15" r="4" />
-						<line x1="10.85" y1="12.15" x2="19" y2="4" />
-						<line x1="18" y1="5" x2="20" y2="7" />
-						<line x1="15" y1="8" x2="17" y2="10" />
-					</svg>
-					{state.errorMessage.message}
-				</Alert>
-			);
-		} else if (
-			state.errorMessage.message === "Email already exists. Choose another one"
-		) {
+		} else if (state.errorMessage.message === "Incorrect email") {
 			errorMessage = (
 				<Alert variant="danger">
 					<svg
@@ -166,7 +76,7 @@ const Signup = (props) => {
 						height="18"
 						viewBox="0 0 24 24"
 						strokeWidth="1.5"
-						stroke="#ffffff"
+						stroke="#fff"
 						fill="none"
 						strokeLinecap="round"
 						strokeLinejoin="round"
@@ -174,6 +84,30 @@ const Signup = (props) => {
 						<path stroke="none" d="M0 0h24v24H0z" />
 						<circle cx="12" cy="12" r="4" />
 						<path d="M16 12v1.5a2.5 2.5 0 0 0 5 0v-1.5a9 9 0 1 0 -5.5 8.28" />
+					</svg>
+					{state.errorMessage.message}
+				</Alert>
+			);
+		} else if (state.errorMessage.message === "Incorrect password") {
+			errorMessage = (
+				<Alert variant="danger">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-key"
+						width="18"
+						height="18"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#fff"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<circle cx="8" cy="15" r="4" />
+						<line x1="10.85" y1="12.15" x2="19" y2="4" />
+						<line x1="18" y1="5" x2="20" y2="7" />
+						<line x1="15" y1="8" x2="17" y2="10" />
 					</svg>
 					{state.errorMessage.message}
 				</Alert>
@@ -203,51 +137,34 @@ const Signup = (props) => {
 				<div className="signup-col right">
 					<div className="signup-col-wrapper right">
 						<div className="navlink">
-							Already have an account? <Link to="/login">Log in</Link>
+							Not have an account yet? <Link to="/signup">Sign up</Link>
 						</div>
 						<div className="title-area">
-							<h1>Sign up to Getaways.guru</h1>
+							<h1>Log in to Getaways.guru</h1>
 							<p className="sub-h1">
-								Create an account to easily search, find and book your next
+								Access your account to easily search, find and book your next
 								perfect getaways.
 							</p>
 						</div>
 						<div className="social-signup d-flex align-items-center">
-							<GoogleLogin
-								clientId={
-									"1001464092709-hi8kknnaqhokalsior0s2kukhtupa7a8.apps.googleusercontent.com"
-								}
-								render={(renderProps) => (
-									<button
-										type="submit"
-										className="btn google"
-										onClick={renderProps.onClick}
-										disabled={renderProps.disabled}
-									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="icon icon-tabler icon-tabler-brand-google"
-											width="18"
-											height="18"
-											viewBox="0 0 24 24"
-											strokeWidth="3"
-											stroke="#ffffff"
-											fill="none"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										>
-											<path stroke="none" d="M0 0h24v24H0z" />
-											<path d="M17.788 5.108A9 9 0 1021 12h-8" />
-										</svg>
-										Sign up with Google
-									</button>
-								)}
-								buttonText="Sign up with Google"
-								onSuccess={responseGoogle}
-								onFailure={responseGoogle}
-								cookiePolicy={"single_host_origin"}
-							/>
-
+							<button type="submit" className="btn google">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="icon icon-tabler icon-tabler-brand-google"
+									width="18"
+									height="18"
+									viewBox="0 0 24 24"
+									strokeWidth="3"
+									stroke="#ffffff"
+									fill="none"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<path stroke="none" d="M0 0h24v24H0z" />
+									<path d="M17.788 5.108A9 9 0 1021 12h-8" />
+								</svg>
+								Log in with Google
+							</button>
 							<button type="submit" className="btn facebook">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -264,24 +181,13 @@ const Signup = (props) => {
 									<path stroke="none" d="M0 0h24v24H0z" />
 									<path
 										d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"
-										style={{fill: "#173572"}}
+										style={{fill: "#666666"}}
 									/>
 								</svg>
 							</button>
 						</div>
 						<Form onSubmit={handleSubmit}>
 							{errorMessage}
-							<div className="d-flex">
-								<Form.Group>
-									<Form.Label>Name</Form.Label>
-									<Form.Control
-										type="text"
-										name="fullName"
-										onChange={handleChange}
-										placeholder="Enter your full name"
-									/>
-								</Form.Group>
-							</div>
 							<Form.Group>
 								<Form.Label>Email</Form.Label>
 								<Form.Control
@@ -300,7 +206,7 @@ const Signup = (props) => {
 									placeholder="6+ characters"
 								/>
 							</Form.Group>
-							<Button type="submit">Create account</Button>
+							<Button type="submit">Log in</Button>
 						</Form>
 					</div>
 				</div>
@@ -309,4 +215,4 @@ const Signup = (props) => {
 	);
 };
 
-export default Signup;
+export default Login;

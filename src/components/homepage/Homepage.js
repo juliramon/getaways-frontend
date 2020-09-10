@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import Hero from "./Hero";
 import NavigationBar from "../NavigationBar";
 
-const Homepage = () => {
+const Homepage = (props) => {
 	const [span, setSpan] = useState("perfect");
 
 	const headerSpans = [
@@ -29,7 +29,11 @@ const Homepage = () => {
 
 	return (
 		<div id="homepage">
-			<NavigationBar logo_url={"../logo-getaways-guru.svg"} />
+			<NavigationBar
+				logo_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+				}
+			/>
 			<Hero
 				background_url={"../jumbotron-bg.jpg"}
 				title={title}
