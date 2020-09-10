@@ -398,7 +398,7 @@ const ActivityForm = ({user, match}) => {
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
 									className="location-control"
-									apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
+									apiKey={`${process.env.GOOGLE_API_KEY}`}
 									style={{width: "100%"}}
 									onPlaceSelected={(activity) => {
 										let activity_full_address,

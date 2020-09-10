@@ -161,9 +161,8 @@ const PlaceList = ({user}) => {
 					console.log("new places fetched");
 					setState({...state, places: res, updateSearch: false});
 				});
-
-			console.log("i need to fetch");
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state.updateSearch]);
 
 	return (

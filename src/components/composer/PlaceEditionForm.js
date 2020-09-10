@@ -487,7 +487,7 @@ const PlaceEditionForm = (props) => {
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
 									className="location-control"
-									apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
+									apiKey={`${process.env.GOOGLE_API_KEY}`}
 									style={{width: "100%"}}
 									defaultValue={place_full_address}
 									onPlaceSelected={(place) => {

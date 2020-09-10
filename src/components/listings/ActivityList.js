@@ -13,6 +13,7 @@ const ActivityList = ({user}) => {
 		queryActivityCategory: [],
 		queryActivitySeason: [],
 		updateSearch: false,
+		hasActivities: false,
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
@@ -22,21 +23,24 @@ const ActivityList = ({user}) => {
 		});
 	}, [state, service]);
 	useEffect(getAllActivities, []);
-	const activitiesList = state.activities.map((el) => (
-		<PublicContentBox
-			key={el._id}
-			type={el.type}
-			id={el._id}
-			image={el.images[0]}
-			title={el.title}
-			subtitle={el.subtitle}
-			location={`${
-				el.activity_locality === undefined ? "" : el.activity_locality
-			} ${el.activity_locality === undefined ? "" : ","} ${
-				el.activity_province || el.activity_state
-			}, ${el.activity_country}`}
-		/>
-	));
+	let activitiesList;
+	if (state.hasActivities) {
+		activitiesList = state.activities.map((el) => (
+			<PublicContentBox
+				key={el._id}
+				type={el.type}
+				id={el._id}
+				image={el.images[0]}
+				title={el.title}
+				subtitle={el.subtitle}
+				location={`${
+					el.activity_locality === undefined ? "" : el.activity_locality
+				} ${el.activity_locality === undefined ? "" : ","} ${
+					el.activity_province || el.activity_state
+				}, ${el.activity_country}`}
+			/>
+		));
+	}
 
 	const handleCheckRegion = (e) => {
 		console.log(`${e.target.name}: ${e.target.id}`);
@@ -145,9 +149,8 @@ const ActivityList = ({user}) => {
 					console.log("new activities fetched");
 					setState({...state, activities: res, updateSearch: false});
 				});
-
-			console.log("i need to fetch");
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state.updateSearch]);
 
 	return (
