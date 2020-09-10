@@ -3,7 +3,7 @@ const {default: Axios} = require("axios");
 class ContentService {
 	constructor() {
 		let service = Axios.create({
-			baseURL: "http://localhost:5000/api/",
+			baseURL: `${process.env.REACT_APP_API_URL}`,
 			withCredentials: true,
 		});
 		this.service = service;
@@ -11,16 +11,54 @@ class ContentService {
 
 	// ACTIVITIES ENDPOINTS
 
-	activity = (type, title, subtitle, image, description, location, status) => {
+	activity = (
+		type,
+		title,
+		subtitle,
+		categories,
+		seasons,
+		region,
+		image,
+		description,
+		phone,
+		website,
+		activity_full_address,
+		activity_locality,
+		activity_province,
+		activity_state,
+		activity_country,
+		activity_lat,
+		activity_lng,
+		activity_rating,
+		activity_place_id,
+		activity_opening_hours,
+		duration,
+		price
+	) => {
 		return this.service
 			.post("/activity", {
 				type,
 				title,
 				subtitle,
+				categories,
+				seasons,
+				region,
 				image,
 				description,
-				location,
-				status,
+				phone,
+				website,
+				activity_full_address,
+				activity_locality,
+				activity_province,
+				activity_state,
+				activity_country,
+				activity_lat,
+				activity_lng,
+				activity_rating,
+				activity_place_id,
+				activity_opening_hours,
+				duration,
+				price,
 			})
 			.then((res) => res.data);
 	};
@@ -34,15 +72,56 @@ class ContentService {
 		this.service.get(`/activities/${id}`).then((res) => res.data);
 
 	removeActivity = (id) =>
-		this.service.delete(`/activities/${id}`).then((res) => res.data);
+		this.service
+			.put(`/activities/${id}`, {isRemoved: true})
+			.then((res) => res.data);
 
-	editActivity = (_id, title, subtitle, description, location, status) =>
+	editActivity = (
+		_id,
+		title,
+		subtitle,
+		categories,
+		seasons,
+		region,
+		images,
+		description,
+		phone,
+		website,
+		activity_full_address,
+		activity_locality,
+		activity_province,
+		activity_state,
+		activity_country,
+		activity_lat,
+		activity_lng,
+		activity_rating,
+		activity_place_id,
+		activity_opening_hours,
+		duration,
+		price
+	) =>
 		this.service.put(`/activities/${_id}`, {
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
+			images,
 			description,
-			location,
-			status,
+			phone,
+			website,
+			activity_full_address,
+			activity_locality,
+			activity_province,
+			activity_state,
+			activity_country,
+			activity_lat,
+			activity_lng,
+			activity_rating,
+			activity_place_id,
+			activity_opening_hours,
+			duration,
+			price,
 		});
 
 	// FILES ENDPOINTS
@@ -70,16 +149,54 @@ class ContentService {
 
 	// PLACES ENDPOINTS
 
-	place = (type, title, subtitle, image, description, location, status) => {
+	place = (
+		type,
+		title,
+		subtitle,
+		categories,
+		seasons,
+		region,
+		placeType,
+		image,
+		description,
+		phone,
+		website,
+		place_full_address,
+		place_locality,
+		place_province,
+		place_state,
+		place_country,
+		place_lat,
+		place_lng,
+		place_rating,
+		place_id,
+		place_opening_hours,
+		price
+	) => {
 		return this.service
 			.post("/place", {
 				type,
 				title,
 				subtitle,
+				categories,
+				seasons,
+				region,
+				placeType,
 				image,
 				description,
-				location,
-				status,
+				phone,
+				website,
+				place_full_address,
+				place_locality,
+				place_province,
+				place_state,
+				place_country,
+				place_lat,
+				place_lng,
+				place_rating,
+				place_id,
+				place_opening_hours,
+				price,
 			})
 			.then((res) => res.data);
 	};
@@ -89,20 +206,61 @@ class ContentService {
 	getPlaceDetails = (id) =>
 		this.service.get(`/places/${id}`).then((res) => res.data);
 
-	editPlace = (_id, title, subtitle, description, location, status) =>
+	removePlace = (id) =>
+		this.service
+			.put(`/places/${id}`, {isRemoved: true})
+			.then((res) => res.data);
+
+	editPlace = (
+		_id,
+		title,
+		subtitle,
+		categories,
+		seasons,
+		region,
+		placeType,
+		images,
+		description,
+		phone,
+		website,
+		place_full_address,
+		place_locality,
+		place_province,
+		place_state,
+		place_country,
+		place_lat,
+		place_lng,
+		place_rating,
+		place_place_id,
+		place_opening_hours,
+		price
+	) =>
 		this.service.put(`/places/${_id}`, {
 			title,
 			subtitle,
+			categories,
+			seasons,
+			region,
+			placeType,
+			images,
 			description,
-			location,
-			status,
+			phone,
+			website,
+			place_full_address,
+			place_locality,
+			place_province,
+			place_state,
+			place_country,
+			place_lat,
+			place_lng,
+			place_rating,
+			place_place_id,
+			place_opening_hours,
+			price,
 		});
 
 	getUserPlaces = (id) =>
 		this.service.get(`/users/${id}/places`).then((res) => res.data);
-
-	removePlace = (id) =>
-		this.service.delete(`/places/${id}`).then((res) => res.data);
 
 	// STORIES ENDPOINTS
 
@@ -150,6 +308,20 @@ class ContentService {
 
 	getUserAllBookmarks = () =>
 		this.service.get("/bookmarks").then((res) => res.data);
+
+	// SEARCH ENDPOINTS
+
+	searchPlaces = (queryType, queryRegion, queryCategory, querySeason) =>
+		this.service
+			.get(
+				`/searchPlaces?${queryType}&${queryRegion}&${queryCategory}&${querySeason}`
+			)
+			.then((res) => res.data);
+
+	searchActivities = (queryRegion, queryCategory, querySeason) =>
+		this.service
+			.get(`/searchActivities?${queryRegion}&${queryCategory}&${querySeason}`)
+			.then((res) => res.data);
 }
 
 export default ContentService;

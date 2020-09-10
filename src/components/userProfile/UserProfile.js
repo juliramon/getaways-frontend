@@ -72,6 +72,7 @@ const UserProfile = (props) => {
 			});
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const fetchData = async () => {
@@ -304,21 +305,20 @@ const UserProfile = (props) => {
 		});
 	};
 
-	const handleSubmit = () => {
-		console.log("cover =>", state.cover);
-		const {_id} = state.loggedUser;
-		const {cover} = state;
-		service.editUserCover(_id, cover).then(() => {
-			refreshUserData();
-		});
-		setState({...state, isCoverReadyToUpload: false});
-	};
-
 	useEffect(() => {
+		const handleSubmit = () => {
+			const {_id} = state.loggedUser;
+			const {cover} = state;
+			service.editUserCover(_id, cover).then(() => {
+				refreshUserData();
+			});
+			setState({...state, isCoverReadyToUpload: false});
+		};
 		if (state.isCoverReadyToUpload === true) {
 			handleSubmit();
 		}
-	}, [handleSubmit, state.isCoverReadyToUpload]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state.isCoverReadyToUpload]);
 
 	if (state.isFetching === true) {
 		return (
