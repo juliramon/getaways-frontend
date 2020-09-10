@@ -3,7 +3,7 @@ const {default: Axios} = require("axios");
 class ContentService {
 	constructor() {
 		let service = Axios.create({
-			baseURL: "http://localhost:5000/api/",
+			baseURL: `${process.env.REACT_APP_API_URL}`,
 			withCredentials: true,
 		});
 		this.service = service;
@@ -22,12 +22,13 @@ class ContentService {
 		description,
 		phone,
 		website,
-		activity_location_full_address,
-		activity_location_locality,
-		activity_location_administrative_area_level,
-		activity_location_country,
-		activity_location_lat,
-		activity_location_lng,
+		activity_full_address,
+		activity_locality,
+		activity_province,
+		activity_state,
+		activity_country,
+		activity_lat,
+		activity_lng,
 		activity_rating,
 		activity_place_id,
 		activity_opening_hours,
@@ -46,12 +47,13 @@ class ContentService {
 				description,
 				phone,
 				website,
-				activity_location_full_address,
-				activity_location_locality,
-				activity_location_administrative_area_level,
-				activity_location_country,
-				activity_location_lat,
-				activity_location_lng,
+				activity_full_address,
+				activity_locality,
+				activity_province,
+				activity_state,
+				activity_country,
+				activity_lat,
+				activity_lng,
 				activity_rating,
 				activity_place_id,
 				activity_opening_hours,
@@ -85,12 +87,13 @@ class ContentService {
 		description,
 		phone,
 		website,
-		activity_location_full_address,
-		activity_location_locality,
-		activity_location_administrative_area_level,
-		activity_location_country,
-		activity_location_lat,
-		activity_location_lng,
+		activity_full_address,
+		activity_locality,
+		activity_province,
+		activity_state,
+		activity_country,
+		activity_lat,
+		activity_lng,
 		activity_rating,
 		activity_place_id,
 		activity_opening_hours,
@@ -107,12 +110,13 @@ class ContentService {
 			description,
 			phone,
 			website,
-			activity_location_full_address,
-			activity_location_locality,
-			activity_location_administrative_area_level,
-			activity_location_country,
-			activity_location_lat,
-			activity_location_lng,
+			activity_full_address,
+			activity_locality,
+			activity_province,
+			activity_state,
+			activity_country,
+			activity_lat,
+			activity_lng,
 			activity_rating,
 			activity_place_id,
 			activity_opening_hours,
@@ -157,12 +161,13 @@ class ContentService {
 		description,
 		phone,
 		website,
-		place_location_full_address,
-		place_location_locality,
-		place_location_administrative_area_level,
-		place_location_country,
-		place_location_lat,
-		place_location_lng,
+		place_full_address,
+		place_locality,
+		place_province,
+		place_state,
+		place_country,
+		place_lat,
+		place_lng,
 		place_rating,
 		place_id,
 		place_opening_hours,
@@ -181,12 +186,13 @@ class ContentService {
 				description,
 				phone,
 				website,
-				place_location_full_address,
-				place_location_locality,
-				place_location_administrative_area_level,
-				place_location_country,
-				place_location_lat,
-				place_location_lng,
+				place_full_address,
+				place_locality,
+				place_province,
+				place_state,
+				place_country,
+				place_lat,
+				place_lng,
 				place_rating,
 				place_id,
 				place_opening_hours,
@@ -217,15 +223,16 @@ class ContentService {
 		description,
 		phone,
 		website,
-		activity_location_full_address,
-		activity_location_locality,
-		activity_location_administrative_area_level,
-		activity_location_country,
-		activity_location_lat,
-		activity_location_lng,
-		activity_rating,
-		activity_place_id,
-		activity_opening_hours,
+		place_full_address,
+		place_locality,
+		place_province,
+		place_state,
+		place_country,
+		place_lat,
+		place_lng,
+		place_rating,
+		place_place_id,
+		place_opening_hours,
 		price
 	) =>
 		this.service.put(`/places/${_id}`, {
@@ -239,15 +246,16 @@ class ContentService {
 			description,
 			phone,
 			website,
-			activity_location_full_address,
-			activity_location_locality,
-			activity_location_administrative_area_level,
-			activity_location_country,
-			activity_location_lat,
-			activity_location_lng,
-			activity_rating,
-			activity_place_id,
-			activity_opening_hours,
+			place_full_address,
+			place_locality,
+			place_province,
+			place_state,
+			place_country,
+			place_lat,
+			place_lng,
+			place_rating,
+			place_place_id,
+			place_opening_hours,
 			price,
 		});
 
@@ -300,6 +308,20 @@ class ContentService {
 
 	getUserAllBookmarks = () =>
 		this.service.get("/bookmarks").then((res) => res.data);
+
+	// SEARCH ENDPOINTS
+
+	searchPlaces = (queryType, queryRegion, queryCategory, querySeason) =>
+		this.service
+			.get(
+				`/searchPlaces?${queryType}&${queryRegion}&${queryCategory}&${querySeason}`
+			)
+			.then((res) => res.data);
+
+	searchActivities = (queryRegion, queryCategory, querySeason) =>
+		this.service
+			.get(`/searchActivities?${queryRegion}&${queryCategory}&${querySeason}`)
+			.then((res) => res.data);
 }
 
 export default ContentService;

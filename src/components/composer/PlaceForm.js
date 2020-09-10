@@ -21,12 +21,13 @@ const PlaceForm = ({user}) => {
 			description: "",
 			phone: "",
 			website: "",
-			place_location_full_address: "",
-			place_location_locality: "",
-			place_location_administrative_area_level: "",
-			place_location_country: "",
-			place_location_lat: "",
-			place_location_lng: "",
+			place_full_address: "",
+			place_locality: "",
+			place_province: "",
+			place_state: "",
+			place_country: "",
+			place_lat: "",
+			place_lng: "",
 			place_rating: 0,
 			place_id: "",
 			place_opening_hours: "",
@@ -120,12 +121,13 @@ const PlaceForm = ({user}) => {
 			description,
 			phone,
 			website,
-			place_location_full_address,
-			place_location_locality,
-			place_location_administrative_area_level,
-			place_location_country,
-			place_location_lat,
-			place_location_lng,
+			place_full_address,
+			place_locality,
+			place_province,
+			place_state,
+			place_country,
+			place_lat,
+			place_lng,
 			place_rating,
 			place_id,
 			place_opening_hours,
@@ -144,12 +146,13 @@ const PlaceForm = ({user}) => {
 				description,
 				phone,
 				website,
-				place_location_full_address,
-				place_location_locality,
-				place_location_administrative_area_level,
-				place_location_country,
-				place_location_lat,
-				place_location_lng,
+				place_full_address,
+				place_locality,
+				place_province,
+				place_state,
+				place_country,
+				place_lat,
+				place_lng,
 				place_rating,
 				place_id,
 				place_opening_hours,
@@ -171,12 +174,13 @@ const PlaceForm = ({user}) => {
 						description: "",
 						phone: "",
 						website: "",
-						place_location_full_address: "",
-						place_location_locality: "",
-						place_location_administrative_area_level: "",
-						place_location_country: "",
-						place_location_lat: "",
-						place_location_lng: "",
+						place_full_address: "",
+						place_locality: "",
+						place_province: "",
+						place_state: "",
+						place_country: "",
+						place_lat: "",
+						place_lng: "",
 						place_rating: 0,
 						place_id: "",
 						place_opening_hours: "",
@@ -202,7 +206,7 @@ const PlaceForm = ({user}) => {
 			seasons,
 			region,
 			placeType,
-			place_location_full_address,
+			place_full_address,
 			phone,
 			website,
 			images,
@@ -217,7 +221,7 @@ const PlaceForm = ({user}) => {
 			seasons &&
 			region &&
 			placeType &&
-			place_location_full_address &&
+			place_full_address &&
 			phone &&
 			website &&
 			images.length > 0 &&
@@ -453,40 +457,45 @@ const PlaceForm = ({user}) => {
 									apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
 									style={{width: "100%"}}
 									onPlaceSelected={(place) => {
-										let place_location_full_address,
-											place_location_locality,
-											place_location_administrative_area_level,
-											place_location_country,
-											place_location_lat,
-											place_location_lng,
+										let place_full_address,
+											place_locality,
+											place_province,
+											place_state,
+											place_country,
+											place_lat,
+											place_lng,
 											place_rating,
 											place_id,
 											place_opening_hours;
 
-										place_location_full_address = place.formatted_address;
-										place_location_locality =
-											place.address_components[
-												place.address_components.length - 5
-											].long_name;
-										place_location_administrative_area_level =
-											place.address_components[
-												place.address_components.length - 3
-											].long_name;
-										place_location_country =
-											place.address_components[
-												place.address_components.length - 2
-											].long_name;
+										place_full_address = place.formatted_address;
+										place.address_components.forEach((el) => {
+											if (el.types[0] === "locality") {
+												place_locality = el.long_name;
+											}
+											if (el.types[0] === "administrative_area_level_2") {
+												place_province = el.long_name;
+											}
+											if (el.types[0] === "administrative_area_level_1") {
+												place_state = el.long_name;
+											}
+											if (el.types[0] === "country") {
+												place_country = el.long_name;
+											}
+										});
 
 										if (place.geometry.viewport) {
 											if (place.geometry.viewport.Za) {
-												place_location_lat = place.geometry.viewport.Za.i;
+												place_lat = place.geometry.viewport.Za.i;
 											} else {
-												place_location_lat = place.geometry.viewport.ab.i;
+												place_lat = place.geometry.viewport.ab.i;
 											}
-											place_location_lng = place.geometry.viewport.Va.i;
+											place_lng = place.geometry.viewport.Va.i;
 										}
+
 										place_rating = place.rating;
 										place_id = place.place_id;
+
 										if (place.opening_hours) {
 											place_opening_hours = place.opening_hours.weekday_text;
 										}
@@ -495,12 +504,13 @@ const PlaceForm = ({user}) => {
 											...state,
 											formData: {
 												...state.formData,
-												place_location_full_address: place_location_full_address,
-												place_location_locality: place_location_locality,
-												place_location_administrative_area_level: place_location_administrative_area_level,
-												place_location_country: place_location_country,
-												place_location_lat: place_location_lat,
-												place_location_lng: place_location_lng,
+												place_full_address: place_full_address,
+												place_locality: place_locality,
+												place_province: place_province,
+												place_state: place_state,
+												place_country: place_country,
+												place_lat: place_lat,
+												place_lng: place_lng,
 												place_rating: place_rating,
 												place_id: place_id,
 												place_opening_hours: place_opening_hours,

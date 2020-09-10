@@ -3,7 +3,7 @@ const {default: Axios} = require("axios");
 class AuthService {
 	constructor() {
 		let service = Axios.create({
-			baseURL: "http://localhost:5000/api/",
+			baseURL: `${process.env.REACT_APP_API_URL}`,
 			withCredentials: true,
 		});
 		let error, response;

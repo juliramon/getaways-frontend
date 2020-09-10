@@ -95,7 +95,7 @@ const ActivityEditionForm = (props) => {
 	const {
 		title,
 		subtitle,
-		activity_location_full_address,
+		activity_full_address,
 		phone,
 		website,
 		price,
@@ -174,12 +174,13 @@ const ActivityEditionForm = (props) => {
 			description,
 			phone,
 			website,
-			activity_location_full_address,
-			activity_location_locality,
-			activity_location_administrative_area_level,
-			activity_location_country,
-			activity_location_lat,
-			activity_location_lng,
+			activity_full_address,
+			activity_locality,
+			activity_province,
+			activity_state,
+			activity_country,
+			activity_lat,
+			activity_lng,
 			activity_rating,
 			activity_place_id,
 			activity_opening_hours,
@@ -198,12 +199,13 @@ const ActivityEditionForm = (props) => {
 				description,
 				phone,
 				website,
-				activity_location_full_address,
-				activity_location_locality,
-				activity_location_administrative_area_level,
-				activity_location_country,
-				activity_location_lat,
-				activity_location_lng,
+				activity_full_address,
+				activity_locality,
+				activity_province,
+				activity_state,
+				activity_country,
+				activity_lat,
+				activity_lng,
 				activity_rating,
 				activity_place_id,
 				activity_opening_hours,
@@ -405,63 +407,68 @@ const ActivityEditionForm = (props) => {
 									className="location-control"
 									apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
 									style={{width: "100%"}}
-									defaultValue={activity_location_full_address}
-									onPlaceSelected={(place) => {
-										let activity_location_full_address,
-											activity_location_locality,
-											activity_location_administrative_area_level,
-											activity_location_country,
-											activity_location_lat,
-											activity_location_lng,
+									defaultValue={activity_full_address}
+									onPlaceSelected={(activity) => {
+										let activity_full_address,
+											activity_locality,
+											activity_province,
+											activity_state,
+											activity_country,
+											activity_lat,
+											activity_lng,
 											activity_rating,
-											activity_place_id,
+											activity_id,
 											activity_opening_hours;
 
-										activity_location_full_address = place.formatted_address;
-										activity_location_locality =
-											place.address_components[
-												place.address_components.length - 4
-											].long_name;
-										activity_location_administrative_area_level =
-											place.address_components[
-												place.address_components.length - 3
-											].long_name;
-										activity_location_country =
-											place.address_components[
-												place.address_components.length - 2
-											].long_name;
-
-										if (place.geometry.viewport) {
-											if (place.geometry.viewport.Za) {
-												activity_location_lat = place.geometry.viewport.Za.i;
-											} else {
-												activity_location_lat = place.geometry.viewport.ab.i;
+										activity_full_address = activity.formatted_address;
+										activity.address_components.forEach((el) => {
+											if (el.types[0] === "locality") {
+												activity_locality = el.long_name;
 											}
-											activity_location_lng = place.geometry.viewport.Va.i;
+											if (el.types[0] === "administrative_area_level_2") {
+												activity_province = el.long_name;
+											}
+											if (el.types[0] === "administrative_area_level_1") {
+												activity_state = el.long_name;
+											}
+											if (el.types[0] === "country") {
+												activity_country = el.long_name;
+											}
+										});
+
+										if (activity.geometry.viewport) {
+											if (activity.geometry.viewport.Za) {
+												activity_lat = activity.geometry.viewport.Za.i;
+											} else {
+												activity_lat = activity.geometry.viewport.ab.i;
+											}
+											activity_lng = activity.geometry.viewport.Va.i;
 										}
-										activity_rating = place.rating;
-										activity_place_id = place.place_id;
-										if (place.opening_hours) {
-											activity_opening_hours = place.opening_hours.weekday_text;
+
+										activity_rating = activity.rating;
+										activity_id = activity.place_id;
+
+										if (activity.opening_hours) {
+											activity_opening_hours =
+												activity.opening_hours.weekday_text;
 										}
 
 										setState({
 											...state,
 											activity: {
 												...state.activity,
-												activity_location_full_address: activity_location_full_address,
-												activity_location_locality: activity_location_locality,
-												activity_location_administrative_area_level: activity_location_administrative_area_level,
-												activity_location_country: activity_location_country,
-												activity_location_lat: activity_location_lat,
-												activity_location_lng: activity_location_lng,
+												activity_full_address: activity_full_address,
+												activity_locality: activity_locality,
+												activity_province: activity_province,
+												activity_state: activity_state,
+												activity_country: activity_country,
+												activity_lat: activity_lat,
+												activity_lng: activity_lng,
 												activity_rating: activity_rating,
-												activity_place_id: activity_place_id,
+												activity_id: activity_id,
 												activity_opening_hours: activity_opening_hours,
 											},
 										});
-
-										console.log(place);
 									}}
 									types={["establishment"]}
 									placeholder={"Type the activity address"}

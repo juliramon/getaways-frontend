@@ -65,16 +65,6 @@ const PlaceListing = (props) => {
 	}
 
 	let {title, subtitle, description} = state.place;
-	let image0, image1, image2, image3, image4;
-
-	if (state.placeLoaded) {
-		const imageslist = state.place.images;
-		image0 = imageslist[0];
-		image1 = imageslist[1];
-		image2 = imageslist[2];
-		image3 = imageslist[3];
-		image4 = imageslist[4];
-	}
 
 	const bookmarkListing = () => {
 		const listingId = state.place._id;
@@ -168,8 +158,8 @@ const PlaceListing = (props) => {
 	);
 
 	const center = {
-		lat: parseFloat(state.place.place_location_lng),
-		lng: parseFloat(state.place.place_location_lat),
+		lat: parseFloat(state.place.place_lat),
+		lng: parseFloat(state.place.place_lng),
 	};
 
 	const getMapOptions = (maps) => {
@@ -187,11 +177,43 @@ const PlaceListing = (props) => {
 
 	const renderMarker = (map, maps) => {
 		const position = {
-			lat: parseFloat(state.place.place_location_lng),
-			lng: parseFloat(state.place.place_location_lat),
+			lat: parseFloat(state.place.place_lat),
+			lng: parseFloat(state.place.place_lng),
 		};
 		new maps.Marker({position: position, map, title: "Hello"});
 	};
+
+	const coversList = state.place.images.map((cover, idx) => (
+		<div
+			key={idx}
+			className="cover"
+			style={{backgroundImage: `url(${cover})`}}
+		></div>
+	));
+
+	const placeHours = state.place.place_opening_hours.map((hour, idx) => (
+		<li key={idx} className="place-hour">
+			{hour}
+		</li>
+	));
+
+	const placeCategories = state.place.categories.map((category, idx) => (
+		<li key={idx} className="place-category">
+			{category} getaway
+		</li>
+	));
+
+	const placeSeasons = state.place.seasons.map((season, idx) => (
+		<li key={idx} className="place-season">
+			{season}
+		</li>
+	));
+
+	const placeRegion = state.place.region.map((region, idx) => (
+		<li key={idx} className="place-region">
+			{region}
+		</li>
+	));
 
 	return (
 		<div id="listingPage">
@@ -269,7 +291,7 @@ const PlaceListing = (props) => {
 														<circle cx="12" cy="11" r="3" />
 														<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
 													</svg>
-													<span>{`${state.place.place_location_locality}, ${state.place.place_location_country}`}</span>
+													<span>{`${state.place.place_locality}, ${state.place.place_province}, ${state.place.place_country}`}</span>
 												</li>
 											</ul>
 										</div>
@@ -277,33 +299,11 @@ const PlaceListing = (props) => {
 									<div className="col right">{bookmarkButton}</div>
 								</div>
 								<div className="listing-cover d-flex justify-space-between">
-									<div
-										className="cover"
-										style={{backgroundImage: `url('${image0}')`}}
-									></div>
-									<div
-										className="cover"
-										style={{backgroundImage: `url('${image1}')`}}
-									></div>
-									<div className="d-flex">
-										<div
-											className="cover"
-											style={{backgroundImage: `url('${image2}')`}}
-										></div>
-										<div
-											className="cover"
-											style={{backgroundImage: `url('${image3}')`}}
-										></div>
-									</div>
-									<div
-										className="cover"
-										style={{backgroundImage: `url('${image4}')`}}
-									></div>
+									{coversList}
 								</div>
 							</Col>
 						</section>
 					</Row>
-
 					<Row>
 						<article className="listing-body">
 							<Col lg={7}>
@@ -321,6 +321,30 @@ const PlaceListing = (props) => {
 												{state.owner.fullName}
 											</p>
 										</Link>
+									</div>
+								</div>
+								<div className="listing-details-body d-flex">
+									<div className="listing-categories">
+										<span>Ideal for a</span>
+										<ul>{placeCategories}</ul>
+									</div>
+									<div className="listing-seasons">
+										<span>Must visit in</span>
+										<ul>{placeSeasons}</ul>
+									</div>
+									<div className="d-flex right">
+										<div className="listing-type">
+											<span>Place is a</span>
+											<ul>{state.place.placeType}</ul>
+										</div>
+										<div className="listing-region">
+											<span>Based in</span>
+											<ul>{placeRegion}</ul>
+										</div>
+										<div className="listing-price">
+											<span>Night price</span>
+											{state.place.price} €
+										</div>
 									</div>
 								</div>
 								<div className="listing-description">{description}</div>
@@ -342,6 +366,34 @@ const PlaceListing = (props) => {
 											}
 										/>
 									</div>
+									<div className="listing-activity-hours">
+										<ul className="listing-activity-hours-list">
+											<li className="header">
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													className="icon icon-tabler icon-tabler-calendar"
+													width="22"
+													height="22"
+													viewBox="0 0 24 24"
+													strokeWidth="1.5"
+													stroke="#2c3e50"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" />
+													<rect x="4" y="5" width="16" height="16" rx="2" />
+													<line x1="16" y1="3" x2="16" y2="7" />
+													<line x1="8" y1="3" x2="8" y2="7" />
+													<line x1="4" y1="11" x2="20" y2="11" />
+													<line x1="11" y1="15" x2="12" y2="15" />
+													<line x1="12" y1="15" x2="12" y2="18" />
+												</svg>
+												Opening Hours
+											</li>
+											{placeHours}
+										</ul>
+									</div>
 									<ul className="listing-details-list">
 										<li className="listing-location">
 											<svg
@@ -360,7 +412,7 @@ const PlaceListing = (props) => {
 												<circle cx="12" cy="11" r="3" />
 												<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
 											</svg>
-											{state.place.place_location_full_address}
+											{state.place.place_full_address}
 										</li>
 										<li className="listing-phone">
 											<svg

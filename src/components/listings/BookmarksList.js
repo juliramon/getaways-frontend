@@ -42,18 +42,53 @@ const BookmarksList = (props) => {
 
 	const bookmarks = state.bookmarks;
 	let bookmarksList;
-	if (bookmarks.length > 0) {
-		bookmarksList = bookmarks.map((el) => (
-			<PublicContentBox
-				key={el._id}
-				type={el.bookmarkActivityRef.type}
-				id={el.bookmarkActivityRef._id}
-				title={el.bookmarkActivityRef.title}
-				subtitle={el.bookmarkActivityRef.subtitle}
-				image={el.bookmarkActivityRef.images[0]}
-				location={el.bookmarkActivityRef.location}
-			/>
-		));
+	console.log(bookmarks);
+	if (state.hasBookmarks === true) {
+		bookmarksList = bookmarks.map((el) => {
+			if (el.bookmarkActivityRef) {
+				console.log("activity");
+				return (
+					<PublicContentBox
+						key={el._id}
+						type={el.bookmarkActivityRef.type}
+						id={el.bookmarkActivityRef._id}
+						title={el.bookmarkActivityRef.title}
+						subtitle={el.bookmarkActivityRef.subtitle}
+						image={el.bookmarkActivityRef.images[0]}
+						location={`${
+							el.bookmarkActivityRef.activity_locality === undefined
+								? ""
+								: el.bookmarkActivityRef.activity_locality
+						} ${
+							el.bookmarkActivityRef.activity_locality === undefined ? "" : ","
+						} ${
+							el.bookmarkActivityRef.activity_province ||
+							el.bookmarkActivityRef.activity_state
+						}, ${el.bookmarkActivityRef.activity_country}`}
+					/>
+				);
+			} else {
+				console.log("hello");
+				return (
+					<PublicContentBox
+						key={el._id}
+						type={el.bookmarkPlaceRef.type}
+						id={el.bookmarkPlaceRef._id}
+						title={el.bookmarkPlaceRef.title}
+						subtitle={el.bookmarkPlaceRef.subtitle}
+						image={el.bookmarkPlaceRef.images[0]}
+						location={`${
+							el.bookmarkPlaceRef.place_locality === undefined
+								? ""
+								: el.bookmarkPlaceRef.place_locality
+						}${el.bookmarkPlaceRef.place_locality === undefined ? "" : ","} ${
+							el.bookmarkPlaceRef.place_province ||
+							el.bookmarkPlaceRef.place_state
+						}, ${el.bookmarkPlaceRef.place_country}`}
+					/>
+				);
+			}
+		});
 	} else {
 		bookmarksList = (
 			<div className="box empty d-flex">
