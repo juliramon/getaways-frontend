@@ -29,15 +29,14 @@ import BookmarksList from "./components/listings/BookmarksList";
 import PageNotFound from "./components/errorPage/PageNotFound";
 
 function App() {
-	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
-
+	// let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
 	const initialState = {
-		loggedUser: loggedData,
+		loggedUser: {},
 	};
 	const [state, setState] = useState(initialState);
 	const getLoggedUser = (user) => {
 		setState({loggedUser: user});
-		Cookies.set("user", user, {expires: 7});
+		// Cookies.set("user", user, {expires: 7});
 	};
 	return (
 		<div className="app">
