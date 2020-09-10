@@ -14,28 +14,32 @@ const PlaceList = ({user}) => {
 		queryPlaceCategory: [],
 		queryPlaceSeason: [],
 		updateSearch: false,
+		hasPlaces: false,
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
 	const getAllPlaces = useCallback(() => {
 		service.getAllPlaces("/places").then((res) => {
-			setState({...state, places: res});
+			setState({...state, places: res, hasPlaces: true});
 		});
 	}, [state, service]);
 	useEffect(getAllPlaces, []);
-	const placesList = state.places.map((el) => (
-		<PublicContentBox
-			key={el._id}
-			type={el.type}
-			id={el._id}
-			image={el.images[0]}
-			title={el.title}
-			subtitle={el.subtitle}
-			location={`${el.place_locality === undefined ? "" : el.place_locality}${
-				el.place_locality === undefined ? "" : ","
-			} ${el.place_province || el.place_state}, ${el.place_country}`}
-		/>
-	));
+	let placesList;
+	if (state.hasPlaces === true) {
+		placesList = state.places.map((el) => (
+			<PublicContentBox
+				key={el._id}
+				type={el.type}
+				id={el._id}
+				image={el.images[0]}
+				title={el.title}
+				subtitle={el.subtitle}
+				location={`${el.place_locality === undefined ? "" : el.place_locality}${
+					el.place_locality === undefined ? "" : ","
+				} ${el.place_province || el.place_state}, ${el.place_country}`}
+			/>
+		));
+	}
 
 	const handleCheckType = (e) => {
 		console.log(`${e.target.name}: ${e.target.id}`);

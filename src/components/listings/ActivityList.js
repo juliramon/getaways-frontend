@@ -19,7 +19,7 @@ const ActivityList = ({user}) => {
 	const service = new ContentService();
 	const getAllActivities = useCallback(() => {
 		service.activities("/activities").then((res) => {
-			setState({...state, activities: res});
+			setState({...state, activities: res, hasActivities: true});
 		});
 	}, [state, service]);
 	useEffect(getAllActivities, []);

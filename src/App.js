@@ -30,6 +30,7 @@ import PageNotFound from "./components/errorPage/PageNotFound";
 
 function App() {
 	let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+
 	const initialState = {
 		loggedUser: loggedData,
 	};

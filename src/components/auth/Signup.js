@@ -63,33 +63,35 @@ const Signup = (props) => {
 	};
 
 	const signupGoogle = () => {
-		const {name, email, imageUrl} = state.googleResponse.data;
-		console.log({
-			name,
-			email,
-			imageUrl,
-		});
-		service
-			.googleAuth(name, email, imageUrl)
-			.then((res) => {
-				if (res.status) {
-					console.log("error =>", res);
-					setState({
-						...state,
-						errorMessage: res,
-						googleResponse: {
-							...state.googleResponse,
-							received: false,
-						},
-					});
-				} else {
-					console.log("respuesta del servidor =>", res);
-					setState(initialState);
-					props.getUserDetails(res);
-					history.push("/feed");
-				}
-			})
-			.catch((err) => console.log(err));
+		if (state.googleResponse.data) {
+			const {name, email, imageUrl} = state.googleResponse.data;
+			console.log({
+				name,
+				email,
+				imageUrl,
+			});
+			service
+				.googleAuth(name, email, imageUrl)
+				.then((res) => {
+					if (res.status) {
+						console.log("error =>", res);
+						setState({
+							...state,
+							errorMessage: res,
+							googleResponse: {
+								...state.googleResponse,
+								received: false,
+							},
+						});
+					} else {
+						console.log("respuesta del servidor =>", res);
+						setState(initialState);
+						props.getUserDetails(res);
+						history.push("/feed");
+					}
+				})
+				.catch((err) => console.log(err));
+		}
 	};
 
 	useEffect(() => {
