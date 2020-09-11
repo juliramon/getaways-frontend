@@ -29,14 +29,18 @@ import BookmarksList from "./components/listings/BookmarksList";
 import PageNotFound from "./components/errorPage/PageNotFound";
 
 function App() {
-	// let loggedData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+	let loggedData;
+	if (Cookies.get("user")) {
+		loggedData = JSON.parse(Cookies.get("user"));
+	}
 	const initialState = {
-		loggedUser: {},
+		loggedUser: loggedData,
 	};
 	const [state, setState] = useState(initialState);
 	const getLoggedUser = (user) => {
+		console.log("user =>", user);
 		setState({loggedUser: user});
-		// Cookies.set("user", user, {expires: 7});
+		Cookies.set("user", user, {expires: 7});
 	};
 	return (
 		<div className="app">

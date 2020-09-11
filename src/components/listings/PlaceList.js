@@ -20,7 +20,11 @@ const PlaceList = ({user}) => {
 	const service = new ContentService();
 	const getAllPlaces = useCallback(() => {
 		service.getAllPlaces("/places").then((res) => {
-			setState({...state, places: res, hasPlaces: true});
+			let hasPlaces;
+			if (res.length > 0) {
+				hasPlaces = true;
+			}
+			setState({...state, places: res, hasPlaces: hasPlaces});
 		});
 	}, [state, service]);
 	useEffect(getAllPlaces, []);
