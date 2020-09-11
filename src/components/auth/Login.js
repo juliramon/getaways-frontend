@@ -5,7 +5,7 @@ import AuthService from "../../services/authService";
 
 const Login = (props) => {
 	const history = useHistory();
-	if (props.user !== null) {
+	if (props.user) {
 		history.push("/feed");
 	}
 	const initialState = {
@@ -36,6 +36,7 @@ const Login = (props) => {
 					});
 				} else {
 					setState(initialState);
+					console.log("loggedIn");
 					props.getUserDetails(res);
 					history.push("/feed");
 				}
