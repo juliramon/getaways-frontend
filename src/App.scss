@@ -335,6 +335,7 @@ nav {
 		background-position: center center !important;
 		background-repeat: no-repeat !important;
 		position: relative;
+		z-index: 100;
 		.header-title {
 			font-size: 2.6rem;
 			max-width: 750px;
@@ -398,6 +399,13 @@ nav {
 			background-color: $white-text;
 			color: $dark-text;
 			text-align: left;
+			span {
+				padding: 4px 10px;
+				background-color: aliceblue;
+				border-radius: 8px;
+				font-size: 0.9em;
+				margin-right: 8px;
+			}
 		}
 		.header-form .form-control:focus {
 			background-color: rgba(0, 0, 0, 0.05);
@@ -409,6 +417,17 @@ nav {
 			margin: 0;
 			border: none;
 			padding: 0;
+			max-height: 70px;
+			overflow: hidden;
+			border-radius: 8px;
+			.form-control {
+				overflow-x: scroll;
+				max-height: 70px;
+				max-width: 475.45px;
+				min-height: 90px;
+				position: relative;
+				top: 10px;
+			}
 		}
 		.header-form .dropdown .dropdown-toggle::after {
 			content: none;
@@ -416,6 +435,7 @@ nav {
 		.header-form .dropdown .dropdown-menu {
 			width: 100%;
 			padding: 0;
+			z-index: 1000;
 			.pac-item {
 				display: flex;
 				align-items: center;
@@ -456,6 +476,9 @@ nav {
 		.section-listings {
 			margin-top: 20px;
 		}
+	}
+	.header-form.places .dropdown .dropdown-toggle .form-control {
+		max-width: 313.56px !important;
 	}
 }
 
