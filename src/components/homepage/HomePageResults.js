@@ -130,7 +130,7 @@ const HomePageResults = () => {
 		});
 		adventureGetawaysSection = (
 			<section className="homepage-section">
-				<h2 className="homepage-section-title">Adventuring is calling</h2>
+				<h2 className="homepage-section-title">Adventure is calling</h2>
 				<div className="section-listings">
 					<div className="section-listings-wrapper">{adventureList}</div>
 				</div>
