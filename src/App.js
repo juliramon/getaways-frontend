@@ -32,17 +32,20 @@ import Search from "./components/listings/Search";
 function App() {
 	const [cookies, setCookie] = useCookies("");
 	let loggedData;
-	if (cookies.loggedInUser) {
+	if (cookies.loggedInUser !== null) {
 		loggedData = cookies.loggedInUser;
 	}
 	const initialState = {
 		loggedUser: loggedData,
 	};
 	const [state, setState] = useState(initialState);
+	let cookieCreationDate = new Date();
+	let cookieExpirationDate = new Date();
+	cookieExpirationDate.setFullYear(cookieCreationDate.getFullYear() + 1);
 	const getLoggedUser = (user) => {
 		console.log("user =>", user);
 		setState({loggedUser: user});
-		setCookie("loggedInUser", user, {expires: 7});
+		setCookie("loggedInUser", user, {expires: cookieExpirationDate});
 	};
 	return (
 		<div className="app">

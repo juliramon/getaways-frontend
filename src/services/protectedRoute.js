@@ -5,7 +5,7 @@ const protectedRoute = ({component: Component, user, ...rest}) => {
 		<Route
 			{...rest}
 			render={(props) => {
-				if (user !== undefined) {
+				if (user !== null) {
 					return <Component {...props} user={user} />;
 				} else {
 					return (
