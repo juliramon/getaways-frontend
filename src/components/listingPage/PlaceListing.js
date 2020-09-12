@@ -191,11 +191,44 @@ const PlaceListing = (props) => {
 		></div>
 	));
 
-	const placeHours = state.place.place_opening_hours.map((hour, idx) => (
-		<li key={idx} className="place-hour">
-			{hour}
-		</li>
-	));
+	let placeHours, hasOpeningHours;
+	if (state.place.place_opening_hours.length > 0) {
+		placeHours = state.place.place_opening_hours.map((hour, idx) => (
+			<li key={idx} className="place-hour">
+				{hour}
+			</li>
+		));
+		hasOpeningHours = (
+			<div className="listing-activity-hours">
+				<ul className="listing-activity-hours-list">
+					<li className="header">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="icon icon-tabler icon-tabler-calendar"
+							width="22"
+							height="22"
+							viewBox="0 0 24 24"
+							strokeWidth="1.5"
+							stroke="#2c3e50"
+							fill="none"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path stroke="none" d="M0 0h24v24H0z" />
+							<rect x="4" y="5" width="16" height="16" rx="2" />
+							<line x1="16" y1="3" x2="16" y2="7" />
+							<line x1="8" y1="3" x2="8" y2="7" />
+							<line x1="4" y1="11" x2="20" y2="11" />
+							<line x1="11" y1="15" x2="12" y2="15" />
+							<line x1="12" y1="15" x2="12" y2="18" />
+						</svg>
+						Opening Hours
+					</li>
+					{placeHours}
+				</ul>
+			</div>
+		);
+	}
 
 	const placeCategories = state.place.categories.map((category, idx) => (
 		<li key={idx} className="place-category">
@@ -223,7 +256,7 @@ const PlaceListing = (props) => {
 				}
 				user={props.user}
 			/>
-			<Container className="mw-1600">
+			<Container className="mw-1200">
 				{state.showBookmarkToast ? toast : null}
 				<div className="box">
 					<Row>
@@ -366,34 +399,7 @@ const PlaceListing = (props) => {
 											}
 										/>
 									</div>
-									<div className="listing-activity-hours">
-										<ul className="listing-activity-hours-list">
-											<li className="header">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-calendar"
-													width="22"
-													height="22"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#2c3e50"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<rect x="4" y="5" width="16" height="16" rx="2" />
-													<line x1="16" y1="3" x2="16" y2="7" />
-													<line x1="8" y1="3" x2="8" y2="7" />
-													<line x1="4" y1="11" x2="20" y2="11" />
-													<line x1="11" y1="15" x2="12" y2="15" />
-													<line x1="12" y1="15" x2="12" y2="18" />
-												</svg>
-												Opening Hours
-											</li>
-											{placeHours}
-										</ul>
-									</div>
+									{hasOpeningHours}
 									<ul className="listing-details-list">
 										<li className="listing-location">
 											<svg
