@@ -5,7 +5,7 @@ import AuthService from "../../services/authService";
 
 const Login = (props) => {
 	const history = useHistory();
-	if (props.user !== "null") {
+	if (props.user && props.user !== "null") {
 		history.push("/feed");
 	}
 	const initialState = {

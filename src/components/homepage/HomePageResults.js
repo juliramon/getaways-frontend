@@ -22,7 +22,8 @@ const HomePageResults = () => {
 			let getaways = [];
 			if (activities.length > 0) {
 				activities.forEach((el) => getaways.push(el));
-			} else if (activities.length > 0) {
+			}
+			if (places.length > 0) {
 				places.forEach((el) => getaways.push(el));
 			}
 			let hasGetaways;
@@ -35,11 +36,14 @@ const HomePageResults = () => {
 				getaways.forEach((el) => {
 					if (el.categories.includes("adventure")) {
 						adventureGetaways.push(el);
-					} else if (el.categories.includes("romantic")) {
+					}
+					if (el.categories.includes("romantic")) {
 						romanticGetaways.push(el);
-					} else if (el.categories.includes("gastronomic")) {
+					}
+					if (el.categories.includes("gastronomic")) {
 						gastronomicGetaways.push(el);
-					} else if (el.activity_rating > 4 || el.place_rating > 4) {
+					}
+					if (el.activity_rating > 4 || el.place_rating > 4) {
 						mostRatedGetaways.push(el);
 					}
 				});
@@ -54,6 +58,7 @@ const HomePageResults = () => {
 			}
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	let romanticGetawaysSection,
 		adventureGetawaysSection,
@@ -69,7 +74,8 @@ const HomePageResults = () => {
 						el.activity_province || el.activity_state
 					}, ${el.activity_country}`}</span>
 				);
-			} else if (el.type === "place") {
+			}
+			if (el.type === "place") {
 				location = (
 					<span className="listing-location">{`${
 						el.place_locality === undefined ? "" : el.place_locality
@@ -81,6 +87,8 @@ const HomePageResults = () => {
 			return (
 				<PublicSquareBox
 					key={el._id}
+					id={el._id}
+					type={el.type}
 					cover_url={el.images[0]}
 					title={el.title}
 					subtitle={el.subtitle}
@@ -97,7 +105,8 @@ const HomePageResults = () => {
 				</div>
 			</section>
 		);
-	} else if (state.adventureGetaways.length > 0) {
+	}
+	if (state.adventureGetaways.length > 0) {
 		let adventureList = state.adventureGetaways.map((el) => {
 			let location;
 			if (el.type === "activity") {
@@ -108,7 +117,8 @@ const HomePageResults = () => {
 						el.activity_province || el.activity_state
 					}, ${el.activity_country}`}</span>
 				);
-			} else if (el.type === "place") {
+			}
+			if (el.type === "place") {
 				location = (
 					<span className="listing-location">{`${
 						el.place_locality === undefined ? "" : el.place_locality
@@ -120,6 +130,8 @@ const HomePageResults = () => {
 			return (
 				<PublicSquareBox
 					key={el._id}
+					id={el._id}
+					type={el.type}
 					cover_url={el.images[0]}
 					title={el.title}
 					subtitle={el.subtitle}
@@ -130,13 +142,14 @@ const HomePageResults = () => {
 		});
 		adventureGetawaysSection = (
 			<section className="homepage-section">
-				<h2 className="homepage-section-title">Adventuring is calling</h2>
+				<h2 className="homepage-section-title">Adventure is calling</h2>
 				<div className="section-listings">
 					<div className="section-listings-wrapper">{adventureList}</div>
 				</div>
 			</section>
 		);
-	} else if (state.gastronomicGetaways.length > 0) {
+	}
+	if (state.gastronomicGetaways.length > 0) {
 		let gastronomicList = state.gastronomicGetaways.map((el) => {
 			let location;
 			if (el.type === "activity") {
@@ -147,7 +160,8 @@ const HomePageResults = () => {
 						el.activity_province || el.activity_state
 					}, ${el.activity_country}`}</span>
 				);
-			} else if (el.type === "place") {
+			}
+			if (el.type === "place") {
 				location = (
 					<span className="listing-location">{`${
 						el.place_locality === undefined ? "" : el.place_locality
@@ -159,6 +173,8 @@ const HomePageResults = () => {
 			return (
 				<PublicSquareBox
 					key={el._id}
+					id={el._id}
+					type={el.type}
 					cover_url={el.images[0]}
 					title={el.title}
 					subtitle={el.subtitle}
@@ -169,7 +185,7 @@ const HomePageResults = () => {
 		});
 		gastronomicGetawaysSection = (
 			<section className="homepage-section">
-				<h2 className="homepage-section-title">Best romantic getaways</h2>
+				<h2 className="homepage-section-title">Best gastronomic getaways</h2>
 				<div className="section-listings">
 					<div className="section-listings-wrapper">{gastronomicList}</div>
 				</div>
@@ -178,7 +194,7 @@ const HomePageResults = () => {
 	}
 	return (
 		<div id="homePageResults">
-			<Container className="mw-1600">
+			<Container className="mw-1200">
 				<Row>
 					<Col lg={12}>
 						{romanticGetawaysSection}

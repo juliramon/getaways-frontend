@@ -22,7 +22,10 @@ const PlaceListing = (props) => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const userBookmarks = await service.getUserActiveBookmarks();
+			let userBookmarks;
+			if (state.loggedUser && state.loggedUser !== "null") {
+				userBookmarks = await service.getUserAllBookmarks();
+			}
 			const placeDetails = await service.getPlaceDetails(state.id);
 			let bookmarkDetails, isBookmarked;
 			if (userBookmarks) {
@@ -52,7 +55,7 @@ const PlaceListing = (props) => {
 		};
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [state.loggedUser]);
 
 	if (state.placeLoaded === false) {
 		return (
@@ -324,7 +327,16 @@ const PlaceListing = (props) => {
 														<circle cx="12" cy="11" r="3" />
 														<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
 													</svg>
-													<span>{`${state.place.place_locality}, ${state.place.place_province}, ${state.place.place_country}`}</span>
+													<span>{`${
+														state.place.place_locality === undefined
+															? ""
+															: state.place.place_locality
+													}${
+														state.place.place_locality === undefined ? "" : ","
+													} ${
+														state.place.place_province ||
+														state.place.place_state
+													}, ${state.place.place_country}`}</span>
 												</li>
 											</ul>
 										</div>

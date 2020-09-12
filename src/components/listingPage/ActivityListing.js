@@ -22,7 +22,10 @@ const ActivityListing = (props) => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const userBookmarks = await service.getUserAllBookmarks();
+			let userBookmarks;
+			if (state.loggedUser && state.loggedUser !== "null") {
+				userBookmarks = await service.getUserAllBookmarks();
+			}
 			const activityDetails = await service.activityDetails(state.id);
 			let bookmarkDetails, isBookmarked;
 			if (userBookmarks) {
@@ -328,7 +331,7 @@ const ActivityListing = (props) => {
 														state.activity.activity_locality === undefined
 															? ""
 															: state.activity.activity_locality
-													} ${
+													}${
 														state.activity.activity_locality === undefined
 															? ""
 															: ","

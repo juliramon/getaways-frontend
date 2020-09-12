@@ -10,7 +10,7 @@ const Hero = ({background_url, title, subtitle}) => {
 				background: `linear-gradient(rgba(46,105,228,.2), rgba(46,105,228,.3)),url('${background_url}')`,
 			}}
 		>
-			<Container>
+			<Container className="mw-1200">
 				<Row>
 					<Col lg={12}>
 						<div className="wrapper">

@@ -134,7 +134,6 @@ const PlaceList = ({user}) => {
 				lat: parseFloat(place.place_lat),
 				lng: parseFloat(place.place_lng),
 			};
-			console.log(position);
 			const contentString =
 				`<div id="infoview-wrapper">` +
 				`<h1 id="firstHeading" class="firstHeading">${place.title}</h1>` +
@@ -143,14 +142,12 @@ const PlaceList = ({user}) => {
 			const infowindow = new maps.InfoWindow({
 				content: contentString,
 			});
-			console.log(infowindow.content);
 			const marker = new maps.Marker({
 				position: position,
 				map,
 				icon: "../../empty-avatar.svg",
 			});
 			bounds.extend(marker.position);
-
 			marker.addListener("click", () => infowindow.open(map, marker));
 		});
 		map.fitBounds(bounds);

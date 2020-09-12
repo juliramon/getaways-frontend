@@ -452,10 +452,21 @@ nav {
 		}
 	}
 	.homepage-section {
-		padding: 60px 0;
+		padding: 60px 0 0 0;
 		.section-listings {
 			margin-top: 20px;
+			.section-listings-wrapper {
+				display: flex;
+				align-items: baseline;
+				margin: -10px;
+				#listingSquareBox {
+					margin: 10px;
+				}
+			}
 		}
+	}
+	.homepage-section:last-child {
+		padding-bottom: 60px;
 	}
 }
 
