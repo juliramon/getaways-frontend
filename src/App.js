@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Route, Switch} from "react-router-dom";
-import Cookies from "js-cookie";
+import {useCookies} from "react-cookie";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import GlobalStyle from "./fonts/fonts";
@@ -27,11 +27,13 @@ import PlaceList from "./components/listings/PlaceList";
 import StoryList from "./components/listings/StoryList";
 import BookmarksList from "./components/listings/BookmarksList";
 import PageNotFound from "./components/errorPage/PageNotFound";
+import Search from "./components/listings/Search";
 
 function App() {
+	const [cookies, setCookie] = useCookies("");
 	let loggedData;
-	if (Cookies.get("user")) {
-		loggedData = JSON.parse(Cookies.get("user"));
+	if (cookies.loggedInUser) {
+		loggedData = cookies.loggedInUser;
 	}
 	const initialState = {
 		loggedUser: loggedData,
@@ -40,7 +42,7 @@ function App() {
 	const getLoggedUser = (user) => {
 		console.log("user =>", user);
 		setState({loggedUser: user});
-		Cookies.set("user", user, {expires: 7});
+		setCookie("loggedInUser", user, {expires: 7});
 	};
 	return (
 		<div className="app">
@@ -183,6 +185,11 @@ function App() {
 					path="/bookmarks"
 					user={state.loggedUser}
 					component={BookmarksList}
+				/>
+				<Route
+					exact
+					path="/search"
+					render={(props) => <Search {...props} user={state.loggedUser} />}
 				/>
 				<Route path="*" component={PageNotFound} />
 			</Switch>
