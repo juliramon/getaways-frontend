@@ -9,6 +9,7 @@ const NavigationBar = (props) => {
 		borderBottom: "1px solid #e8e8e8",
 	};
 	let styledHeader = user ? notLoggedHeader : undefined;
+	let logoLink = user ? "/feed" : "/";
 	let navRight = undefined;
 	if (user) {
 		navRight = (
@@ -150,7 +151,7 @@ const NavigationBar = (props) => {
 				<Navbar>
 					<Container fluid className="align-items-center">
 						<div className="nav-col left d-flex">
-							<Navbar.Brand href="/feed">
+							<Navbar.Brand href={logoLink}>
 								<img src={logo_url} alt="Logo Getaways.guru" />
 							</Navbar.Brand>
 						</div>
@@ -169,7 +170,7 @@ const NavigationBar = (props) => {
 				<Navbar>
 					<Container fluid className="align-items-center">
 						<div className="nav-col left d-flex">
-							<Navbar.Brand href="/feed">
+							<Navbar.Brand href={logoLink}>
 								<img src={logo_url} alt="Logo Getaways.guru" />
 							</Navbar.Brand>
 							<Nav>

@@ -405,7 +405,7 @@ const ActivityEditionForm = (props) => {
 								<Form.Label>Location</Form.Label>
 								<Autocomplete
 									className="location-control"
-									apiKey={`${process.env.GOOGLE_API_KEY}`}
+									apiKey={`${process.env.REACT_APP_GOOGLE_API_KEY}`}
 									style={{width: "100%"}}
 									defaultValue={activity_full_address}
 									onPlaceSelected={(activity) => {

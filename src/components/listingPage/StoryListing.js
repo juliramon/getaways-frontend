@@ -56,7 +56,7 @@ const StoryListing = (props) => {
 				}
 				user={props.user}
 			/>
-			<Container className="mw-1600">
+			<Container className="mw-1200">
 				<Row>
 					<div className="box">
 						<section className="col">

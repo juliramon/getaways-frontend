@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Hero from "./Hero";
 import NavigationBar from "../NavigationBar";
+import Footer from "./Footer";
 
 const Homepage = (props) => {
 	const [span, setSpan] = useState("perfect");
@@ -25,7 +26,11 @@ const Homepage = (props) => {
 		return () => clearInterval(interval);
 	});
 
-	const title = `Your next ${span} getaway starts here`;
+	const title = (
+		<div>
+			Your next <br /> {span} getaway <br /> near Barcelona <br /> starts here
+		</div>
+	);
 
 	return (
 		<div id="homepage">
@@ -34,11 +39,18 @@ const Homepage = (props) => {
 					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 			/>
+
 			<Hero
 				background_url={"../jumbotron-bg.jpg"}
 				title={title}
 				subtitle={
-					"Search, find and book among thousands of verified getaways from local  travellers"
+					"Search, find and bookmark thousands of verified getaways from local travellers"
+				}
+			/>
+
+			<Footer
+				logo_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
 				}
 			/>
 		</div>
