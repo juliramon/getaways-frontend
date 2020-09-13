@@ -6,7 +6,7 @@ import GoogleLogin from "react-google-login";
 
 const Signup = (props) => {
 	const history = useHistory();
-	if (props.user !== "null" || !props.user) {
+	if (props.user && props.user !== "null") {
 		history.push("/feed");
 	}
 	const initialState = {
