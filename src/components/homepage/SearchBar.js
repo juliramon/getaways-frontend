@@ -6,14 +6,11 @@ import {useHistory} from "react-router-dom";
 const SearchBar = () => {
 	const initialState = {
 		location: undefined,
-		queryActivityLocation: "",
-		queryPlaceLocation: "",
 		hasLocation: false,
+		queryLocation: "",
 		queryPlaceType: [],
 		queryActivityCategory: [],
 		queryPlaceCategory: [],
-		hasActivities: false,
-		hasPlaces: false,
 		activeTab: "activities",
 		isSubmittable: false,
 	};
@@ -24,51 +21,49 @@ const SearchBar = () => {
 		if (e.target.id === "activities") {
 			setState({
 				...state,
-				queryPlaceCategory: "",
-				location: "",
-				queryActivityLocation: "",
+				queryPlaceType: [],
+				queryPlaceCategory: [],
 				activeTab: "activities",
 			});
 		} else {
 			setState({
 				...state,
-				queryActivityCategory: "",
-				location: "",
-				queryActivityLocation: "",
+				queryActivityCategory: [],
 				activeTab: "places",
 			});
 		}
 	};
 
-	const handleCheckCategory = (e) => {
+	const handleCheckActivityCategory = (e) => {
 		console.log(`${e.target.name}: ${e.target.id}`);
-		if (state.activeTab === "activities") {
-			let query = state.queryActivityCategory;
-			if (e.target.checked === true) {
-				if (query.length < 1) {
-					query.push(`${e.target.name}=${e.target.id}`);
-				} else {
-					query.push(e.target.id);
-				}
+		let query = state.queryActivityCategory;
+		if (e.target.checked === true) {
+			if (query.length < 1) {
+				query.push(`${e.target.name}=${e.target.id}`);
 			} else {
-				let index = query.indexOf(e.target.id);
-				query.splice(index, 1);
+				query.push(e.target.id);
 			}
-			setState({...state, queryActivityCategory: query});
-		} else if (state.activeTab === "places") {
-			let query = state.queryPlaceCategory;
-			if (e.target.checked === true) {
-				if (query.length < 1) {
-					query.push(`${e.target.name}=${e.target.id}`);
-				} else {
-					query.push(e.target.id);
-				}
-			} else {
-				let index = query.indexOf(e.target.id);
-				query.splice(index, 1);
-			}
-			setState({...state, queryPlaceCategory: query});
+		} else {
+			let index = query.indexOf(e.target.id);
+			query.splice(index, 1);
 		}
+		setState({...state, queryActivityCategory: query});
+	};
+
+	const handleCheckPlaceCategory = (e) => {
+		console.log(`${e.target.name}: ${e.target.id}`);
+		let query = state.queryPlaceCategory;
+		if (e.target.checked === true) {
+			if (query.length < 1) {
+				query.push(`${e.target.name}=${e.target.id}`);
+			} else {
+				query.push(e.target.id);
+			}
+		} else {
+			let index = query.indexOf(e.target.id);
+			query.splice(index, 1);
+		}
+		setState({...state, queryPlaceCategory: query});
 	};
 
 	const handleCheckType = (e) => {
@@ -104,13 +99,32 @@ const SearchBar = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (state.activeTab === "activities") {
-			history.push(
-				`/search?${state.queryActivityLocation}&${state.queryActivityCategory}`
-			);
+			if (state.queryActivityCategory.length > 0) {
+				history.push(
+					`/search?activityLocation=${state.queryLocation}&${state.queryActivityCategory}`
+				);
+			} else {
+				history.push(`/search?activityLocation=${state.queryLocation}`);
+			}
 		} else if (state.activeTab === "places") {
-			history.push(
-				`/search?${state.queryPlaceLocation}&${state.queryPlaceCategory}`
-			);
+			if (
+				state.queryPlaceType.length > 0 &&
+				state.queryPlaceCategory.length > 0
+			) {
+				history.push(
+					`/search?placeLocation=${state.queryLocation}&${state.queryPlaceType}&${state.queryPlaceCategory}`
+				);
+			} else if (state.queryPlaceType.length > 0) {
+				history.push(
+					`/search?placeLocation=${state.queryLocation}&${state.queryPlaceType}`
+				);
+			} else if (state.queryPlaceCategory.length > 0) {
+				history.push(
+					`/search?placeLocation=${state.queryLocation}&${state.queryPlaceCategory}`
+				);
+			} else {
+				history.push(`/search?placeLocation=${state.queryLocation}`);
+			}
 		}
 	};
 
@@ -132,11 +146,11 @@ const SearchBar = () => {
 		} else {
 			categoriesDropdownValue = `Select categories to filter`;
 		}
-	} else if (state.activeTab === "places") {
+	} else {
 		if (state.queryPlaceCategory.length > 0) {
 			let selection = [];
 			state.queryPlaceCategory.forEach((el, idx) =>
-				idx === 0 ? selection.push(el.slice(17)) : selection.push(el)
+				idx === 0 ? selection.push(el.slice(14)) : selection.push(el)
 			);
 			let formattedSelection = selection.map((el, idx) => {
 				return (
@@ -147,7 +161,7 @@ const SearchBar = () => {
 			});
 			categoriesDropdownValue = formattedSelection;
 		} else {
-			categoriesDropdownValue = `Select types to filter`;
+			categoriesDropdownValue = `Select categories to filter`;
 		}
 	}
 
@@ -169,16 +183,25 @@ const SearchBar = () => {
 		typeDropdownValue = `Select types to filter`;
 	}
 
+	let defaultValue;
+	if (state.location || state.location) {
+		defaultValue =
+			state.location.activity_full_address || state.location.place_full_address;
+	} else {
+		defaultValue = undefined;
+	}
+
 	let selectedForm;
 	if (state.activeTab === "activities") {
 		selectedForm = (
-			<Form className="header-form d-flex align-items-center">
+			<Form key={1} className="header-form d-flex align-items-center">
 				<Form.Group>
 					<Form.Label className="input-label">Location</Form.Label>
 					<Autocomplete
 						className="location-control form-control"
 						apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
 						style={{width: "100%"}}
+						defaultValue={defaultValue}
 						onPlaceSelected={(activity) => {
 							let activity_full_address,
 								activity_locality,
@@ -228,7 +251,7 @@ const SearchBar = () => {
 									activity_country: activity_country,
 								},
 								hasLocation: true,
-								queryActivityLocation: `activityLocation=${queryLocation}`,
+								queryLocation: queryLocation,
 							});
 						}}
 						types={[]}
@@ -248,35 +271,35 @@ const SearchBar = () => {
 								name="activityCategory"
 								id="romantic"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckActivityCategory}
 							/>
 							<Form.Check
 								label="Adventure"
 								name="activityCategory"
 								id="adventure"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckActivityCategory}
 							/>
 							<Form.Check
 								label="Gastronomic"
 								name="activityCategory"
 								id="gastronomic"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckActivityCategory}
 							/>
 							<Form.Check
 								label="Cultural"
 								name="activityCategory"
 								id="cultural"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckActivityCategory}
 							/>
 							<Form.Check
 								label="Relax"
 								name="activityCategory"
 								id="relax"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckActivityCategory}
 							/>
 						</Dropdown.Menu>
 					</Dropdown>
@@ -309,15 +332,16 @@ const SearchBar = () => {
 				</Form.Group>
 			</Form>
 		);
-	} else if (state.activeTab === "places") {
+	} else {
 		selectedForm = (
-			<Form className="header-form d-flex align-items-center places">
+			<Form key={2} className="header-form d-flex align-items-center places">
 				<Form.Group>
 					<Form.Label className="input-label">Location</Form.Label>
 					<Autocomplete
 						className="location-control form-control"
 						apiKey={"AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw&"}
 						style={{width: "100%"}}
+						defaultValue={defaultValue}
 						onPlaceSelected={(place) => {
 							let place_full_address,
 								place_locality,
@@ -367,7 +391,7 @@ const SearchBar = () => {
 									place_country: place_country,
 								},
 								hasLocation: true,
-								queryPlaceLocation: `placeLocation=${queryLocation}`,
+								queryLocation: queryLocation,
 							});
 						}}
 						types={[]}
@@ -439,35 +463,35 @@ const SearchBar = () => {
 								name="placeCategory"
 								id="romantic"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckPlaceCategory}
 							/>
 							<Form.Check
 								label="Adventure"
 								name="placeCategory"
 								id="adventure"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckPlaceCategory}
 							/>
 							<Form.Check
 								label="Gastronomic"
 								name="placeCategory"
 								id="gastronomic"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckPlaceCategory}
 							/>
 							<Form.Check
 								label="Cultural"
 								name="placeCategory"
 								id="cultural"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckPlaceCategory}
 							/>
 							<Form.Check
 								label="Relax"
 								name="placeCategory"
 								id="relax"
 								className="pac-item"
-								onClick={handleCheckCategory}
+								onClick={handleCheckPlaceCategory}
 							/>
 						</Dropdown.Menu>
 					</Dropdown>
