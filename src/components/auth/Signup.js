@@ -190,7 +190,7 @@ const Signup = (props) => {
 					<div className="title-area">
 						<Link to="/">
 							<img
-								src="https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+								src="https://res.cloudinary.com/juligoodie/image/upload/c_scale,q_100,w_135/v1600008855/getaways-guru/static-files/logo-getaways-guru_vvbikk.svg"
 								alt=""
 							/>
 						</Link>

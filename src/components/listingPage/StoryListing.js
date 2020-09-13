@@ -52,7 +52,7 @@ const StoryListing = (props) => {
 		<div id="listingPage">
 			<NavigationBar
 				logo_url={
-					"https://res.cloudinary.com/juligoodie/image/upload/v1598554049/Getaways.guru/logo_getaways_navbar_tpsd0w.svg"
+					"https://res.cloudinary.com/juligoodie/image/upload/c_scale,q_100,w_135/v1600008855/getaways-guru/static-files/logo-getaways-guru_vvbikk.svg"
 				}
 				user={props.user}
 			/>

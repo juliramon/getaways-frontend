@@ -50,6 +50,7 @@ $hover-tab-background: #eaf0fc;
 .avatar-nav {
 	width: 30px;
 	height: 30px;
+	overflow: hidden;
 }
 
 .avatar-s {
@@ -1541,6 +1542,8 @@ nav {
 		}
 		.avatar.user-avatar {
 			width: 130px;
+			height: 130px;
+			overflow: hidden;
 			margin-bottom: 15px;
 		}
 		.user-fullName {
@@ -1578,19 +1581,20 @@ nav {
 				position: absolute;
 				right: 20px;
 				top: 20px;
-				color: $white-text !important;
+				color: #ffffff !important;
 				transition: 0.3s;
 				border-radius: 8px;
-				border: 1px solid $dark-button-color;
 				backdrop-filter: blur(8px);
 				-webkit-backdrop-filter: blur(8px);
 				margin-bottom: 0;
+				box-shadow: 1px 1px 11px rgba(0, 0, 0, 0.2);
+				background: rgba(0, 0, 0, 0.3);
 				svg {
 					margin-right: 8px;
 				}
 			}
 			.edit-cover:hover {
-				background-color: rgba(255, 255, 255, 0.2);
+				background: rgba(0, 0, 0, 0.6);
 			}
 		}
 		.filter-bar {
@@ -1673,6 +1677,8 @@ nav {
 		#publicUserBox {
 			.avatar {
 				width: 100px;
+				height: 100px;
+				overflow: hidden;
 				margin-bottom: 15px;
 			}
 			h3 {
