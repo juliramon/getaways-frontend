@@ -28,9 +28,17 @@ const Homepage = (props) => {
 	});
 
 	const title = (
-		<div>
-			Your next <br /> {span} getaway <br /> near Barcelona <br /> starts here
-		</div>
+		<>
+			Your next {span} getaway
+			<br /> near Barcelona starts here
+		</>
+	);
+
+	const subtitle = (
+		<>
+			Search, find and bookmark thousands
+			<br /> of verified getaways from local travellers
+		</>
 	);
 
 	return (
@@ -43,9 +51,7 @@ const Homepage = (props) => {
 			<Hero
 				background_url={"../jumbotron-bg.jpg"}
 				title={title}
-				subtitle={
-					"Search, find and bookmark thousands of verified getaways from local travellers"
-				}
+				subtitle={subtitle}
 			/>
 			<HomePageResults />
 			<Footer
