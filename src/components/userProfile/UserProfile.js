@@ -37,8 +37,8 @@ const UserProfile = (props) => {
 			setState({...state, isFetching: true});
 			const userDetails = await service.getUserProfile(state.id);
 			const userActivities = await service.userActivities(state.id);
-			const userPlaces = await service.getUserPlaces(state.loggedUser._id);
-			const userStories = await service.getUserStories(state.loggedUser._id);
+			const userPlaces = await service.getUserPlaces(state.id);
+			const userStories = await service.getUserStories(state.id);
 			let hasListings, hasActivities, hasPlaces, hasStories, yearJoined;
 			userActivities.length > 0
 				? (hasActivities = true)

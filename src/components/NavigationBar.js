@@ -8,10 +8,20 @@ const NavigationBar = (props) => {
 		boxShadow: "none",
 		borderBottom: "1px solid #e8e8e8",
 	};
-	let styledHeader = user ? notLoggedHeader : undefined;
-	let logoLink = user ? "/feed" : "/";
+	let styledHeader = user === "null" || !user ? notLoggedHeader : undefined;
+	let logoLink = user === "null" || !user || user === undefined ? "/" : "/feed";
 	let navRight = undefined;
-	if (user) {
+
+	if (!user || user === "null") {
+		navRight = (
+			<Nav>
+				<Nav.Link href="/login">Log in</Nav.Link>
+				<Nav.Link href="/signup" className="btn signup">
+					Sign up
+				</Nav.Link>
+			</Nav>
+		);
+	} else {
 		navRight = (
 			<Nav className="logged-user">
 				<Dropdown>
@@ -127,15 +137,6 @@ const NavigationBar = (props) => {
 						</ul>
 					</Dropdown.Menu>
 				</Dropdown>
-			</Nav>
-		);
-	} else {
-		navRight = (
-			<Nav>
-				<Nav.Link href="/login">Log in</Nav.Link>
-				<Nav.Link href="/signup" className="btn signup">
-					Sign up
-				</Nav.Link>
 			</Nav>
 		);
 	}

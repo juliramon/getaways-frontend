@@ -7,7 +7,7 @@ const Footer = ({logo_url}) => {
 	copyrightDate = copyrightDate.getFullYear();
 	return (
 		<section id="footer">
-			<Container className="mw-1600">
+			<Container className="mw-1200">
 				<Row>
 					<Col lg={4}>
 						<div className="footer-intro">

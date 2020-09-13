@@ -32,7 +32,7 @@ import Search from "./components/listings/Search";
 function App() {
 	const [cookies, setCookie] = useCookies("");
 	let loggedData;
-	if (cookies.loggedInUser !== null) {
+	if (cookies.loggedInUser && cookies.loggedInUser !== null) {
 		loggedData = cookies.loggedInUser;
 	}
 	const initialState = {

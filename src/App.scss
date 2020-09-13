@@ -472,14 +472,22 @@ nav {
 		}
 	}
 	.homepage-section {
-		padding: 60px 0;
+		padding: 60px 0 0 0;
 		.section-listings {
 			margin-top: 20px;
+			.section-listings-wrapper {
+				display: flex;
+				align-items: baseline;
+				margin: -10px;
+				#listingSquareBox {
+					margin: 10px;
+				}
+			}
 		}
 	}
+
 	.header-form.places .dropdown .dropdown-toggle .form-control {
 		max-width: 313.56px !important;
-	}
 }
 
 #footer {
