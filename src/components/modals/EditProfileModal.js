@@ -63,7 +63,7 @@ const EditProfileModal = ({visibility, hideModal, user, refreshUserData}) => {
 				<div
 					className="cover-picture box bordered"
 					style={{
-						backgroundImage: `url("${state.loggedUser.cover}")`,
+						backgroundImage: `url("${user.cover}")`,
 					}}
 				></div>
 				<Form onSubmit={handleSubmit} className="user-editor">
@@ -107,7 +107,7 @@ const EditProfileModal = ({visibility, hideModal, user, refreshUserData}) => {
 						<Form.Control
 							type="text"
 							name="fullName"
-							defaultValue={state.loggedUser.fullName}
+							defaultValue={state.formData.fullName}
 							onChange={handleChange}
 							placeholder="Enter your full name"
 						></Form.Control>
@@ -117,7 +117,7 @@ const EditProfileModal = ({visibility, hideModal, user, refreshUserData}) => {
 						<Form.Control
 							type="text"
 							name="username"
-							defaultValue={state.loggedUser.username}
+							defaultValue={state.formData.username}
 							placeholder="Choose your username"
 							onChange={handleChange}
 						></Form.Control>
@@ -129,7 +129,7 @@ const EditProfileModal = ({visibility, hideModal, user, refreshUserData}) => {
 							rows="3"
 							type="text"
 							name="bio"
-							defaultValue={state.loggedUser.bio}
+							defaultValue={state.formData.bio}
 							placeholder="Enter your bio"
 							onChange={handleChange}
 						></Form.Control>
@@ -139,7 +139,7 @@ const EditProfileModal = ({visibility, hideModal, user, refreshUserData}) => {
 						<Form.Control
 							type="text"
 							name="location"
-							defaultValue={state.loggedUser.location}
+							defaultValue={state.formData.location}
 							placeholder="Enter your location"
 							onChange={handleChange}
 						></Form.Control>

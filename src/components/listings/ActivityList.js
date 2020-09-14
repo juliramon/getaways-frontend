@@ -47,7 +47,6 @@ const ActivityList = ({user}) => {
 	}
 
 	const handleCheckRegion = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryActivityRegion;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -63,7 +62,6 @@ const ActivityList = ({user}) => {
 	};
 
 	const handleCheckCategory = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryActivityCategory;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -79,7 +77,6 @@ const ActivityList = ({user}) => {
 	};
 
 	const handleCheckSeason = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryActivitySeason;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -95,8 +92,8 @@ const ActivityList = ({user}) => {
 	};
 
 	const center = {
-		lat: 59.95,
-		lng: 30.33,
+		lat: 41.3948976,
+		lng: 2.0787283,
 	};
 
 	const getMapOptions = (maps) => {
@@ -119,7 +116,6 @@ const ActivityList = ({user}) => {
 				lat: parseFloat(activity.activity_lat),
 				lng: parseFloat(activity.activity_lng),
 			};
-			console.log(position);
 			const contentString =
 				`<div id="infoview-wrapper">` +
 				`<h1 id="firstHeading" class="firstHeading">${activity.title}</h1>` +
@@ -128,14 +124,12 @@ const ActivityList = ({user}) => {
 			const infowindow = new maps.InfoWindow({
 				content: contentString,
 			});
-			console.log(infowindow.content);
 			const marker = new maps.Marker({
 				position: position,
 				map,
-				icon: "../../empty-avatar.svg",
+				icon: "../../map-marker.svg",
 			});
 			bounds.extend(marker.position);
-
 			marker.addListener("click", () => infowindow.open(map, marker));
 		});
 		map.fitBounds(bounds);
@@ -150,7 +144,6 @@ const ActivityList = ({user}) => {
 					state.queryActivitySeason
 				)
 				.then((res) => {
-					console.log("new activities fetched");
 					setState({...state, activities: res, updateSearch: false});
 				});
 		}
@@ -299,8 +292,9 @@ const ActivityList = ({user}) => {
 										bootstrapURLKeys={{
 											key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
 										}}
+										center={center}
 										defaultCenter={center}
-										defaultZoom={11}
+										defaultZoom={8}
 										options={getMapOptions}
 										yesIWantToUseGoogleMapApiInternals
 										onGoogleApiLoaded={({map, maps}) => renderMarker(map, maps)}

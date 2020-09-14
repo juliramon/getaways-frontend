@@ -56,10 +56,8 @@ class AuthService {
 	login = (username, password) => {
 		return this.service.post("/auth/login", {username, password}).then(() => {
 			if (this.error === undefined) {
-				console.log(this.response);
 				return this.response;
 			} else {
-				console.log(this.error);
 				return this.error;
 			}
 		});

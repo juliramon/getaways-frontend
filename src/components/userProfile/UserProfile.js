@@ -5,6 +5,7 @@ import ContentService from "../../services/contentService";
 import EditProfileModal from "../modals/EditProfileModal";
 import {Link} from "react-router-dom";
 import PublicContentBox from "../listings/PublicContentBox";
+import SignUpModal from "../modals/SignUpModal";
 
 const UserProfile = (props) => {
 	const initialState = {
@@ -27,8 +28,12 @@ const UserProfile = (props) => {
 	};
 	const [state, setState] = useState(initialState);
 	const [modalVisibility, setModalVisibility] = useState(false);
+	const [modalVisibilityOffpage, setModalVisibilityOffpage] = useState(false);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
+
+	const handleModalVisibilityOffpage = () => setModalVisibilityOffpage(true);
+	const hideModalVisibilityOffpage = () => setModalVisibilityOffpage(false);
 
 	const service = new ContentService();
 
@@ -172,31 +177,14 @@ const UserProfile = (props) => {
 				</div>
 			);
 		} else {
-			mainButton = (
-				<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="icon icon-tabler icon-tabler-plus"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						strokeWidth="1.5"
-						stroke="#fff"
-						fill="none"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" />
-						<line x1="12" y1="5" x2="12" y2="19" />
-						<line x1="5" y1="12" x2="19" y2="12" />
-					</svg>{" "}
-					Follow
-				</Button>
-			);
+			mainButton = undefined;
 		}
 	} else {
 		mainButton = (
-			<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
+			<Button
+				className="btn btn-primary text-center sidebar d-flex align-items-center"
+				onClick={() => handleModalVisibilityOffpage()}
+			>
 				Sign up
 			</Button>
 		);
@@ -580,6 +568,10 @@ const UserProfile = (props) => {
 				hideModal={hideModalVisibility}
 				user={state.userProfile}
 				refreshUserData={refreshUserData}
+			/>
+			<SignUpModal
+				visibility={modalVisibilityOffpage}
+				hideModal={hideModalVisibilityOffpage}
 			/>
 		</div>
 	);

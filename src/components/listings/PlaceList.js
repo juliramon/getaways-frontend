@@ -46,7 +46,6 @@ const PlaceList = ({user}) => {
 	}
 
 	const handleCheckType = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryPlaceType;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -62,7 +61,6 @@ const PlaceList = ({user}) => {
 	};
 
 	const handleCheckRegion = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryPlaceRegion;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -78,7 +76,6 @@ const PlaceList = ({user}) => {
 	};
 
 	const handleCheckCategory = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryPlaceCategory;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -94,7 +91,6 @@ const PlaceList = ({user}) => {
 	};
 
 	const handleCheckSeason = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryPlaceSeason;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -110,8 +106,8 @@ const PlaceList = ({user}) => {
 	};
 
 	const center = {
-		lat: 59.95,
-		lng: 30.33,
+		lat: 41.3948976,
+		lng: 2.0787283,
 	};
 
 	const getMapOptions = (maps) => {
@@ -145,7 +141,7 @@ const PlaceList = ({user}) => {
 			const marker = new maps.Marker({
 				position: position,
 				map,
-				icon: "../../empty-avatar.svg",
+				icon: "../../map-marker.svg",
 			});
 			bounds.extend(marker.position);
 			marker.addListener("click", () => infowindow.open(map, marker));
@@ -163,7 +159,6 @@ const PlaceList = ({user}) => {
 					state.queryPlaceSeason
 				)
 				.then((res) => {
-					console.log("new places fetched");
 					setState({...state, places: res, updateSearch: false});
 				});
 		}
@@ -352,7 +347,7 @@ const PlaceList = ({user}) => {
 											key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
 										}}
 										defaultCenter={center}
-										defaultZoom={11}
+										defaultZoom={8}
 										options={getMapOptions}
 										yesIWantToUseGoogleMapApiInternals
 										onGoogleApiLoaded={({map, maps}) => renderMarker(map, maps)}

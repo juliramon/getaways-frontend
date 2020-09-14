@@ -26,22 +26,18 @@ const Login = (props) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const {email, password} = state.formData;
-		service
-			.login(email, password)
-			.then((res) => {
-				if (res.status) {
-					setState({
-						...state,
-						errorMessage: res,
-					});
-				} else {
-					setState(initialState);
-					console.log("loggedIn");
-					props.getUserDetails(res);
-					history.push("/feed");
-				}
-			})
-			.catch((err) => console.log(err));
+		service.login(email, password).then((res) => {
+			if (res.status) {
+				setState({
+					...state,
+					errorMessage: res,
+				});
+			} else {
+				setState(initialState);
+				props.getUserDetails(res);
+				history.push("/feed");
+			}
+		});
 	};
 	let errorMessage;
 	if (state.errorMessage.message) {
