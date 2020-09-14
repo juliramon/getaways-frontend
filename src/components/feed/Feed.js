@@ -1,17 +1,145 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import NavigationBar from "../NavigationBar";
-import {Container, Row, Button} from "react-bootstrap";
+import {Container, Row, Button, Spinner} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import PublicationModal from "../modals/PublicationModal";
+import ContentService from "../../services/contentService";
+import PublicSquareBox from "../listings/PublicSquareBox";
 
 const Feed = ({user}) => {
 	const initialState = {
 		loggedUser: user,
+		isFetching: false,
+		hasActivities: false,
+		hasPlaces: false,
+		userCustomActivities: [],
+		userCustomPlaces: [],
 	};
-	const [state] = useState(initialState);
+	const [state, setState] = useState(initialState);
+	const service = new ContentService();
 	const [modalVisibility, setModalVisibility] = useState(false);
 	const handleModalVisibility = () => setModalVisibility(true);
 	const hideModalVisibility = () => setModalVisibility(false);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setState({...state, isFetching: true});
+			const userCustomActivities = await service.getUserCustomActivities();
+			const userCustomPlaces = await service.getUserCustomPlaces();
+			let hasActivities, hasPlaces, hasListings;
+			userCustomActivities.length > 0
+				? (hasActivities = true)
+				: (hasActivities = false);
+			userCustomPlaces.length > 0 ? (hasPlaces = true) : (hasPlaces = false);
+			userCustomActivities.length > 0 && userCustomPlaces.length > 0
+				? (hasListings = true)
+				: (hasListings = false);
+			setState({
+				...state,
+				hasListings: hasListings,
+				hasActivities: hasActivities,
+				hasPlaces: hasPlaces,
+				userCustomActivities: userCustomActivities,
+				userCustomPlaces: userCustomPlaces,
+			});
+		};
+		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const resultsToShow = [];
+	if (state.userCustomActivities.length > 0) {
+		state.userCustomActivities.map((el) => resultsToShow.push(el));
+	}
+	if (state.userCustomPlaces.length > 0) {
+		state.userCustomPlaces.map((el) => resultsToShow.push(el));
+	}
+
+	let resultsList;
+	if (!state.hasListings) {
+		resultsList = (
+			<Container className="spinner d-flex justify-space-between">
+				<Spinner animation="border" role="status" variant="primary">
+					<span className="sr-only">Loading...</span>
+				</Spinner>
+			</Container>
+		);
+	} else {
+		resultsList = resultsToShow.map((el) => {
+			let location;
+			if (el.type === "activity") {
+				location = (
+					<span className="listing-location">{`${
+						el.activity_locality === undefined ? "" : el.activity_locality
+					}${el.activity_locality === undefined ? "" : ","} ${
+						el.activity_province || el.activity_state
+					}, ${el.activity_country}`}</span>
+				);
+			}
+			if (el.type === "place") {
+				location = (
+					<span className="listing-location">{`${
+						el.place_locality === undefined ? "" : el.place_locality
+					}${el.place_locality === undefined ? "" : ","} ${
+						el.place_province || el.place_state
+					}, ${el.place_country}`}</span>
+				);
+			}
+			return (
+				<PublicSquareBox
+					key={el._id}
+					id={el._id}
+					type={el.type}
+					cover_url={el.images[0]}
+					title={el.title}
+					subtitle={el.subtitle}
+					rating={el.activity_rating || el.place_rating}
+					location={location}
+				/>
+			);
+		});
+	}
+
+	let topicsFollowed = [];
+	if (state.loggedUser.typesToFollow.length > 0) {
+		state.loggedUser.typesToFollow.map((el) => topicsFollowed.push(el));
+	}
+	if (state.loggedUser.categoriesToFollow.length > 0) {
+		state.loggedUser.categoriesToFollow.map((el) => topicsFollowed.push(el));
+	}
+	if (state.loggedUser.seasonsToFollow.length > 0) {
+		state.loggedUser.seasonsToFollow.map((el) => topicsFollowed.push(el));
+	}
+	if (state.loggedUser.regionsToFollow.length > 0) {
+		state.loggedUser.regionsToFollow.map((el) => topicsFollowed.push(el));
+	}
+
+	const topicsList = topicsFollowed.map((el, idx) => (
+		<li key={idx}>
+			<Link to="/">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="icon icon-tabler icon-tabler-hash"
+					width="28"
+					height="28"
+					viewBox="0 0 24 24"
+					strokeWidth="1.5"
+					stroke="#2c3e50"
+					fill="none"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" />
+					<line x1="5" y1="9" x2="19" y2="9" />
+					<line x1="5" y1="15" x2="19" y2="15" />
+					<line x1="11" y1="4" x2="7" y2="20" />
+					<line x1="17" y1="4" x2="13" y2="20" />
+				</svg>{" "}
+				{el}
+			</Link>
+		</li>
+	));
+
 	return (
 		<div id="feed">
 			<NavigationBar
@@ -42,95 +170,11 @@ const Feed = ({user}) => {
 							<div className="left-menu">
 								<div className="topics">
 									<p>Topics you follow</p>
-									<ul className="menu-topics">
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-heart"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#0D1F44"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
-												</svg>{" "}
-												Romantic
-											</Link>
-										</li>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-map-pin"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#0D1F44"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<circle cx="12" cy="11" r="3" />
-													<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
-												</svg>
-												Barcelona
-											</Link>
-										</li>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-map-pin"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#0D1F44"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<circle cx="12" cy="11" r="3" />
-													<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1 -2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
-												</svg>
-												Costa Brava
-											</Link>
-										</li>
-									</ul>
+									<ul className="menu-topics">{topicsList}</ul>
 								</div>
 								<div className="content">
 									<p>Explore and engage</p>
 									<ul>
-										<li>
-											<Link to="/">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="icon icon-tabler icon-tabler-compass"
-													width="28"
-													height="28"
-													viewBox="0 0 24 24"
-													strokeWidth="1.5"
-													stroke="#0D1F44"
-													fill="none"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												>
-													<path stroke="none" d="M0 0h24v24H0z" />
-													<polyline points="8 16 10 10 16 8 14 14 8 16" />
-													<circle cx="12" cy="12" r="9" />
-												</svg>
-												Discover
-											</Link>
-										</li>
 										<li>
 											<Link to="/users">
 												<svg
@@ -233,8 +277,12 @@ const Feed = ({user}) => {
 								</div>
 							</div>
 						</div>
-						<div className="col center"></div>
-						<div className="col right"></div>
+						<div className="col center">
+							<div className="col-title">
+								<p className="small">Results based on the topics you follow</p>
+							</div>
+							<div className="col-results">{resultsList}</div>
+						</div>
 					</div>
 				</Row>
 			</Container>

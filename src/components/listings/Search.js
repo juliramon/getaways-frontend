@@ -12,6 +12,9 @@ const Search = (props) => {
 		isFetching: false,
 		hasResults: false,
 		searchResults: [],
+		activitiesFound: [],
+		placesFound: [],
+		updatedSearch: false,
 	};
 	const [state, setState] = useState(initialState);
 
@@ -24,22 +27,65 @@ const Search = (props) => {
 				state.searchQuery
 			);
 			console.log(searchQueryResults);
-			let hasResults;
-			searchQueryResults.length > 0
-				? (hasResults = true)
-				: (hasResults = false);
-			setState({
-				...state,
-				isFetching: false,
-				hasResults: hasResults,
-				searchResults: searchQueryResults,
-			});
+			if (searchQueryResults instanceof Array) {
+				let hasResults;
+				searchQueryResults.length > 0
+					? (hasResults = true)
+					: (hasResults = false);
+				setState({
+					...state,
+					isFetching: false,
+					hasResults: hasResults,
+					searchResults: searchQueryResults,
+				});
+			}
+			if (searchQueryResults instanceof Object) {
+				let hasResults;
+				searchQueryResults.places.length > 0 ||
+				searchQueryResults.activities.length > 0
+					? (hasResults = true)
+					: (hasResults = false);
+				setState({
+					...state,
+					isFetching: false,
+					hasResults: hasResults,
+					activitiesFound: searchQueryResults.activities,
+					placesFound: searchQueryResults.places,
+				});
+			}
 		};
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	if (state.isFetching === true) {
+	useEffect(() => {
+		if (state.searchQuery !== props.location.search) {
+			console.log("hello");
+			console.log(props.location.search);
+			const fetchData = async () => {
+				const searchQueryResults = await service.searchBarQuery(
+					props.location.search
+				);
+				console.log(searchQueryResults);
+				let hasResults;
+				searchQueryResults.places.length > 0 ||
+				searchQueryResults.activities.length > 0
+					? (hasResults = true)
+					: (hasResults = false);
+				setState({
+					...state,
+					isFetching: false,
+					hasResults: hasResults,
+					activitiesFound: searchQueryResults.activities,
+					placesFound: searchQueryResults.places,
+				});
+			};
+			fetchData();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state.searchQuery, props.location.search]);
+
+	if (state.isFetching) {
 		return (
 			<Container className="spinner d-flex justify-space-between">
 				<Spinner animation="border" role="status" variant="primary">
@@ -50,27 +96,21 @@ const Search = (props) => {
 	}
 
 	let searchResultsList;
-	const searchResultsLength = state.searchResults.length;
-	if (searchResultsLength === 0) {
-		searchResultsList = (
-			<div className="box empty d-flex">
-				<div className="media">
-					<img src="../../empty-search-results.svg" alt="Graphic no results" />
-				</div>
-				<div className="text">
-					<p>
-						Damn, this looks so empty.
-						<br />
-						Refine your search to get better results.
-					</p>
-					<Link to={"/"} className="btn btn-primary text-center">
-						Search again
-					</Link>
-				</div>
-			</div>
-		);
+	let searchResultsLength;
+
+	if (state.searchResults.length > 0) {
+		searchResultsLength = state.searchResults.length;
 	} else {
-		searchResultsList = state.searchResults.map((el) => {
+		searchResultsLength =
+			state.activitiesFound.length + state.placesFound.length;
+	}
+
+	if (state.activitiesFound.length > 0 || state.placesFound.length > 0) {
+		let searchResults = [];
+		state.activitiesFound.map((el) => searchResults.push(el));
+		state.placesFound.map((el) => searchResults.push(el));
+		console.log(searchResults);
+		searchResultsList = searchResults.map((el) => {
 			let location;
 			if (el.type === "activity") {
 				location = `${
@@ -98,6 +138,62 @@ const Search = (props) => {
 				/>
 			);
 		});
+	} else {
+		if (
+			searchResultsLength === 0 &&
+			state.activitiesFound.length === 0 &&
+			state.placesFound.length === 0
+		) {
+			searchResultsList = (
+				<div className="box empty d-flex">
+					<div className="media">
+						<img
+							src="../../empty-search-results.svg"
+							alt="Graphic no results"
+						/>
+					</div>
+					<div className="text">
+						<p>
+							Damn, this looks so empty.
+							<br />
+							Refine your search to get better results.
+						</p>
+						<Link to={"/"} className="btn btn-primary text-center">
+							Search again
+						</Link>
+					</div>
+				</div>
+			);
+		} else {
+			searchResultsList = state.searchResults.map((el) => {
+				let location;
+				if (el.type === "activity") {
+					location = `${
+						el.activity_locality === undefined ? "" : el.activity_locality
+					} ${el.activity_locality === undefined ? "" : ","} ${
+						el.activity_province || el.activity_state
+					}, ${el.activity_country}`;
+				} else {
+					location = `${
+						el.place_locality === undefined ? "" : el.place_locality
+					}${el.place_locality === undefined ? "" : ","} ${
+						el.place_province || el.place_state
+					}, ${el.place_country}`;
+				}
+
+				return (
+					<PublicContentBox
+						key={el._id}
+						image={el.images[0]}
+						id={el._id}
+						title={el.title}
+						subtitle={el.subtitle}
+						type={el.type}
+						location={location}
+					/>
+				);
+			});
+		}
 	}
 
 	return (

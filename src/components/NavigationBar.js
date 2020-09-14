@@ -1,13 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import {Navbar, Nav, Container, Form, Dropdown} from "react-bootstrap";
+import {useHistory} from "react-router-dom";
 import ContentBar from "./homepage/ContentBar";
 
 const NavigationBar = (props) => {
+	const initialState = {
+		searchQuery: "",
+	};
+	const [state, setState] = useState(initialState);
 	const {logo_url, user, path} = props;
 	const notLoggedHeader = {
 		boxShadow: "none",
 		borderBottom: "1px solid #e8e8e8",
 	};
+
+	const history = useHistory();
+
+	const handleKeyPress = (e) => {
+		let searchQuery = e.target.value;
+		setState({...state, searchQuery: searchQuery});
+		if (e.keyCode === 13) {
+			e.preventDefault();
+			history.push(`/search?query=${searchQuery}`);
+		}
+	};
+
 	let styledHeader = user === "null" || !user ? notLoggedHeader : undefined;
 	let logoLink = user === "null" || !user || user === undefined ? "/" : "/feed";
 	let navRight = undefined;
@@ -93,10 +110,10 @@ const NavigationBar = (props) => {
 								</Nav.Link>
 							</li>
 							<li>
-								<Nav.Link href="/settings">
+								<Nav.Link href="/bookmarks">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-settings"
+										className="icon icon-tabler icon-tabler-bookmark"
 										width="44"
 										height="44"
 										viewBox="0 0 24 24"
@@ -107,10 +124,9 @@ const NavigationBar = (props) => {
 										strokeLinejoin="round"
 									>
 										<path stroke="none" d="M0 0h24v24H0z" />
-										<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-										<circle cx="12" cy="12" r="3" />
+										<path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
 									</svg>{" "}
-									Settings & Privacy
+									Bookmarks
 								</Nav.Link>
 							</li>
 							<li>
@@ -156,10 +172,7 @@ const NavigationBar = (props) => {
 								<img src={logo_url} alt="Logo Getaways.guru" />
 							</Navbar.Brand>
 						</div>
-						<div className="nav-col right d-flex">
-							<Nav></Nav>
-							{navRight}
-						</div>
+						<div className="nav-col right d-flex">{navRight}</div>
 					</Container>
 				</Navbar>
 				<ContentBar user={user} />
@@ -260,12 +273,41 @@ const NavigationBar = (props) => {
 									<circle cx="10" cy="10" r="7" />
 									<line x1="21" y1="21" x2="15" y2="15" />
 								</svg>
+								{/* <NativeListener> */}
 								<Form>
 									<Form.Control
+										onKeyDown={handleKeyPress}
 										type="text"
-										placeholder="Search where you'd like to escape..."
+										placeholder="Search your next getaway..."
 									/>
+
+									<span className="search-helper">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="icon icon-tabler icon-tabler-keyboard"
+											width="15"
+											height="15"
+											viewBox="0 0 24 24"
+											strokeWidth="1.5"
+											stroke="#2c3e50"
+											fill="none"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										>
+											<path stroke="none" d="M0 0h24v24H0z" />
+											<rect x="2" y="6" width="20" height="12" rx="2" />
+											<line x1="6" y1="10" x2="6" y2="10" />
+											<line x1="10" y1="10" x2="10" y2="10" />
+											<line x1="14" y1="10" x2="14" y2="10" />
+											<line x1="18" y1="10" x2="18" y2="10" />
+											<line x1="6" y1="14" x2="6" y2="14.01" />
+											<line x1="18" y1="14" x2="18" y2="14.01" />
+											<line x1="10" y1="14" x2="14" y2="14" />
+										</svg>
+										Type enter to search
+									</span>
 								</Form>
+								{/* </NativeListener> */}
 							</Nav>
 						</div>
 						<div className="nav-col right d-flex">
