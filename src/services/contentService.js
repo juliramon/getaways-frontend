@@ -325,6 +325,12 @@ class ContentService {
 
 	searchBarQuery = (searchQuery) =>
 		this.service.get(`/searchQuery${searchQuery}`).then((res) => res.data);
+
+	getUserCustomActivities = () =>
+		this.service.get("/searchUserCustomActivities").then((res) => res.data);
+
+	getUserCustomPlaces = () =>
+		this.service.get("/searchUserCustomPlaces").then((res) => res.data);
 }
 
 export default ContentService;

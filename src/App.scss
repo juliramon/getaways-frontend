@@ -107,6 +107,11 @@ button:focus,
 	box-shadow: none !important;
 }
 
+button,
+.btn {
+	border: none !important;
+}
+
 form .form-label {
 	font-size: 0.9em;
 	font-weight: bold;
@@ -197,6 +202,20 @@ nav {
 	.nav-col.left .navbar-nav,
 	.nav-col.left form {
 		width: 100%;
+		position: relative;
+	}
+	.nav-col.left form .search-helper {
+		position: absolute;
+		right: 15px;
+		top: 10px;
+		font-size: 12px;
+		display: flex;
+		align-items: center;
+		opacity: 0.7;
+		svg {
+			width: 20px;
+			height: 20px;
+		}
 	}
 	.nav-col.left .form-control {
 		background-color: $input-background;
@@ -666,10 +685,11 @@ nav {
 #feed {
 	.box {
 		width: 100%;
-		padding: 50px 0;
+		padding: 40px 0;
 	}
 	.box .col.left {
 		max-width: 20% !important;
+		border-right: 1px solid $hover-tab-background;
 	}
 	.user-meta-wrapper {
 		display: flex;
@@ -707,6 +727,7 @@ nav {
 			margin: 6px 0;
 			font-size: 1.2em;
 			font-weight: bold;
+			text-transform: capitalize;
 		}
 		a {
 			display: flex;
@@ -720,6 +741,24 @@ nav {
 			background-color: $input-background;
 			border-radius: 8px;
 			cursor: pointer;
+		}
+	}
+	.col.center {
+		padding: 0 50px;
+		flex: 1;
+		.col-results {
+			display: flex;
+			flex-flow: row wrap;
+			margin: -10px;
+			#listingSquareBox {
+				margin: 10px;
+				width: 23.3%;
+			}
+			.spinner {
+				align-items: center;
+				position: relative;
+				top: -180px;
+			}
 		}
 	}
 }
