@@ -28,6 +28,7 @@ import StoryList from "./components/listings/StoryList";
 import BookmarksList from "./components/listings/BookmarksList";
 import PageNotFound from "./components/errorPage/PageNotFound";
 import Search from "./components/listings/Search";
+import CompleteAccount from "./components/auth/CompleteAccount";
 
 function App() {
 	const [cookies, setCookie] = useCookies("");
@@ -43,9 +44,12 @@ function App() {
 	let cookieExpirationDate = new Date();
 	cookieExpirationDate.setFullYear(cookieCreationDate.getFullYear() + 1);
 	const getLoggedUser = (user) => {
-		console.log("user =>", user);
 		setState({loggedUser: user});
 		setCookie("loggedInUser", user, {expires: cookieExpirationDate});
+	};
+	const refreshUserData = (updatedUser) => {
+		setState({loggedUser: updatedUser});
+		setCookie("loggedInUser", updatedUser, {expires: cookieExpirationDate});
 	};
 	return (
 		<div className="app">
@@ -64,6 +68,17 @@ function App() {
 							{...props}
 							user={state.loggedUser}
 							getUserDetails={getLoggedUser}
+						/>
+					)}
+				/>
+				<Route
+					exact
+					path="/signup/complete-account"
+					render={(props) => (
+						<CompleteAccount
+							{...props}
+							user={state.loggedUser}
+							refreshUserData={refreshUserData}
 						/>
 					)}
 				/>

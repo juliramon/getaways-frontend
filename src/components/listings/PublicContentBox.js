@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 
 const PublicContentBox = ({id, image, title, subtitle, location, type}) => {
+	let shortenedSubtitle = subtitle.slice(0, 105);
 	let path;
 	if (type === "activity") {
 		path = "activities";
@@ -25,7 +26,7 @@ const PublicContentBox = ({id, image, title, subtitle, location, type}) => {
 				</div>
 				<div className="listing-content">
 					<h3 className="listing-title">{title}</h3>
-					<p className="listing-subtitle">{subtitle}</p>
+					<p className="listing-subtitle">{shortenedSubtitle}...</p>
 					<p className="listing-location">{location}</p>
 				</div>
 			</Link>

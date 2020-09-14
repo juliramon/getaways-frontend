@@ -165,6 +165,75 @@ const NavigationBar = (props) => {
 				<ContentBar user={user} />
 			</header>
 		);
+	} else if (path === "/signup/complete-account") {
+		navBar = (
+			<header style={styledHeader}>
+				<Navbar>
+					<Container fluid className="align-items-center">
+						<div className="nav-col left d-flex">
+							<Navbar.Brand>
+								<img src={logo_url} alt="Logo Getaways.guru" />
+							</Navbar.Brand>
+						</div>
+						<div className="nav-col right d-flex">
+							<Nav className="logged-user">
+								<Dropdown>
+									<Dropdown.Toggle variant="none" id="dropdown-basic">
+										<div className="avatar avatar-nav">
+											<img src={user.avatar} alt={user.fullName} />
+										</div>
+										<div className="user-meta">
+											{user.fullName}
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="icon icon-tabler icon-tabler-chevron-down"
+												width="20"
+												height="20"
+												viewBox="0 0 24 24"
+												strokeWidth="1.5"
+												stroke="#2c3e50"
+												fill="none"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path stroke="none" d="M0 0h24v24H0z" />
+												<polyline points="6 9 12 15 18 9" />
+											</svg>
+										</div>
+									</Dropdown.Toggle>
+									<Dropdown.Menu>
+										<ul>
+											<li>
+												<Nav.Link href="/logout">
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="icon icon-tabler icon-tabler-power"
+														width="44"
+														height="44"
+														viewBox="0 0 24 24"
+														strokeWidth="1.5"
+														stroke="#2c3e50"
+														fill="none"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path stroke="none" d="M0 0h24v24H0z" />
+														<path d="M7 6a7.75 7.75 0 1 0 10 0" />
+														<line x1="12" y1="4" x2="12" y2="12" />
+													</svg>{" "}
+													Logout
+												</Nav.Link>
+											</li>
+										</ul>
+									</Dropdown.Menu>
+								</Dropdown>
+							</Nav>
+						</div>
+					</Container>
+				</Navbar>
+				<ContentBar user={user} />
+			</header>
+		);
 	} else {
 		navBar = (
 			<header style={styledHeader}>

@@ -12,6 +12,7 @@ const ContentBox = ({
 	publicationDate,
 	fetchData,
 }) => {
+	let shortenedSubtitle = subtitle.slice(0, 70);
 	const service = new ContentService();
 	const removeItem = () => {
 		if (type === "activity") {
@@ -37,7 +38,7 @@ const ContentBox = ({
 					<img src={image} alt={title} />
 				</div>
 				<h1 className="title">{title}</h1>
-				<p className="subtitle">{subtitle}</p>
+				<p className="subtitle">{shortenedSubtitle}...</p>
 				<p className="date">{publicationDate}</p>
 			</Link>
 			<div className="crud-buttons">

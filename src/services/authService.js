@@ -30,13 +30,27 @@ class AuthService {
 			.post("/auth/signup", {fullName, email, password})
 			.then(() => {
 				if (this.error === undefined) {
-					console.log(this.response);
 					return this.response;
 				} else {
-					console.log(this.error);
 					return this.error;
 				}
 			});
+	};
+
+	completeAccount = (
+		accountCompleted,
+		typesToFollow,
+		categoriesToFollow,
+		regionsToFollow,
+		seasonsToFollow
+	) => {
+		return this.service.put("/auth/complete-account", {
+			accountCompleted,
+			typesToFollow,
+			categoriesToFollow,
+			regionsToFollow,
+			seasonsToFollow,
+		});
 	};
 
 	login = (username, password) => {

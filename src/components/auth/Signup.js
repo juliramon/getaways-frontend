@@ -45,7 +45,7 @@ const Signup = (props) => {
 					console.log("signed up =>", res);
 					setState(initialState);
 					props.getUserDetails(res);
-					history.push("/feed");
+					history.push("/signup/complete-account");
 				}
 			})
 			.catch((err) => console.log(err));

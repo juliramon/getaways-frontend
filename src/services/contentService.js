@@ -322,6 +322,9 @@ class ContentService {
 		this.service
 			.get(`/searchActivities?${queryRegion}&${queryCategory}&${querySeason}`)
 			.then((res) => res.data);
+
+	searchBarQuery = (searchQuery) =>
+		this.service.get(`/searchQuery${searchQuery}`).then((res) => res.data);
 }
 
 export default ContentService;

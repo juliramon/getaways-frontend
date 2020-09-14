@@ -145,21 +145,79 @@ const UserProfile = (props) => {
 			);
 	}
 
-	let noresults = (
-		<div className="box empty d-flex">
-			<div className="media">
-				<img src="../../no-results.svg" alt="Graphic no results" />
+	let mainButton, noresults;
+	if (state.loggedUser && state.loggedUser !== "null") {
+		if (state.userProfile._id === state.loggedUser._id) {
+			mainButton = (
+				<Button
+					className="btn btn-primary text-center sidebar"
+					onClick={handleModalVisibility}
+				>
+					Edit profile
+				</Button>
+			);
+			noresults = (
+				<div className="box empty d-flex">
+					<div className="media">
+						<img src="../../no-results.svg" alt="Graphic no results" />
+					</div>
+					<div className="text">
+						<p>
+							Oh no, this looks so empty.
+							<br />
+							Create your first {contentType} to inspire others.
+						</p>
+						{noResultsCTA}
+					</div>
+				</div>
+			);
+		} else {
+			mainButton = (
+				<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-plus"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#fff"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<line x1="12" y1="5" x2="12" y2="19" />
+						<line x1="5" y1="12" x2="19" y2="12" />
+					</svg>{" "}
+					Follow
+				</Button>
+			);
+		}
+	} else {
+		mainButton = (
+			<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
+				Sign up
+			</Button>
+		);
+		noresults = (
+			<div className="box empty d-flex">
+				<div className="media">
+					<img src="../../no-results.svg" alt="Graphic no results" />
+				</div>
+				<div className="text">
+					<p>
+						<span className="profile-owner-name">
+							{state.userProfile.fullName}
+						</span>{" "}
+						didn't publish any {contentType} yet.
+						<br />
+						Come back later to check what's new.
+					</p>
+				</div>
 			</div>
-			<div className="text">
-				<p>
-					Oh no, this looks so empty.
-					<br />
-					Create your first {contentType} to inspire others.
-				</p>
-				{noResultsCTA}
-			</div>
-		</div>
-	);
+		);
+	}
 
 	if (state.hasListings === true) {
 		if (state.activeTab === "activities") {
@@ -227,64 +285,6 @@ const UserProfile = (props) => {
 		color: "#0d1f44",
 	};
 
-	let mainButton;
-	if (state.loggedUser) {
-		if (state.userProfile._id === state.loggedUser._id) {
-			mainButton = (
-				<Button
-					className="btn btn-primary text-center sidebar"
-					onClick={handleModalVisibility}
-				>
-					Edit profile
-				</Button>
-			);
-		} else {
-			mainButton = (
-				<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="icon icon-tabler icon-tabler-plus"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						strokeWidth="1.5"
-						stroke="#fff"
-						fill="none"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" />
-						<line x1="12" y1="5" x2="12" y2="19" />
-						<line x1="5" y1="12" x2="19" y2="12" />
-					</svg>{" "}
-					Follow
-				</Button>
-			);
-		}
-	} else {
-		mainButton = (
-			<Button className="btn btn-primary text-center sidebar d-flex align-items-center">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					className="icon icon-tabler icon-tabler-plus"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					strokeWidth="1.5"
-					stroke="#fff"
-					fill="none"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				>
-					<path stroke="none" d="M0 0h24v24H0z" />
-					<line x1="12" y1="5" x2="12" y2="19" />
-					<line x1="5" y1="12" x2="19" y2="12" />
-				</svg>{" "}
-				Sign up
-			</Button>
-		);
-	}
-
 	const handleFileUpload = async (e) => {
 		const fileToUpload = e.target.files[0];
 		const uploadData = new FormData();
@@ -327,6 +327,34 @@ const UserProfile = (props) => {
 					<span className="sr-only">Loading...</span>
 				</Spinner>
 			</Container>
+		);
+	}
+
+	let editCoverButton;
+	if (props.user && props.user !== "null") {
+		editCoverButton = (
+			<label className="edit-cover">
+				<input type="file" onChange={handleFileUpload} />
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="icon icon-tabler icon-tabler-photo"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					strokeWidth="1.5"
+					stroke="#ffffff"
+					fill="none"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" />
+					<line x1="15" y1="8" x2="15.01" y2="8" />
+					<rect x="4" y="4" width="16" height="16" rx="3" />
+					<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+					<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+				</svg>{" "}
+				Edit cover
+			</label>
 		);
 	}
 
@@ -384,51 +412,7 @@ const UserProfile = (props) => {
 											{state.userProfile.bio || "No bio"}
 										</li>
 										<hr />
-										{/* <li className="user-property d-flex align-items-center">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="icon icon-tabler icon-tabler-building-arch"
-												width="18"
-												height="18"
-												viewBox="0 0 24 24"
-												strokeWidth="1.5"
-												stroke="#2c3e50"
-												fill="none"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											>
-												<path stroke="none" d="M0 0h24v24H0z" />
-												<line x1="3" y1="21" x2="21" y2="21" />
-												<path d="M4 21v-15a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v15" />
-												<path d="M9 21v-8a3 3 0 0 1 6 0v8" />
-											</svg>
-											<div className="property-name">
-												Manages<Link to="/">Cal Ouaire</Link>
-											</div>
-										</li>
-										<li className="user-property d-flex align-items-center">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="icon icon-tabler icon-tabler-route"
-												width="18"
-												height="18"
-												viewBox="0 0 24 24"
-												strokeWidth="1.5"
-												stroke="#2c3e50"
-												fill="none"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											>
-												<path stroke="none" d="M0 0h24v24H0z" />
-												<circle cx="6" cy="19" r="2" />
-												<circle cx="18" cy="5" r="2" />
-												<path d="M12 19h4.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h3.5" />
-											</svg>
-											<div className="property-name">
-												Manages
-												<Link to="/">Comarcaventura: Rutes amb Seagway</Link>
-											</div>
-										</li> */}
+
 										<li className="user-location d-flex align-items-center">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -506,28 +490,7 @@ const UserProfile = (props) => {
 									backgroundImage: `url("${state.userProfile.cover}")`,
 								}}
 							>
-								<label className="edit-cover">
-									<input type="file" onChange={handleFileUpload} />
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="icon icon-tabler icon-tabler-photo"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										strokeWidth="1.5"
-										stroke="#ffffff"
-										fill="none"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path stroke="none" d="M0 0h24v24H0z" />
-										<line x1="15" y1="8" x2="15.01" y2="8" />
-										<rect x="4" y="4" width="16" height="16" rx="3" />
-										<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
-										<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
-									</svg>{" "}
-									Edit cover
-								</label>
+								{editCoverButton}
 							</div>
 							<div className="filter-bar">
 								<Button
@@ -608,9 +571,7 @@ const UserProfile = (props) => {
 							</div>
 							<div className="content-bar">{listings}</div>
 						</div>
-						<div className="col right">
-							<div className="box bordered"></div>
-						</div>
+						<div className="col right"></div>
 					</div>
 				</Row>
 			</Container>
