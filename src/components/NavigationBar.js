@@ -304,7 +304,7 @@ const NavigationBar = (props) => {
 											<line x1="18" y1="14" x2="18" y2="14.01" />
 											<line x1="10" y1="14" x2="14" y2="14" />
 										</svg>
-										Type enter to search
+										Press enter to search
 									</span>
 								</Form>
 								{/* </NativeListener> */}

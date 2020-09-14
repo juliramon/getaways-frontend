@@ -35,7 +35,6 @@ const SearchBar = () => {
 	};
 
 	const handleCheckActivityCategory = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryActivityCategory;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -51,7 +50,6 @@ const SearchBar = () => {
 	};
 
 	const handleCheckPlaceCategory = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryPlaceCategory;
 		if (e.target.checked === true) {
 			if (query.length < 1) {
@@ -67,7 +65,6 @@ const SearchBar = () => {
 	};
 
 	const handleCheckType = (e) => {
-		console.log(`${e.target.name}: ${e.target.id}`);
 		let query = state.queryPlaceType;
 		if (e.target.checked === true) {
 			if (query.length < 1) {

@@ -32,27 +32,21 @@ const Signup = (props) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const {fullName, email, password} = state.formData;
-		service
-			.signup(fullName, email, password)
-			.then((res) => {
-				if (res.status) {
-					console.log("error =>", res);
-					setState({
-						...state,
-						errorMessage: res,
-					});
-				} else {
-					console.log("signed up =>", res);
-					setState(initialState);
-					props.getUserDetails(res);
-					history.push("/signup/complete-account");
-				}
-			})
-			.catch((err) => console.log(err));
+		service.signup(fullName, email, password).then((res) => {
+			if (res.status) {
+				setState({
+					...state,
+					errorMessage: res,
+				});
+			} else {
+				setState(initialState);
+				props.getUserDetails(res);
+				history.push("/signup/complete-account");
+			}
+		});
 	};
 
 	const responseGoogle = (response) => {
-		console.log(response);
 		setState({
 			...state,
 			googleResponse: {
@@ -65,32 +59,22 @@ const Signup = (props) => {
 	const signupGoogle = () => {
 		if (state.googleResponse.data) {
 			const {name, email, imageUrl} = state.googleResponse.data;
-			console.log({
-				name,
-				email,
-				imageUrl,
+			service.googleAuth(name, email, imageUrl).then((res) => {
+				if (res.status) {
+					setState({
+						...state,
+						errorMessage: res,
+						googleResponse: {
+							...state.googleResponse,
+							received: false,
+						},
+					});
+				} else {
+					setState(initialState);
+					props.getUserDetails(res);
+					history.push("/feed");
+				}
 			});
-			service
-				.googleAuth(name, email, imageUrl)
-				.then((res) => {
-					if (res.status) {
-						console.log("error =>", res);
-						setState({
-							...state,
-							errorMessage: res,
-							googleResponse: {
-								...state.googleResponse,
-								received: false,
-							},
-						});
-					} else {
-						console.log("respuesta del servidor =>", res);
-						setState(initialState);
-						props.getUserDetails(res);
-						history.push("/feed");
-					}
-				})
-				.catch((err) => console.log(err));
 		}
 	};
 

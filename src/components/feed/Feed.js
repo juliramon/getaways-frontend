@@ -14,6 +14,10 @@ const Feed = ({user}) => {
 		hasPlaces: false,
 		userCustomActivities: [],
 		userCustomPlaces: [],
+		categoriesToFollow: user.categoriesToFollow,
+		regionsToFollow: user.regionsToFollow,
+		seasonsToFollow: user.seasonsToFollow,
+		typesToFollow: user.typesToFollow,
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
@@ -101,17 +105,17 @@ const Feed = ({user}) => {
 	}
 
 	let topicsFollowed = [];
-	if (state.loggedUser.typesToFollow.length > 0) {
-		state.loggedUser.typesToFollow.map((el) => topicsFollowed.push(el));
+	if (user.typesToFollow.length > 0) {
+		user.typesToFollow.map((el) => topicsFollowed.push(el));
 	}
-	if (state.loggedUser.categoriesToFollow.length > 0) {
-		state.loggedUser.categoriesToFollow.map((el) => topicsFollowed.push(el));
+	if (user.categoriesToFollow.length > 0) {
+		user.categoriesToFollow.map((el) => topicsFollowed.push(el));
 	}
-	if (state.loggedUser.seasonsToFollow.length > 0) {
-		state.loggedUser.seasonsToFollow.map((el) => topicsFollowed.push(el));
+	if (user.seasonsToFollow.length > 0) {
+		user.seasonsToFollow.map((el) => topicsFollowed.push(el));
 	}
-	if (state.loggedUser.regionsToFollow.length > 0) {
-		state.loggedUser.regionsToFollow.map((el) => topicsFollowed.push(el));
+	if (user.regionsToFollow.length > 0) {
+		user.regionsToFollow.map((el) => topicsFollowed.push(el));
 	}
 
 	const topicsList = topicsFollowed.map((el, idx) => (

@@ -4,6 +4,7 @@ import ContentService from "../../services/contentService";
 import {Container, Row, Spinner, Toast, Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import GoogleMapReact from "google-map-react";
+import SignUpModal from "../modals/SignUpModal";
 
 const ActivityListing = (props) => {
 	const initialState = {
@@ -19,6 +20,10 @@ const ActivityListing = (props) => {
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
+
+	const [modalVisibility, setModalVisibility] = useState(false);
+	const handleModalVisibility = () => setModalVisibility(true);
+	const hideModalVisibility = () => setModalVisibility(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -83,11 +88,69 @@ const ActivityListing = (props) => {
 	};
 
 	let bookmarkButton;
-	if (state.isBookmarked === false) {
+
+	if (props.user && props.user !== "null") {
+		if (state.isBookmarked === false) {
+			bookmarkButton = (
+				<div
+					className="listing-bookmark-wrapper"
+					onClick={() => bookmarkListing()}
+				>
+					<button className="listing-bookmark">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="icon icon-tabler icon-tabler-bookmark"
+							width="44"
+							height="44"
+							viewBox="0 0 24 24"
+							strokeWidth="1.5"
+							stroke="#0d1f44"
+							fill="none"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path stroke="none" d="M0 0h24v24H0z" />
+							<path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
+						</svg>
+					</button>
+					<span>Bookmark</span>
+				</div>
+			);
+		} else {
+			bookmarkButton = (
+				<div
+					className="listing-bookmark-wrapper"
+					onClick={() => bookmarkListing()}
+				>
+					<button className="listing-bookmark">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="icon icon-tabler icon-tabler-bookmark"
+							width="44"
+							height="44"
+							viewBox="0 0 24 24"
+							strokeWidth="1.5"
+							stroke="#0d1f44"
+							fill="none"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path stroke="none" d="M0 0h24v24H0z" />
+							<path
+								fill="#0d1f44"
+								d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2"
+							/>
+						</svg>
+					</button>
+					<span>Unbookmark</span>
+				</div>
+			);
+		}
+	} else {
 		bookmarkButton = (
 			<div
 				className="listing-bookmark-wrapper"
-				onClick={() => bookmarkListing()}
+				onClick={() => handleModalVisibility()}
 			>
 				<button className="listing-bookmark">
 					<svg
@@ -107,35 +170,6 @@ const ActivityListing = (props) => {
 					</svg>
 				</button>
 				<span>Bookmark</span>
-			</div>
-		);
-	} else {
-		bookmarkButton = (
-			<div
-				className="listing-bookmark-wrapper"
-				onClick={() => bookmarkListing()}
-			>
-				<button className="listing-bookmark">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="icon icon-tabler icon-tabler-bookmark"
-						width="44"
-						height="44"
-						viewBox="0 0 24 24"
-						strokeWidth="1.5"
-						stroke="#0d1f44"
-						fill="none"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" />
-						<path
-							fill="#0d1f44"
-							d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2"
-						/>
-					</svg>
-				</button>
-				<span>Unbookmark</span>
 			</div>
 		);
 	}
@@ -484,6 +518,10 @@ const ActivityListing = (props) => {
 					</Row>
 				</div>
 			</Container>
+			<SignUpModal
+				visibility={modalVisibility}
+				hideModal={hideModalVisibility}
+			/>
 		</div>
 	);
 };

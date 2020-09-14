@@ -26,7 +26,6 @@ const Search = (props) => {
 			const searchQueryResults = await service.searchBarQuery(
 				state.searchQuery
 			);
-			console.log(searchQueryResults);
 			if (searchQueryResults instanceof Array) {
 				let hasResults;
 				searchQueryResults.length > 0
@@ -38,8 +37,7 @@ const Search = (props) => {
 					hasResults: hasResults,
 					searchResults: searchQueryResults,
 				});
-			}
-			if (searchQueryResults instanceof Object) {
+			} else if (searchQueryResults instanceof Object) {
 				let hasResults;
 				searchQueryResults.places.length > 0 ||
 				searchQueryResults.activities.length > 0
@@ -60,13 +58,10 @@ const Search = (props) => {
 
 	useEffect(() => {
 		if (state.searchQuery !== props.location.search) {
-			console.log("hello");
-			console.log(props.location.search);
 			const fetchData = async () => {
 				const searchQueryResults = await service.searchBarQuery(
 					props.location.search
 				);
-				console.log(searchQueryResults);
 				let hasResults;
 				searchQueryResults.places.length > 0 ||
 				searchQueryResults.activities.length > 0
@@ -109,7 +104,6 @@ const Search = (props) => {
 		let searchResults = [];
 		state.activitiesFound.map((el) => searchResults.push(el));
 		state.placesFound.map((el) => searchResults.push(el));
-		console.log(searchResults);
 		searchResultsList = searchResults.map((el) => {
 			let location;
 			if (el.type === "activity") {
