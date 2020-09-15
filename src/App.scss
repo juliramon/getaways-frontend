@@ -1266,6 +1266,10 @@ nav {
 	.col.center {
 		flex: 1;
 		padding-left: 30px;
+		.listings-wrapper {
+			max-height: 75vh;
+			overflow-y: scroll;
+		}
 	}
 	.col.right {
 		max-width: 28%;
@@ -1285,7 +1289,7 @@ nav {
 		font-size: 0.9em;
 	}
 	.map-wrapper {
-		height: 100%;
+		height: 87vh;
 		border-radius: 8px;
 		overflow: hidden;
 		border: 1px solid $hover-tab-background;

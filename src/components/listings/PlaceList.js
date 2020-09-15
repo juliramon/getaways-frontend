@@ -123,8 +123,7 @@ const PlaceList = ({user}) => {
 		};
 	};
 
-	const renderMarker = (map, maps) => {
-		const bounds = new maps.LatLngBounds();
+	let renderMarker = (map, maps) => {
 		state.places.forEach((place) => {
 			const position = {
 				lat: parseFloat(place.place_lat),
@@ -143,10 +142,8 @@ const PlaceList = ({user}) => {
 				map,
 				icon: "../../map-marker.svg",
 			});
-			bounds.extend(marker.position);
 			marker.addListener("click", () => infowindow.open(map, marker));
 		});
-		map.fitBounds(bounds);
 	};
 
 	useEffect(() => {
@@ -332,26 +329,28 @@ const PlaceList = ({user}) => {
 									skis. There's a whole world waiting to be discovered. Get away
 									and enjoy with the activities below.
 								</p>
-								<ul className="top-nav-meta d-flex align-items-center">
-									<li>3 places</li>
-									<li>2 contributors</li>
-								</ul>
 							</div>
-							{placesList}
+							<div className="listings-wrapper">
+								<div className="listings-list">{placesList}</div>
+							</div>
 						</div>
 						<div className="col right">
 							<div className="map-wrapper">
 								<div className="map-block">
-									<GoogleMapReact
-										bootstrapURLKeys={{
-											key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
-										}}
-										defaultCenter={center}
-										defaultZoom={8}
-										options={getMapOptions}
-										yesIWantToUseGoogleMapApiInternals
-										onGoogleApiLoaded={({map, maps}) => renderMarker(map, maps)}
-									/>
+									{state.hasPlaces ? (
+										<GoogleMapReact
+											bootstrapURLKeys={{
+												key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
+											}}
+											defaultCenter={center}
+											defaultZoom={8}
+											options={getMapOptions}
+											yesIWantToUseGoogleMapApiInternals
+											onGoogleApiLoaded={({map, maps}) =>
+												renderMarker(map, maps)
+											}
+										/>
+									) : null}
 								</div>
 							</div>
 						</div>

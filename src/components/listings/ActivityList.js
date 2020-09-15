@@ -278,27 +278,29 @@ const ActivityList = ({user}) => {
 									skis. There's a whole world waiting to be discovered. Get away
 									and enjoy with the activities below.
 								</p>
-								<ul className="top-nav-meta d-flex align-items-center">
-									<li>3 activities</li>
-									<li>2 contributors</li>
-								</ul>
 							</div>
-							{activitiesList}
+							<div className="listings-wrapper">
+								<div className="listings-list">{activitiesList}</div>
+							</div>
 						</div>
 						<div className="col right">
 							<div className="map-wrapper">
 								<div className="map-block">
-									<GoogleMapReact
-										bootstrapURLKeys={{
-											key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
-										}}
-										center={center}
-										defaultCenter={center}
-										defaultZoom={8}
-										options={getMapOptions}
-										yesIWantToUseGoogleMapApiInternals
-										onGoogleApiLoaded={({map, maps}) => renderMarker(map, maps)}
-									/>
+									{state.hasActivities ? (
+										<GoogleMapReact
+											bootstrapURLKeys={{
+												key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
+											}}
+											center={center}
+											defaultCenter={center}
+											defaultZoom={8}
+											options={getMapOptions}
+											yesIWantToUseGoogleMapApiInternals
+											onGoogleApiLoaded={({map, maps}) =>
+												renderMarker(map, maps)
+											}
+										/>
+									) : null}
 								</div>
 							</div>
 						</div>
