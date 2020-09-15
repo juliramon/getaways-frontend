@@ -23,6 +23,7 @@ const UsersList = ({user}) => {
 			id={el._id}
 			avatar={el.avatar}
 			fullname={el.fullName}
+			username={el.username}
 		/>
 	));
 	return (
@@ -33,24 +34,29 @@ const UsersList = ({user}) => {
 				}
 				user={user}
 			/>
-			<Container fluid className="top-nav">
-				<div className="top-nav-wrapper">
-					<h1 className="top-nav-title">Community</h1>
-					<p className="top-nav-subtitle">
-						Wear your best boots, your swimsuit, your backpack or your skis.
-						There's a whole world waiting to be discovered. Get away and enjoy
-						with the activities below.
-					</p>
-					<ul className="top-nav-meta d-flex align-items-center">
-						<li>3 activities</li>
-						<li>2 contributors</li>
-					</ul>
-				</div>
-			</Container>
 			<Container fluid className="mw-1600">
 				<Row>
 					<div className="box d-flex">
-						<div className="col left"></div>
+						<div className="col left">
+							<div className="box bordered">
+								<div className="page-meta">
+									<div className="page-header d-flex">
+										<h1 className="page-title">Community</h1>
+									</div>
+									<ul>
+										<li className="page-bookmarks">
+											<span>{state.users.length}</span>{" "}
+											{state.users.length > 1 ? "users" : "user"}
+										</li>
+										<hr />
+										<li className="page-description">
+											Find here the members of the Getaways.guru community
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
 						<div className="col right">
 							<div className="box wrapper d-flex">{usersList}</div>
 						</div>

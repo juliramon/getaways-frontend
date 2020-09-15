@@ -138,11 +138,7 @@ const Dashboard = ({user}) => {
 		case "stories":
 			contentType = "story";
 			linkTo = "/story-composer";
-			noResultsCTA = (
-				<Link to={linkTo} className="btn btn-primary text-center">
-					Add {contentType}
-				</Link>
-			);
+			noResultsCTA = undefined;
 			break;
 		default:
 			contentType = "getaway";
@@ -172,6 +168,23 @@ const Dashboard = ({user}) => {
 			</div>
 		</div>
 	);
+
+	if (state.activeTab === "stories") {
+		noresults = (
+			<div className="box empty d-flex">
+				<div className="media">
+					<img src="../../development.svg" alt="Graphic development" />
+				</div>
+				<div className="text">
+					<p>
+						<strong>New!</strong> Stories feature is on its way.
+						<br />
+						Check back in a few days to see what's new.
+					</p>
+				</div>
+			</div>
+		);
+	}
 
 	const sortTitle = (arr, listToSort) => {
 		if (state.sortedTitle === false || state.sortedTitle === "ZtoA") {
@@ -337,7 +350,7 @@ const Dashboard = ({user}) => {
 			/>
 			<Container fluid className="top-nav">
 				<div className="top-nav-wrapper">
-					<h1 className="top-nav-title db">Dashboard</h1>
+					<h1 className="top-nav-title db mw-1600">Dashboard</h1>
 				</div>
 			</Container>
 			<Container fluid className="mw-1600">

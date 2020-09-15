@@ -18,7 +18,7 @@ const PublicUserBox = ({id, avatar, fullname, username, bio}) => {
 						<img src={state.avatar} alt={state.fullname} />
 					</div>
 					<h3>{state.fullname}</h3>
-					<p>{state.username || "@username"}</p>
+					<p>@{state.username || "@username"}</p>
 					<p>{state.bio}</p>
 				</div>
 			</Link>

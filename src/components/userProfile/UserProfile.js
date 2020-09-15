@@ -131,11 +131,7 @@ const UserProfile = (props) => {
 		case "stories":
 			contentType = "story";
 			linkTo = "/story-composer";
-			noResultsCTA = (
-				<Link to={linkTo} className="btn btn-primary text-center">
-					Add {contentType}
-				</Link>
-			);
+			noResultsCTA = undefined;
 			break;
 		default:
 			contentType = "getaway";
@@ -151,7 +147,7 @@ const UserProfile = (props) => {
 	}
 
 	let mainButton, noresults;
-	if (state.loggedUser && state.loggedUser !== "null") {
+	if (props.user && props.user !== "null") {
 		if (state.userProfile._id === state.loggedUser._id) {
 			mainButton = (
 				<Button
@@ -178,6 +174,23 @@ const UserProfile = (props) => {
 			);
 		} else {
 			mainButton = undefined;
+			noresults = (
+				<div className="box empty d-flex">
+					<div className="media">
+						<img src="../../no-results.svg" alt="Graphic no results" />
+					</div>
+					<div className="text">
+						<p>
+							<span className="profile-owner-name">
+								{state.userProfile.fullName}
+							</span>{" "}
+							didn't publish any {contentType} yet.
+							<br />
+							Come back later to check what's new.
+						</p>
+					</div>
+				</div>
+			);
 		}
 	} else {
 		mainButton = (
@@ -201,6 +214,23 @@ const UserProfile = (props) => {
 						didn't publish any {contentType} yet.
 						<br />
 						Come back later to check what's new.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (state.activeTab === "stories") {
+		noresults = (
+			<div className="box empty d-flex">
+				<div className="media">
+					<img src="../../development.svg" alt="Graphic development" />
+				</div>
+				<div className="text">
+					<p>
+						<strong>New!</strong> Stories feature is on its way.
+						<br />
+						Check back in a few days to see what's new.
 					</p>
 				</div>
 			</div>
@@ -320,30 +350,32 @@ const UserProfile = (props) => {
 
 	let editCoverButton;
 	if (props.user && props.user !== "null") {
-		editCoverButton = (
-			<label className="edit-cover">
-				<input type="file" onChange={handleFileUpload} />
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					className="icon icon-tabler icon-tabler-photo"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					strokeWidth="1.5"
-					stroke="#ffffff"
-					fill="none"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				>
-					<path stroke="none" d="M0 0h24v24H0z" />
-					<line x1="15" y1="8" x2="15.01" y2="8" />
-					<rect x="4" y="4" width="16" height="16" rx="3" />
-					<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
-					<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
-				</svg>{" "}
-				Edit cover
-			</label>
-		);
+		if (state.loggedUser._id === state.userProfile._id) {
+			editCoverButton = (
+				<label className="edit-cover">
+					<input type="file" onChange={handleFileUpload} />
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="icon icon-tabler icon-tabler-photo"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						strokeWidth="1.5"
+						stroke="#ffffff"
+						fill="none"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path stroke="none" d="M0 0h24v24H0z" />
+						<line x1="15" y1="8" x2="15.01" y2="8" />
+						<rect x="4" y="4" width="16" height="16" rx="3" />
+						<path d="M4 15l4 -4a3 5 0 0 1 3 0l 5 5" />
+						<path d="M14 14l1 -1a3 5 0 0 1 3 0l 2 2" />
+					</svg>{" "}
+					Edit cover
+				</label>
+			);
+		}
 	}
 
 	return (
@@ -567,11 +599,11 @@ const UserProfile = (props) => {
 				visibility={modalVisibility}
 				hideModal={hideModalVisibility}
 				user={state.userProfile}
-				refreshUserData={refreshUserData}
+				refreshUserData={() => refreshUserData()}
 			/>
 			<SignUpModal
 				visibility={modalVisibilityOffpage}
-				hideModal={hideModalVisibilityOffpage}
+				hideModal={() => hideModalVisibilityOffpage()}
 			/>
 		</div>
 	);
