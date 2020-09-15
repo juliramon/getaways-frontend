@@ -284,9 +284,9 @@ const NavigationBar = (props) => {
 									<span className="search-helper">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="icon icon-tabler icon-tabler-keyboard"
-											width="15"
-											height="15"
+											className="icon icon-tabler icon-tabler-corner-down-left"
+											width="14"
+											height="14"
 											viewBox="0 0 24 24"
 											strokeWidth="1.5"
 											stroke="#2c3e50"
@@ -295,14 +295,7 @@ const NavigationBar = (props) => {
 											strokeLinejoin="round"
 										>
 											<path stroke="none" d="M0 0h24v24H0z" />
-											<rect x="2" y="6" width="20" height="12" rx="2" />
-											<line x1="6" y1="10" x2="6" y2="10" />
-											<line x1="10" y1="10" x2="10" y2="10" />
-											<line x1="14" y1="10" x2="14" y2="10" />
-											<line x1="18" y1="10" x2="18" y2="10" />
-											<line x1="6" y1="14" x2="6" y2="14.01" />
-											<line x1="18" y1="14" x2="18" y2="14.01" />
-											<line x1="10" y1="14" x2="14" y2="14" />
+											<path d="M18 6v6a3 3 0 0 1 -3 3h-10l5 -5m0 10l-5 -5" />
 										</svg>
 										Press enter to search
 									</span>
