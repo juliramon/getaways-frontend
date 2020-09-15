@@ -207,7 +207,7 @@ const Search = (props) => {
 								<h1 className="top-nav-title">Search results</h1>
 								<p className="top-nav-subtitle">
 									We have found <span>{searchResultsLength} results</span> based
-									out of your search query
+									on your search query
 								</p>
 							</div>
 							{searchResultsList}
