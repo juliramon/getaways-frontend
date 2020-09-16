@@ -31,7 +31,7 @@ import Search from "./components/listings/Search";
 import CompleteAccount from "./components/auth/CompleteAccount";
 
 function App() {
-	const [cookies, setCookie] = useCookies("");
+	const [cookies, setCookie, removeCookie] = useCookies("");
 	let loggedData;
 	if (cookies.loggedInUser && cookies.loggedInUser !== null) {
 		loggedData = cookies.loggedInUser;
@@ -48,6 +48,7 @@ function App() {
 		setCookie("loggedInUser", user, {expires: cookieExpirationDate});
 	};
 	const refreshUserData = (updatedUser) => {
+		removeCookie("loggedInUser", updatedUser);
 		setState({loggedUser: updatedUser});
 		setCookie("loggedInUser", updatedUser, {expires: cookieExpirationDate});
 	};

@@ -49,7 +49,9 @@ const Homepage = (props) => {
 				}
 			/>
 			<Hero
-				background_url={"../jumbotron-bg.jpg"}
+				background_url={
+					"https://res.cloudinary.com/juligoodie/image/upload/q_69/v1600242861/getaways-guru/cover-getaways_zogryn.webp"
+				}
 				title={title}
 				subtitle={subtitle}
 			/>

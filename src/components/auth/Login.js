@@ -143,7 +143,7 @@ const Login = (props) => {
 								perfect getaways.
 							</p>
 						</div>
-						<div className="social-signup d-flex align-items-center">
+						{/* <div className="social-signup d-flex align-items-center">
 							<button type="submit" className="btn google">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +182,7 @@ const Login = (props) => {
 									/>
 								</svg>
 							</button>
-						</div>
+						</div> */}
 						<Form onSubmit={handleSubmit}>
 							{errorMessage}
 							<Form.Group>

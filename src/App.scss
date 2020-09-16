@@ -350,7 +350,7 @@ nav {
 
 #homepage {
 	#hero {
-		padding: 70px 0 100px 0;
+		padding: 120px 0;
 		background-size: cover !important;
 		background-position: center center !important;
 		background-repeat: no-repeat !important;
@@ -823,6 +823,7 @@ nav {
 		}
 		.user-avatar {
 			margin-top: -65px;
+			max-height: 130px;
 			.input-avatar-user {
 				display: none;
 			}
@@ -830,6 +831,7 @@ nav {
 				border: 5px solid $white-text;
 				position: relative;
 				cursor: pointer;
+				max-height: 130px !important;
 				img {
 					width: 120px;
 					height: auto;

@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {Form, Button, Alert} from "react-bootstrap";
 import {Link, useHistory} from "react-router-dom";
 import AuthService from "../../services/authService";
-import GoogleLogin from "react-google-login";
+// import GoogleLogin from "react-google-login";
 
 const Signup = (props) => {
 	const history = useHistory();
@@ -46,43 +46,43 @@ const Signup = (props) => {
 		});
 	};
 
-	const responseGoogle = (response) => {
-		setState({
-			...state,
-			googleResponse: {
-				received: true,
-				data: response.profileObj,
-			},
-		});
-	};
+	// const responseGoogle = (response) => {
+	// 	setState({
+	// 		...state,
+	// 		googleResponse: {
+	// 			received: true,
+	// 			data: response.profileObj,
+	// 		},
+	// 	});
+	// };
 
-	const signupGoogle = () => {
-		if (state.googleResponse.data) {
-			const {name, email, imageUrl} = state.googleResponse.data;
-			service.googleAuth(name, email, imageUrl).then((res) => {
-				if (res.status) {
-					setState({
-						...state,
-						errorMessage: res,
-						googleResponse: {
-							...state.googleResponse,
-							received: false,
-						},
-					});
-				} else {
-					setState(initialState);
-					props.getUserDetails(res);
-					history.push("/feed");
-				}
-			});
-		}
-	};
+	// const signupGoogle = () => {
+	// 	if (state.googleResponse.data) {
+	// 		const {name, email, imageUrl} = state.googleResponse.data;
+	// 		service.googleAuth(name, email, imageUrl).then((res) => {
+	// 			if (res.status) {
+	// 				setState({
+	// 					...state,
+	// 					errorMessage: res,
+	// 					googleResponse: {
+	// 						...state.googleResponse,
+	// 						received: false,
+	// 					},
+	// 				});
+	// 			} else {
+	// 				setState(initialState);
+	// 				props.getUserDetails(res);
+	// 				history.push("/feed");
+	// 			}
+	// 		});
+	// 	}
+	// };
 
-	useEffect(() => {
-		if (state.googleResponse.received) {
-			signupGoogle();
-		}
-	});
+	// useEffect(() => {
+	// 	if (state.googleResponse.received) {
+	// 		signupGoogle();
+	// 	}
+	// });
 
 	let errorMessage;
 	if (state.errorMessage.message) {
@@ -196,7 +196,7 @@ const Signup = (props) => {
 								perfect getaways.
 							</p>
 						</div>
-						<div className="social-signup d-flex align-items-center">
+						{/* <div className="social-signup d-flex align-items-center">
 							<GoogleLogin
 								clientId={
 									"1001464092709-hi8kknnaqhokalsior0s2kukhtupa7a8.apps.googleusercontent.com"
@@ -252,7 +252,7 @@ const Signup = (props) => {
 									/>
 								</svg>
 							</button>
-						</div>
+						</div> */}
 						<Form onSubmit={handleSubmit}>
 							{errorMessage}
 							<div className="d-flex">

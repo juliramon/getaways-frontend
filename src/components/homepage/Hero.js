@@ -7,7 +7,7 @@ const Hero = ({background_url, title, subtitle}) => {
 		<section
 			id="hero"
 			style={{
-				background: `linear-gradient(rgba(46,105,228,.2), rgba(46,105,228,.3)),url('${background_url}')`,
+				background: `linear-gradient(rgba(11, 26, 58, 0.54), rgba(8, 24, 58, 0.26)),url('${background_url}')`,
 			}}
 		>
 			<Container className="mw-1200">

@@ -19,7 +19,7 @@ const BookmarksList = (props) => {
 			let allBookmarks = [];
 			userBookmarks.map((el) => allBookmarks.push(el));
 			let hasBookmarks;
-			allBookmarks ? (hasBookmarks = true) : (hasBookmarks = false);
+			allBookmarks.length > 0 ? (hasBookmarks = true) : (hasBookmarks = false);
 			setState({
 				...state,
 				bookmarks: allBookmarks,
