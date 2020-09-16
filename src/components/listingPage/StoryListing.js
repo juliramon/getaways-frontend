@@ -16,7 +16,6 @@ const StoryListing = (props) => {
 	const service = new ContentService();
 	const getStoryDetails = useCallback(() => {
 		service.getStoryDetails(state.id).then((res) => {
-			console.log(res);
 			setState({
 				...state,
 				story: res,

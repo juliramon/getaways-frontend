@@ -490,6 +490,17 @@ nav {
 			display: flex;
 			border: none;
 		}
+		.header-indicator {
+			position: absolute;
+			bottom: 20px;
+			a {
+				color: #ffffff;
+				display: flex;
+				align-items: center;
+				font-weight: bold;
+				text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+			}
+		}
 	}
 	.homepage-section {
 		padding: 60px 0 0 0;
@@ -689,7 +700,9 @@ nav {
 	}
 	.box .col.left {
 		max-width: 20% !important;
-		border-right: 1px solid $hover-tab-background;
+		height: 0;
+		position: sticky;
+		top: 100px;
 	}
 	.user-meta-wrapper {
 		display: flex;
@@ -707,6 +720,10 @@ nav {
 		}
 	}
 	.left-menu {
+		.topics ul {
+			max-height: 230px;
+			overflow-y: scroll;
+		}
 		.topics,
 		.links,
 		.content {
@@ -1591,6 +1608,11 @@ nav {
 				margin-right: 6px;
 				display: block;
 				min-width: 22px;
+			}
+			a {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 		}
 		li:last-child {

@@ -516,8 +516,6 @@ const PlaceForm = ({user}) => {
 												place_opening_hours: place_opening_hours,
 											},
 										});
-
-										console.log(place);
 									}}
 									types={["establishment"]}
 									placeholder={"Type the place address"}

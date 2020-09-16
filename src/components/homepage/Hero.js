@@ -1,5 +1,6 @@
 import React from "react";
 import {Container, Row, Col} from "react-bootstrap";
+import {Link} from "react-router-dom";
 import SearchBar from "./SearchBar";
 
 const Hero = ({background_url, title, subtitle}) => {
@@ -22,7 +23,11 @@ const Hero = ({background_url, title, subtitle}) => {
 						</div>
 					</Col>
 				</Row>
-				<div className="header-indicator d-flex align-items-center"></div>
+				<div className="header-indicator d-flex align-items-center">
+					<Link to="/places/5f60cef2e9d2f2001783ba6d">
+						Cabanes als arbres | Sant Hilari Sacalm, Girona
+					</Link>
+				</div>
 			</Container>
 		</section>
 	);

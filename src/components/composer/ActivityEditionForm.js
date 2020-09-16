@@ -124,7 +124,6 @@ const ActivityEditionForm = (props) => {
 			categories.push(e.target.id);
 		} else {
 			let index = categories.indexOf(e.target.id);
-			console.log(index);
 			categories.splice(index, 1);
 		}
 		setState({

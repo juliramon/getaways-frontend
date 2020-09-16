@@ -96,7 +96,11 @@ const Footer = ({logo_url}) => {
 							<h4 className="footer-header">Connect</h4>
 							<ul>
 								<li>
-									<Link to="https://github.com/juliramon">
+									<a
+										href="https://github.com/juliramon"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											className="icon icon-tabler icon-tabler-brand-github"
@@ -113,10 +117,14 @@ const Footer = ({logo_url}) => {
 											<path d="M9 19c-4.286 1.35-4.286-2.55-6-3m12 5v-3.5c0-1 .099-1.405-.5-2 2.791-.3 5.5-1.366 5.5-6.04a4.567 4.567 0 0 0 -1.333 -3.21a4.192 4.192 0 0 0 -.08 -3.227s-1.05-.3-3.476 1.267a12.334 12.334 0 0 0 -6.222 0C6.462 2.723 5.413 3.023 5.413 3.023a4.192 4.192 0 0 0 -.08 3.227A4.566 4.566 0 0 0 4 9.486c0 4.64 2.709 5.68 5.5 6.014-.591.589-.56 1.183-.5 2V21" />
 										</svg>
 										Github
-									</Link>
+									</a>
 								</li>
 								<li>
-									<Link to="https://www.linkedin.com/in/juliramon/">
+									<a
+										href="https://www.linkedin.com/in/juliramon/"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											className="icon icon-tabler icon-tabler-brand-linkedin"
@@ -137,10 +145,14 @@ const Footer = ({logo_url}) => {
 											<path d="M16 16v-3a2 2 0 0 0 -4 0" />
 										</svg>
 										LinkedIn
-									</Link>
+									</a>
 								</li>
 								<li>
-									<Link to="https://twitter.com/juligoodie">
+									<a
+										href="https://twitter.com/juligoodie"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											className="icon icon-tabler icon-tabler-brand-twitter"
@@ -157,10 +169,14 @@ const Footer = ({logo_url}) => {
 											<path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84 0 0 0 .497 -3.753C20.18 7.773 21.692 5.25 22 4.009z" />
 										</svg>
 										Twitter
-									</Link>
+									</a>
 								</li>
 								<li>
-									<Link to="hello@getaways.guru">
+									<a
+										href="mailto://hello@getaways.guru"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											className="icon icon-tabler icon-tabler-at"
@@ -178,7 +194,7 @@ const Footer = ({logo_url}) => {
 											<path d="M16 12v1.5a2.5 2.5 0 0 0 5 0v-1.5a9 9 0 1 0 -5.5 8.28" />
 										</svg>
 										E-mail
-									</Link>
+									</a>
 								</li>
 							</ul>
 						</div>

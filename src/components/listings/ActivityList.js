@@ -289,11 +289,11 @@ const ActivityList = ({user}) => {
 									{state.hasActivities ? (
 										<GoogleMapReact
 											bootstrapURLKeys={{
-												key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
+												key: process.env.REACT_APP_GOOGLE_API_KEY,
 											}}
 											center={center}
 											defaultCenter={center}
-											defaultZoom={8}
+											defaultZoom={7}
 											options={getMapOptions}
 											yesIWantToUseGoogleMapApiInternals
 											onGoogleApiLoaded={({map, maps}) =>

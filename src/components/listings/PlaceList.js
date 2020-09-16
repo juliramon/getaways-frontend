@@ -198,13 +198,13 @@ const PlaceList = ({user}) => {
 									<Form.Check
 										label="Treehouse"
 										name="placeType"
-										id="treehouse"
+										id="treeHouse"
 										onChange={handleCheckType}
 									/>
 									<Form.Check
 										label="Ruralhouse"
 										name="placeType"
-										id="ruralhouse"
+										id="ruralHouse"
 										onChange={handleCheckType}
 									/>
 									<Form.Check
@@ -325,9 +325,11 @@ const PlaceList = ({user}) => {
 							<div className="top-nav-wrapper">
 								<h1 className="top-nav-title">Places</h1>
 								<p className="top-nav-subtitle">
-									Wear your best boots, your swimsuit, your backpack or your
-									skis. There's a whole world waiting to be discovered. Get away
-									and enjoy with the activities below.
+									From <strong>unique boutique hotels</strong> to{" "}
+									<strong>cozy cabins</strong> and <strong>treehouses</strong>,
+									passing by trailers, <strong>rural houses</strong> and{" "}
+									<strong>fancy apartments</strong>, we have the right place for
+									your perfect getaway. Start enjoying with the places below.
 								</p>
 							</div>
 							<div className="listings-wrapper">
@@ -340,10 +342,10 @@ const PlaceList = ({user}) => {
 									{state.hasPlaces ? (
 										<GoogleMapReact
 											bootstrapURLKeys={{
-												key: "AIzaSyAUENym8OVt2pBPNIMzvYLnXj_C7lIZtSw",
+												key: process.env.REACT_APP_GOOGLE_API_KEY,
 											}}
 											defaultCenter={center}
-											defaultZoom={8}
+											defaultZoom={7}
 											options={getMapOptions}
 											yesIWantToUseGoogleMapApiInternals
 											onGoogleApiLoaded={({map, maps}) =>

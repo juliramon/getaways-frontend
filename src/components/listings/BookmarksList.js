@@ -7,14 +7,15 @@ import PublicContentBox from "../listings/PublicContentBox";
 const BookmarksList = (props) => {
 	const initialState = {
 		loggedUser: props.user,
-		id: props.match.params.id,
 		bookmarks: [],
+		isFetching: false,
 		hasBookmarks: false,
 	};
 	const [state, setState] = useState(initialState);
 	const service = new ContentService();
 	useEffect(() => {
 		const fetchData = async () => {
+			setState({...state, isFetching: true});
 			const userBookmarks = await service.getUserActiveBookmarks();
 			let allBookmarks = [];
 			userBookmarks.map((el) => allBookmarks.push(el));
@@ -24,13 +25,14 @@ const BookmarksList = (props) => {
 				...state,
 				bookmarks: allBookmarks,
 				hasBookmarks: hasBookmarks,
+				isFetching: false,
 			});
 		};
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	if (state.hasBookmarks === false) {
+	if (state.isFetching) {
 		return (
 			<Container className="spinner d-flex justify-space-between">
 				<Spinner animation="border" role="status" variant="primary">
@@ -42,11 +44,9 @@ const BookmarksList = (props) => {
 
 	const bookmarks = state.bookmarks;
 	let bookmarksList;
-	console.log(bookmarks);
 	if (state.hasBookmarks === true) {
 		bookmarksList = bookmarks.map((el) => {
 			if (el.bookmarkActivityRef) {
-				console.log("activity");
 				return (
 					<PublicContentBox
 						key={el._id}
@@ -68,7 +68,6 @@ const BookmarksList = (props) => {
 					/>
 				);
 			} else {
-				console.log("hello");
 				return (
 					<PublicContentBox
 						key={el._id}

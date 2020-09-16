@@ -64,38 +64,41 @@ const HomePageResults = () => {
 		adventureGetawaysSection,
 		gastronomicGetawaysSection;
 	if (state.romanticGetaways.length > 0) {
-		let romanticList = state.romanticGetaways.map((el) => {
-			let location;
-			if (el.type === "activity") {
-				location = (
-					<span className="listing-location">{`${
-						el.activity_locality === undefined ? "" : el.activity_locality
-					}${el.activity_locality === undefined ? "" : ","} ${
-						el.activity_province || el.activity_state
-					}, ${el.activity_country}`}</span>
+		let romanticList = state.romanticGetaways.map((el, idx) => {
+			while (state.romanticGetaways.indexOf(el) < 4) {
+				let location;
+				if (el.type === "activity") {
+					location = (
+						<span className="listing-location">{`${
+							el.activity_locality === undefined ? "" : el.activity_locality
+						}${el.activity_locality === undefined ? "" : ","} ${
+							el.activity_province || el.activity_state
+						}, ${el.activity_country}`}</span>
+					);
+				}
+				if (el.type === "place") {
+					location = (
+						<span className="listing-location">{`${
+							el.place_locality === undefined ? "" : el.place_locality
+						}${el.place_locality === undefined ? "" : ","} ${
+							el.place_province || el.place_state
+						}, ${el.place_country}`}</span>
+					);
+				}
+				return (
+					<PublicSquareBox
+						key={el._id}
+						id={el._id}
+						type={el.type}
+						cover_url={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						rating={el.activity_rating || el.place_rating}
+						location={location}
+					/>
 				);
 			}
-			if (el.type === "place") {
-				location = (
-					<span className="listing-location">{`${
-						el.place_locality === undefined ? "" : el.place_locality
-					}${el.place_locality === undefined ? "" : ","} ${
-						el.place_province || el.place_state
-					}, ${el.place_country}`}</span>
-				);
-			}
-			return (
-				<PublicSquareBox
-					key={el._id}
-					id={el._id}
-					type={el.type}
-					cover_url={el.images[0]}
-					title={el.title}
-					subtitle={el.subtitle}
-					rating={el.activity_rating || el.place_rating}
-					location={location}
-				/>
-			);
+			return undefined;
 		});
 		romanticGetawaysSection = (
 			<section className="homepage-section">
@@ -108,37 +111,40 @@ const HomePageResults = () => {
 	}
 	if (state.adventureGetaways.length > 0) {
 		let adventureList = state.adventureGetaways.map((el) => {
-			let location;
-			if (el.type === "activity") {
-				location = (
-					<span className="listing-location">{`${
-						el.activity_locality === undefined ? "" : el.activity_locality
-					}${el.activity_locality === undefined ? "" : ","} ${
-						el.activity_province || el.activity_state
-					}, ${el.activity_country}`}</span>
+			while (state.adventureGetaways.indexOf(el) < 4) {
+				let location;
+				if (el.type === "activity") {
+					location = (
+						<span className="listing-location">{`${
+							el.activity_locality === undefined ? "" : el.activity_locality
+						}${el.activity_locality === undefined ? "" : ","} ${
+							el.activity_province || el.activity_state
+						}, ${el.activity_country}`}</span>
+					);
+				}
+				if (el.type === "place") {
+					location = (
+						<span className="listing-location">{`${
+							el.place_locality === undefined ? "" : el.place_locality
+						}${el.place_locality === undefined ? "" : ","} ${
+							el.place_province || el.place_state
+						}, ${el.place_country}`}</span>
+					);
+				}
+				return (
+					<PublicSquareBox
+						key={el._id}
+						id={el._id}
+						type={el.type}
+						cover_url={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						rating={el.activity_rating || el.place_rating}
+						location={location}
+					/>
 				);
 			}
-			if (el.type === "place") {
-				location = (
-					<span className="listing-location">{`${
-						el.place_locality === undefined ? "" : el.place_locality
-					}${el.place_locality === undefined ? "" : ","} ${
-						el.place_province || el.place_state
-					}, ${el.place_country}`}</span>
-				);
-			}
-			return (
-				<PublicSquareBox
-					key={el._id}
-					id={el._id}
-					type={el.type}
-					cover_url={el.images[0]}
-					title={el.title}
-					subtitle={el.subtitle}
-					rating={el.activity_rating || el.place_rating}
-					location={location}
-				/>
-			);
+			return undefined;
 		});
 		adventureGetawaysSection = (
 			<section className="homepage-section">
@@ -151,37 +157,40 @@ const HomePageResults = () => {
 	}
 	if (state.gastronomicGetaways.length > 0) {
 		let gastronomicList = state.gastronomicGetaways.map((el) => {
-			let location;
-			if (el.type === "activity") {
-				location = (
-					<span className="listing-location">{`${
-						el.activity_locality === undefined ? "" : el.activity_locality
-					}${el.activity_locality === undefined ? "" : ","} ${
-						el.activity_province || el.activity_state
-					}, ${el.activity_country}`}</span>
+			while (state.gastronomicGetaways.indexOf(el) < 4) {
+				let location;
+				if (el.type === "activity") {
+					location = (
+						<span className="listing-location">{`${
+							el.activity_locality === undefined ? "" : el.activity_locality
+						}${el.activity_locality === undefined ? "" : ","} ${
+							el.activity_province || el.activity_state
+						}, ${el.activity_country}`}</span>
+					);
+				}
+				if (el.type === "place") {
+					location = (
+						<span className="listing-location">{`${
+							el.place_locality === undefined ? "" : el.place_locality
+						}${el.place_locality === undefined ? "" : ","} ${
+							el.place_province || el.place_state
+						}, ${el.place_country}`}</span>
+					);
+				}
+				return (
+					<PublicSquareBox
+						key={el._id}
+						id={el._id}
+						type={el.type}
+						cover_url={el.images[0]}
+						title={el.title}
+						subtitle={el.subtitle}
+						rating={el.activity_rating || el.place_rating}
+						location={location}
+					/>
 				);
 			}
-			if (el.type === "place") {
-				location = (
-					<span className="listing-location">{`${
-						el.place_locality === undefined ? "" : el.place_locality
-					}${el.place_locality === undefined ? "" : ","} ${
-						el.place_province || el.place_state
-					}, ${el.place_country}`}</span>
-				);
-			}
-			return (
-				<PublicSquareBox
-					key={el._id}
-					id={el._id}
-					type={el.type}
-					cover_url={el.images[0]}
-					title={el.title}
-					subtitle={el.subtitle}
-					rating={el.activity_rating || el.place_rating}
-					location={location}
-				/>
-			);
+			return undefined;
 		});
 		gastronomicGetawaysSection = (
 			<section className="homepage-section">

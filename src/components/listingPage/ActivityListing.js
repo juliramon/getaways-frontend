@@ -33,14 +33,13 @@ const ActivityListing = (props) => {
 			}
 			const activityDetails = await service.activityDetails(state.id);
 			let bookmarkDetails, isBookmarked;
-			if (userBookmarks) {
+			if (userBookmarks.length > 0) {
 				userBookmarks.forEach((el) => {
-					if (el.bookmarkActivityRef) {
-						if (el.bookmarkActivityRef._id === activityDetails._id) {
-							bookmarkDetails = el;
-						} else {
-							bookmarkDetails = null;
-						}
+					if (
+						el.bookmarkActivityRef &&
+						el.bookmarkActivityRef._id === activityDetails._id
+					) {
+						return (bookmarkDetails = el);
 					}
 				});
 			}

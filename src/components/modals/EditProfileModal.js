@@ -38,7 +38,6 @@ const EditProfileModal = ({visibility, hideModal, user, refreshUserData}) => {
 		e.preventDefault();
 		const {_id} = state.loggedUser;
 		const {avatar, fullName, username, bio, location} = state.formData;
-		console.log(_id, avatar, fullName, username, bio, location);
 		service
 			.editProfile(_id, avatar, fullName, username, bio, location)
 			.then(() => {

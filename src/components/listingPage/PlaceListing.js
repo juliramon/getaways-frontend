@@ -35,12 +35,11 @@ const PlaceListing = (props) => {
 			let bookmarkDetails, isBookmarked;
 			if (userBookmarks) {
 				userBookmarks.forEach((el) => {
-					if (el.bookmarkPlaceRef) {
-						if (el.bookmarkPlaceRef._id === placeDetails._id) {
-							bookmarkDetails = el;
-						} else {
-							bookmarkDetails = null;
-						}
+					if (
+						el.bookmarkPlaceRef &&
+						el.bookmarkPlaceRef._id === placeDetails._id
+					) {
+						return (bookmarkDetails = el);
 					}
 				});
 			}
