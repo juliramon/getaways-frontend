@@ -5,7 +5,7 @@ Frontend repo | Getaways.guru
 Juli Ramon
 
 ## Link to the app
-[Getaways.guru](#)
+[Getaways.guru](https://getaways-guru.herokuapp.com)
 
 ## Description
 
@@ -17,9 +17,9 @@ Getaways.guru is a discovery platform where community members can search, book a
 - **Login**
 - **Access to the user feed**
 - **Access to the user profile**
-- **Promote a getaway**
-- **Promote an experience**
-- **Publish an story**
+- **Edit the user profile**
+- **Promote an activity**
+- **Promote a place**
 - **Search content**
 
 ## User Stories
@@ -60,7 +60,7 @@ List of extra features not included in the MVP:
 
 ## Links
 - [Backend Repo](https://github.com/juliramon/getaways-backend)
-- [Heroku](#)
+- [Heroku](https://getaways-guru.herokuapp.com)
 - [Trello](https://trello.com/b/OECrYZ5V/getawaysguru)
 - [Slides](https://docs.google.com/presentation/d/1DxM7t3Y3Fx6j6xptG64EGT6lLAJPyH9k0sMkdEzwV4w/edit?usp=sharing)
 
